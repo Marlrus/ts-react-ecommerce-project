@@ -86,7 +86,44 @@
 				<p class="paragraph">
 					<strong>SASS</strong>
 					<br>
-					sass in an evolved version of CSS. We add it with <code>yarn add node-sass</code> CRA comes with the setting for babel and webpack to convert our sas files into CSS, which is great. Yihua got an error, and he followed the instructions, deleted yarn.lock, node_mouldes and then ran <code>yarn</code> which is the equivalent of <code>yarn install</code>. 
+					sass in an evolved version of CSS. We add it with <code>yarn add node-sass</code> CRA comes with the setting for babel and webpack to convert our sas files into CSS, which is great. Yihua got an error, and he followed the instructions, deleted yarn.lock, node_mouldes and then ran <code>yarn</code> which is the equivalent of <code>yarn install</code>. We create a file <strong>homepage.styles.scss</strong> and we paste the styling. The first parts of our file is almost like css, however we have an element <em>menu-item</em> that has nested props. 
+				</p>
+				<p class="paragraph">
+					<strong>SASS Syntax</strong>
+					<br>
+					We see that inside menu-item we have <code>&:first-child</code>, it is telling sass that we want to target the first child of menu-item targeted using a class. We could do this with css with <code>menu-item:first-child { ... }</code> however, having it nested makes it much easier to read and reason about. Then nested we also have a <code>.content { ... }</code> which means, any element with the class content, inside menu-item, gets this style. We would do that in css with <code>.menu-item .content { ... }</code>. We have the same thing inside .content with <code>.title { ... }</code> and <code>.subtitle { ... }</code> This allows us to write CSS selectors that are related to each other in a very intuitive and interconnected way. We import it to our file <code>import './homepage.styles.scss</code>, we can see that the style gets applied to our app. 
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">Homepage and Directories Components</h2>
+				<p class="paragraph">
+					So we want to start breaking our code into components. The folder structure here is key. In src/ we create two dirs <code>components/</code> and <code>pages/</code> Inside pages/ we create <code>homepage/</code> where we move our homepage component and style files. Then we start breaking down what we have in this file into smaller components. We create a directory/ dir in components/ and our component files <code>directory.component.tsx</code> and styles accordingly. Then we do the same for <strong>menu-item</strong>. 
+				</p>
+				<p class="paragraph">
+					<strong>menu-item</strong>
+					<br>
+					Menu item is a Fn component that displays the content of our items. We move the code of the div that had className menu-item and all its children into the component. But we want to have a dynamic title, which we do with props. We dont want to be using <code>props.title</code> all the time, so we use destructuring <code>const MenuItem = ({ title }) =>( ... )</code> and inside our h1 we use <code>{ title }</code>. Since we are in the TS version of react, it will err because title is set to any, and then if we do title: string it will err as well because it will say <em>cannot find name title</em>. What we need to do is create an interface for the props <code>interface MenuItemProps { title: string }</code> which is all we know at the moment the props will have. Then we do <code>({ title }: MenuItemProps)</code> which will tell TS that we will pass an object of that structure, and that it can be destructured into the property title. Then we <code>export default MenuItem</code>. <strong>Note:</strong> Yihua had a very confusing workflow of doing this before the directory, which is coutnerintuitive because setting the dreictory component first, would make it easier to abstract the creation and content of our menu-item component.
+					<br>
+					<strong>Note Refactor:</strong> I looked into the TS course with react and set the type of menu item to <code>const MenuItem: React.FC&lt;MenuItemProps&gt;</code> which worked perfectly instead of having the generic type set to it JSX.Element, and I could remove the typecasting from the props directly. 
+				</p>
+				<p class="paragraph">
+					<strong>directory</strong>
+					<br>
+					We want to move the state down from App itno this component, therefore we make it a <em>class component</em> <code>class Directory extends React.Component { ... }</code> Inside we add <code>constructor(){ super(); this.setState = { ... } }</code> This will err TS, as it wants something to be passed in the super() so we just set it to <code>super({})</code> and pass an empty obj in the meantime. I copied and pasted the state from the github repo. Then we did the render() method to return what we had in homepage under className directory-menu, but inside that div we use our logic. <code>{ this.state.sections.map( ... ) }</code> which maps the array sections in our state. We use destructuring to use the values from our state <code>({title, imageUrl, id}) =&gt; ( ... )</code> and inside we pass our MenuItem component <code>MenuItem key={id} title={title}</code> which leaves imageUrl unused. This had a few errs, mainly because the map method didn't know the structure of the state, so I created an interface <code>DirectoryState { sections: { title: string, imageUrl: string, id: number, size?: string}[] }</code> which is the structure of the state we imported. Now, to put it, I tried directly on the state which didn't work. So I dug and found that you set it as a generic after <code>extends React.Component</code>, which takes the props as the first type, and then the state: <code>&lt;{}, DirectoryState&gt;</code> which removed all errs from our code and made things work. Now I saved and reloaded the app after the correct imports, and we have the page looking exactly like we had it before. 
+				</p>
+				<p class="paragraph">
+					<strong>Adding imageUrl</strong>
+					<br>
+					I sent the prop in directory as imageUrl={imageUrl} but TS erred saying that imageUrl did not exist on the props of any child element. So I added it to the porps in menu-item and added it to the destructuring and everything was working fine. TS power in react is great to see if we had a misspelling err and for cross component communication. We go to our component and we add a new attribute to our div of className menu-item <code>style={{ ... }}</code> which is similar to style in HTML, but it uses cammelCase instead of - . Inside we set <code>backgroundImage: `url($[imageUrl})`</code> which is the CSS anotation for doing this, and now we have the images in our page. We go to our styles scss file and add two things <code>background-position: center;</code> and <code>background-size: cover;</code> which will center the images and and set them to cover the whole component. 
+				</p>
+				<p class="paragraph">
+					<strong>Props for dynamic styling</strong>
+					<br>
+					We saw how we passed in the imageUrl to our style attribute to get the image there with our css ish syntax. However, we want to have the bottom two images be larger than the top items. We will do this with scss targetting using a class. We start by setting a prop in our state <code>size: 'large'</code> which is on some of the state items of the array. In the map we destructure that state prop and pass it as a prop to our menu-item <code>size={size}</code> Now we must go to menu-item and add it to the interface for the props, and we can now use it. This will stop errs from both our components. Here we will use the size prop in our className <code>className={`${size} menu-item}</code> which will add the size prop that is a string to the classes of the component if there is one, or leave it blank if there is none. Now we go to our scss file and target that class <code>&.large { height: 380px }</code> which means that if our menu-item element <em>ALSO</em> has the large class, set the height to 380px. We save and reload and the page is how we want it to be.
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">Styling Menu Items</h2>
+				<p class="paragraph">
+					
 				</p>
 			</li>
 		</ul>
