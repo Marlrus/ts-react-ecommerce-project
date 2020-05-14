@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>00 Your Name Here</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">00 Your Name Here<hr></h1>
+		<header>
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">Shop Page</h2>
+				<p class="paragraph">
+					We start by creating a dir shop/ in our pages/ dir, and create a shop.compnent.tsx file and a shop.data.js file for the data of our state. We import React and SHOP_DATA and create a class component <code>class ShopPage extends React.Component { ... }</code> in the constructor we need props for some reason, and we call <code>constructor(props:any){ super(props); this.state ={ collections: SHOP_DATA } }</code> then we just <code>render() { return ...div }</code> just to see if we connected. We export the component and then import it into App.tsx. Then we change our second Route component inside our Switch to <code>path='/shop'</code> and <code>component={ShopPage}</code> and if we go to that URL we get the Shop Page. 
+				</p>
+				<p class="paragraph">
+					<strong>CollectionPreview Component</strong>
+					<br>
+					We create a component to display our items. We create the folder and files for it in our components/ dir. Here we do the standard imports for our components and create a Fn component <code>const CollectionPreview: React.FC = ( ... ) => { ... }</code> where we will render a div with className collection-preview and inside an h1 className title, and another div className preview. We want to pass two things as props, a title for our H1 and items for our items. I create <code>interface CollectionPreviewProps { title: string, items: any[] }</code> to code-along in the mean time, and pass it as a generic for our React.FC component. We use <code>{ title.toUpperCase() }</code> in our h1, and <code>{ items.map( item => ... ) }</code> which renders a div with <code>key={item.id}</code> and the <code>{ item.name }</code> inside of the div. 
+				</p>
+				<p class="paragraph">
+					<strong>Shop Component</strong>
+					<br>
+					We import our new CollectionPreview Component into our ShopPage component. We go to render() and destructure our collections from the state <code>const { collections } = this.state</code> which we will use to map our CollectionPreview component. We go to our return and inside the className shop-page dive do <code>{ collections.map()... }</code> where we want to get the data we want from the collecitons arr with destructuring <code>({id, ...otherCollectionProps}) => ( ... )</code>. We don't have TS support because we don't have typecasting for the state we are passing. I created a <code>interface ShopPageState { ... }</code> that we will use as a generic for our React.Component. I hover over SHOP_DATA and copy the TS inferred type and add it into our interface <code>collections: { ... }</code> which will match what our state is. In a React.Component we need to pass two things as generics, the <em>props</em> that we will pass, and the <em>state</em>, so we do <code>any, ShopPageState</code>. Having done that we get TS support and no errs on our code. We can now proceed to render the component. We render a <code>CollectionPreview key={id} {...otherCollectionProps}</code> which will send all the values from a SHOP_DATA items to the component. 
+				</p>
+				<p class="paragraph">
+					<strong>Back to CollectionPreview</strong>
+					<br>
+					I update the CollectionPreviewProps interface with the typing of Items form SHOP_DATA. This gives us TS support for the destrucutred title, items in our props. Now we do two transformations to our items <code>.filter(_, index)=> index < 4)</code> and <code>.map(item=> ... )</code> where we render a div for each item <code>div key={item.id}</code> and <code>{ item.name }</code> inside the div. Now we load our page and we see that we get the first for items of every category of our data, just how we want it. <strong>Note:</strong> Yihua goes into performance due to all the transformations we are doing and that we will se a workaround in the future.
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>
