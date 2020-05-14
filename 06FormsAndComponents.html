@@ -95,7 +95,7 @@
 					<br>
 					I update the CollectionPreviewProps interface with the typing of Items form SHOP_DATA. This gives us TS support for the destrucutred title, items in our props. Now we do two transformations to our items <code>.filter(_, index)=> index < 4)</code> and <code>.map(item=> ... )</code> where we render a div for each item <code>div key={item.id}</code> and <code>{ item.name }</code> inside the div. Now we load our page and we see that we get the first for items of every category of our data, just how we want it. <strong>Note:</strong> Yihua goes into performance due to all the transformations we are doing and that we will se a workaround in the future.
 				</p>
-				<a id="01" href="#00">Index</a>
+				<a id="02" href="#00">Index</a>
 				<h2 class="subtitle">Collection Item</h2>
 				<p class="paragraph">
 					We create a new component with the same Jazz as always, dir, and files. We import our default imports. We create a Fn component <code>const CollectionItem</code> which I will go ahead and export for TS satiety. Here we will get what we pass from our CollectionPreview component as props when we use it. We will get what is in each item of our SHOP_DATA so I create an interface <code>interface CollectionItemProps { ... }</code> with typing for that. I pass it to our React.FC component as a generic and then we destructure it in our props with TS support <code>({ id, name, price, imageUrl }) => ( ... )</code> Inside we create a parent div className collection-item. Inside we create a div for the image like we did before: className image and <code>style={{ backgroundImage: `url(${imageUrl})` }}</code>  which we get from the props. Then we create a sibling div className collection-footer that has two spans of className name and price and we pass the values in for name and price. We have the component ready to go. Then we import our style for the component where we can see how they are placed, which is not gone into with much detail. 
@@ -103,7 +103,17 @@
 				<p class="paragraph">
 					<strong>CollectionPreview</strong>
 					<br>
-					We import CollectionItem from our components and then change what we render from our .map() to be CollectionItem. Here we want to pass the props from the item we are mapping through so we destructure <code>({ id, ...otherItemProps })</code> which we pass <code>CollectionItem key={ id } { ...otherItemProps }</code> which will send what we want. <strong>Note:</strong> I removed ID from the interface in Collection Item as it collides with the prop we are actually sending, which is key. We then copy the styles for CollectionPreview and now we get what we want. 4 rows, one for each category, then inside the rows, 4 collectionItems with image, name, and price. 
+					We import CollectionItem from our components and then change what we render from our .map() to be CollectionItem. Here we want to pass the props from the item we are mapping through so we destructure <code>({ id, ...otherItemProps })</code> which we pass <code>CollectionItem key={ id } { ...otherItemProps }</code> which will send what we want. <strong>Note:</strong> I removed ID from the interface in Collection Item as it collides with the prop we are actually sending, which is key. We then copy the styles for CollectionPreview and now we get what we want. 4 rows, one for each category, then inside the rows, 4 collectionItems with image, name, and price. Now we import the style and add padding in our App.css file, and we are done, everything is working and looking as expected. 
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">Header Component</h2>
+				<p class="paragraph">
+					We start by the usual for a Header component. We create a React.FC Header with a div className header, and we <code>import { Link } from 'react-router-dom'</code> which we use inside our div. We will use a logo that is provided in SVG format (Scalable Vector Graphics). These are really small, really performant images that look the same no matter how large or how small the image is expanded. We place it into an assets/ dir, and then import it with a special React syntax for SVG <code>import { ReactComponent as Logo } from '../../assets/crown.svg'</code> Which now lets us use the Logo component in our Header. We set it inside our Link tag className logo-container as <code>Logo className='logo'</code>. Then we create a div className options for our other links, and create two Link components inside with className option and to='/shop' and /contact. 
+				</p>
+				<p class="paragraph">
+					<strong>Always visible</strong>
+					<br>
+					We import Header into our App component and then set it outside of our Switch Component, right over it, which means that it will <em>always render</em> regardless of what happens with our routes and Router. A lot easier than EJS... We copy the styles into our header styles and we have our header complete, where the logo is 28px wide, and the options take 50% of the flex container. However we have the standard a tag undeline which we remove in our App.css with <code>a { text-decoration: none; color: black; }</code> We do this so that any a tag we use from now on doesn't have this styling, but we could have done it in our scss file. 
 				</p>
 			</li>
 		</ul>
