@@ -130,6 +130,26 @@
 					<br>
 					We want to change our state when the user types into any of our inputs. We have done this before in monster rolodex with the onChange attribute that triggerst a React SyntheticEvent that returns an event object with all the changes that occured in the element. We create a function <code>handleChange = (event: React.ChangeEvent&lt;HTMLInputElement&gt;) => { ... }</code> Inside we destructure our event <code>const { name, value } = event.target</code> which TS undrstands and supports fully. Then we use them to set our state <code>this.setState({ [name]: value })</code> which creates properties in our state based on the name of the input and the value. This is why I had to set the interface as I did, I could not get TS to support explicit props. We then import the SignIn component to our Sign in page and place it inside our div and we have everything set. We see that everything works as expected and that onSubmit the values are cleared.
 				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">FormInput Component</h2>
+				<p class="paragraph">
+					We create a new React.FC component FormInput. It will take the props necessary to create our input, we destructure them <code>({ handleChange, label, ...otherProps })</code> and it will render a div className group, and inside an input <code>className='form-input' onChange={ handleChange } {...otherProps}</code> which will create what we want. Then inside we have an optional value in our props <code>label</code> so we create a ternary operator <code>label? ...renderLogic... : null</code> to render a label tag if we have a label in our props. The label has <code>className={`${otherProps.value.length ? 'shrink' : ''} form-input-label`}</code> which will add the class shrink if we have a value string with a lenght over 0, and will always have the class form-input label' 
+				</p>
+				<p class="paragraph">
+					<strong>Styling</strong>
+					<br>
+					We copy over the styles for formInput and we have something new <code>$sub-color: grey; $main-color: black;</code> which is a SASS variable, which allows us to call that value in our file using <code>$sub-color</code>, this allows us to change a color all over a file without having to individually change the value. We have another new thing <code>@mixin shrinkLabel { ... }</code> which is a mixin that has 3 lines of css code. We can now include this whole block of code where we call it with <code>@include shrinkLabel()</code>. They are basically re-usable blocks of css, or css objects, where variables are primitives. We also have <code>&:focus ~ .form-input-label { ... }</code> This line of code means that when we focus <em>set our writing cursos in the input</em> on the form-input-label class, we apply a style, in this case <code>@include shrinkLabel()</code>. shrinkLabel moves the input up, changese the font-size and the color. We also have a transition of 300ms so that when the properties in shrinkLabel are applied, they take 300ms to change, giving us an animation.  
+				</p>
+				<p class="paragraph">
+					<strong>Adding to SignIn Component</strong>
+					<br>
+					We import it to our SignIn Component and replace the Input tags with our custo FormInput Component. We change onChange to <code>handleChange={ ... }</code> which is the prop that we are passing to the FormInput component. And we add the label prop as email and password. Now we go to typing the component properly. We are passing props to the FormInput component but we have no TS support and we get errs. I create <code>interface FormInputProps { ... }</code> that has all the props we pass. There are two details the first one is <code>handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void</code> where I took the definition of our function from the hover over. And <code>label?: string;</code> because we have all the code set up to expect an optional label property. I pass this interface as a generic for our React.FC. In our signIn component we remove the label because we are creating int in our FormInput directly. Now we save and we can see our new styled form inputs. One minor detail is that we set the width of the div className sign-in to be 30wh so it doesn't go through the whole screen.
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">CustomButton Component</h2>
+				<p class="paragraph">
+					We are creating a FormInput and CustomButtom components so that we can handle every need for an input and a button wherever our app may need it in the future. We want a very flexible button, and we will add functionality and flexibility as we grow into needing it to see how the workflow would be. 
+				</p>
 			</li>
 		</ul>
 	</div>
