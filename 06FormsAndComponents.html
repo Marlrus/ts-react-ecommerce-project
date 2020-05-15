@@ -105,7 +105,7 @@
 					<br>
 					We import CollectionItem from our components and then change what we render from our .map() to be CollectionItem. Here we want to pass the props from the item we are mapping through so we destructure <code>({ id, ...otherItemProps })</code> which we pass <code>CollectionItem key={ id } { ...otherItemProps }</code> which will send what we want. <strong>Note:</strong> I removed ID from the interface in Collection Item as it collides with the prop we are actually sending, which is key. We then copy the styles for CollectionPreview and now we get what we want. 4 rows, one for each category, then inside the rows, 4 collectionItems with image, name, and price. Now we import the style and add padding in our App.css file, and we are done, everything is working and looking as expected. 
 				</p>
-				<a id="02" href="#00">Index</a>
+				<a id="03" href="#00">Index</a>
 				<h2 class="subtitle">Header Component</h2>
 				<p class="paragraph">
 					We start by the usual for a Header component. We create a React.FC Header with a div className header, and we <code>import { Link } from 'react-router-dom'</code> which we use inside our div. We will use a logo that is provided in SVG format (Scalable Vector Graphics). These are really small, really performant images that look the same no matter how large or how small the image is expanded. We place it into an assets/ dir, and then import it with a special React syntax for SVG <code>import { ReactComponent as Logo } from '../../assets/crown.svg'</code> Which now lets us use the Logo component in our Header. We set it inside our Link tag className logo-container as <code>Logo className='logo'</code>. Then we create a div className options for our other links, and create two Link components inside with className option and to='/shop' and /contact. 
@@ -114,6 +114,21 @@
 					<strong>Always visible</strong>
 					<br>
 					We import Header into our App component and then set it outside of our Switch Component, right over it, which means that it will <em>always render</em> regardless of what happens with our routes and Router. A lot easier than EJS... We copy the styles into our header styles and we have our header complete, where the logo is 28px wide, and the options take 50% of the flex container. However we have the standard a tag undeline which we remove in our App.css with <code>a { text-decoration: none; color: black; }</code> We do this so that any a tag we use from now on doesn't have this styling, but we could have done it in our scss file. 
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">Sign In Page and SignIn Component</h2>
+				<p class="paragraph">
+					We create a SingInAndSignUpPage component, Yihua is not great at naming. We do the default and create a React.FC component and then import it to our App component and use a Route with path /signin to render it. We create a component sign-in with all the usual. We make this a <code>class SignIn extends React.Component { ... }</code> we set the generics to <code>any, SignInState</code> using a custom interface <code>interface SignInState { [key: string]: string }</code> which can take multiple props with keys that are strings and values that are string. We call the constructor <code>constructor(props: any) { super(props); this.state = { email = '', password: '' } }</code>
+				</p>
+				<p class="paragraph">
+					<strong>SignIn Component</strong>
+					<br>
+					We do our render() inside we create a parent div className sign-in with an h2 'I already have an Account' and a span 'Sign in with your email and password'. Then we create a from element with no attributes. Inside we create an input <code>input name='email' type='email' value={ this.state.email } required</code> whch uses HTML standard attributes. Then we create a label. We do the same for password but we change to <code>this.state.password</code>. Once we have that we want to handle our submit and prevent it from triggering the default HTML behaviour. We create a function in our class <code>handleSubmit = (event: React.FormEvent&lt;HTMLFormElement&gt;) => { ... }</code> which I took the type from the <code>onSubmit={}</code> I added to the form. <strong>Note:</strong> you can find the appropriate types by hovering over and it will get you the TS support you need. We <code>event.prevetDefault(); this.setState({ email: '', password: '' })</code> which will reset our fields when we submit without triggering the HTML form default behaviour of sending an HTTP request. Then we call this method on our form <code>onSubmit= { this.handleSubmit }</code>
+				</p>
+				<p class="paragraph">
+					<strong>onChange and handleChange()</strong>
+					<br>
+					We want to change our state when the user types into any of our inputs. We have done this before in monster rolodex with the onChange attribute that triggerst a React SyntheticEvent that returns an event object with all the changes that occured in the element. We create a function <code>handleChange = (event: React.ChangeEvent&lt;HTMLInputElement&gt;) => { ... }</code> Inside we destructure our event <code>const { name, value } = event.target</code> which TS undrstands and supports fully. Then we use them to set our state <code>this.setState({ [name]: value })</code> which creates properties in our state based on the name of the input and the value. This is why I had to set the interface as I did, I could not get TS to support explicit props. We then import the SignIn component to our Sign in page and place it inside our div and we have everything set. We see that everything works as expected and that onSubmit the values are cleared.
 				</p>
 			</li>
 		</ul>
