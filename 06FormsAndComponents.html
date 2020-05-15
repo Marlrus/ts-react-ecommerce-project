@@ -148,7 +148,12 @@
 				<a id="05" href="#00">Index</a>
 				<h2 class="subtitle">CustomButton Component</h2>
 				<p class="paragraph">
-					We are creating a FormInput and CustomButtom components so that we can handle every need for an input and a button wherever our app may need it in the future. We want a very flexible button, and we will add functionality and flexibility as we grow into needing it to see how the workflow would be. 
+					We are creating a FormInput and CustomButtom components so that we can handle every need for an input and a button wherever our app may need it in the future. We want a very flexible button, and we will add functionality and flexibility as we grow into needing it to see how the workflow would be. Our component is a React.FC component, and it will render a button of className custom-button. We will pass a few props <code>({ children, ...otherProps })</code> where children is anything that goes inside our CustomButton tag. It is supported by default as type <code>children: React.ReactNode</code> and ...otherProps will be what gives us other information about how the button should work, mainly type as submit. So we create the <code>interface CustomButtonProps { children: React.ReactNode; type?: 'button' | 'submit' | 'reset' }</code> I added the types for type straight form the button element in our Component when I got an err. We use ? since we don't always get this prop, and we set the string literals to the types that button can take. This will stop the TS err.
+				</p>
+				<p class="paragraph">
+					<strong>SignIn integration</strong>
+					<br>
+					We import the CustomButton component from our file and then change the button in the bottom with CustomButton, where we have a complete tag that holds Sign in inside it, which will be treated as the childern. We copy the style and there is nothing magical about it. This time we use <code>text-transform: uppercase</code> instead of doing it in our template with JS. Now that we have this, we have our button looking as intended and replacing our old button but still leaving room for customization. We then add some styling to the SignIn component <code>display: flex; flex-direction: column;</code> and to the nested title className element a margin of 10px. 
 				</p>
 			</li>
 		</ul>
