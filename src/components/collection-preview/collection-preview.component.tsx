@@ -1,31 +1,33 @@
-import React from 'react'
+import React from 'react';
 
-import CollectionItem from '../collection-item/collection-item.component'
+import CollectionItem from '../collection-item/collection-item.component';
 
-import './collection-preview.styles.scss'
+import './collection-preview.styles.scss';
 
 interface CollectionPreviewProps {
-   title: string
+   title: string;
    items: {
       id: number;
       name: string;
       imageUrl: string;
       price: number;
-   }[]
+   }[];
 }
 
-const CollectionPreview: React.FC<CollectionPreviewProps> = ({ title, items }) => (
+const CollectionPreview: React.FC<CollectionPreviewProps> = ({
+   title,
+   items,
+}) => (
    <div className='collection-preview'>
-      <h1 className='title'>{ title.toUpperCase() }</h1>
+      <h1 className='title'>{title.toUpperCase()}</h1>
       <div className='preview'>
          {items
             .filter((_, index) => index < 4)
-            .map(({ id, ...otherItemProps })=> (
-               <CollectionItem key={ id } { ...otherItemProps }/>
-            ))
-         }
+            .map(({ id, ...otherItemProps }) => (
+               <CollectionItem key={id} {...otherItemProps} />
+            ))}
       </div>
    </div>
-)
+);
 
-export default CollectionPreview
+export default CollectionPreview;
