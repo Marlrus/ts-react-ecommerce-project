@@ -90,6 +90,36 @@
                <p class="paragraph">
 						It stupidly took me forever to set up prettier. All I neede for what I wanted was to install <code>yanr add -D prettier</code> and configure a <strong>.prettierrc</strong> file with my settings. I got it going and now I have it after 2 hours + ... I created a <strong>.prettierignore</strong> file with <code>*.html</code> in it for stopping it from formatting this document...
 					</p>
+					<a id="02" href="#00">Index</a>
+               <h2 class="subtitle">Firebase Intro</h2>
+               <p class="paragraph">
+						We will use Firebase for Auth and Storage. Firebase is a backend tool (Database, Server, Auth) for things that the user doesn't see. The DB is where we store the data that is important for the App, and that we want to preserve. The server stores the code that requests the data in the most efficient way possible. Auth is the way in which the server knows that the person requesting the data is the one that has persmission to get that data or that we need to send them some data like their cart info by default. Firebase handles all of this for us, meaning we need no backend code if we don't want to. Firebase is created by Google, and takes care of all the backend code for us. It has a ton of functionality that allows frontend developers to use backend features. 
+					</p>
+					<a id="02" href="#00">Index</a>
+               <h2 class="subtitle">Adding a Project to Firebase</h2>
+               <p class="paragraph">
+						We go to the firebase page, login to our Google account and go to console. There we create a new project. Firebase offers a free "spark" plan, that we will rarely go over, and if we do it is not expensive at all. In the develop panel, we can see the things we have access to: Auth, DB, Storage, Hosting, Functions, ML Kit. We go to Auth. We go to Proeject Overview and click on Web. There we get prompted with some data, and we copy the JS Object we see. We then <code>yarn add firebase</code> 
+					</p>
+					<p class="paragraph">
+						<strong>Setup</strong>
+						<br>
+						We create a dir firebase/ and a <strong>firebase.utils.js</strong> file for our config. The confing is the JS object we copied, if we lost it we just go to our firebase console, to the grid where it says app, then the setting of our app, and we scroll down to our app. There we see a CDN with a few script tags, we copy the contests of the <code>var firebaseConfig = { ... }</code> We go to our firebase.utils.js file and <code>import firebase from 'firebase/app'</code> Here we then <code>import 'firebase/firestore'</code> and <code>import 'firebase/auth'</code> and then <code>const config = { ... }</code> where we paste what we copied from the config object. Then we do <code>firebase.initiaizeApp(config)</code>. 
+					</p>
+					<p class="paragraph">
+						<strong>Other exports and settings</strong>
+						<br>
+						We export <code>export const auth = firebase.auth()</code> and <code>export const firestore = firebase.firestore()</code>, this givves us access to anything related to auth and firestore if we need it in the future. We then proceed to set up our auth <code>const provider = new firebase.auth.GoogleAuthProvider()</code> which creates an object from the auth library with for Google. We then use that object and <code>provider.setCustomParameters({ propt: 'select_account' })</code> this means that we always want to trigger the google popup whever we use the GoogleAuthProvider for Auth and Sign-in. Then we <code>export const signInWithGoogle = () => auth.signInWithPopup(provider)</code> which uses a method from the auth object, but sets it to the google popup instead of the other possible popups. Then we <code>export default firebase</code> if we want to use more generic things from the firebase/app module. <strong>Note:</strong> Firebase is massive, it took 136.6s to install. 
+					</p>
+					<p class="paragraph">
+						<strong>Configuring our Auth in Firebase and our Component</strong>
+						<br>
+						We go to the AUthetication tab, Sign-in providers and look for Google, then edit with the pencil icon on the right and enable it by giving it our email. Now it is officially enabled. We go into our SignIn Component and import <code>signInWithGoogle</code> and create a new CustomButton Component. Inside we add the <code>onClick={signInWithGoogle}</code> prop, we add it to the props of our element, and then we put Sign in with Google. We now have a button. I click it and I get a popup but I don't get prompted to choose a google account. 
+					</p>
+					<a id="03" href="#00">Index</a>
+               <h2 class="subtitle">Google Sign In Auth 2</h2>
+               <p class="paragraph">
+						I had an err, my enabling of the Google Auth in the Firebase Console didn't go through, therefore I could not execute it. I fixed it and now the popup works as it should. I can now see the user in the Firebase account. <strong>Note:</strong> Seeing this part showed me that this course was done in May 17, 2019. 
+               </p>
             </li>
          </ul>
       </div>
