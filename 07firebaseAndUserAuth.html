@@ -128,7 +128,7 @@
 						<br>
 						Its an open messaging system between our app and firebase. Whenever any change from any source realted to our app changes in Firebase it sends a message that the auth state has changed. Such as having signed in to our service, or they signed out. This connection is always open when our App component is mounted on our DOM. Since its an open subscription we have to close it when the component unmounts because we don't want a memory leak. We create a new method on our class <code>unsubscribeFromAuth: null | Function = null</code> which will be null by default. In our componentDidMount() we <code>this.unsubscribeFromAuth = auth.onAuthStateChanged( ... )</code> which will override our null default. Then to close the subscription we call <code>componentWillUnmount() { this.unsubscribeFromAuth() }</code> which will call our method when the app closes. <strong>Note:</strong> I don't really understand this auth flow at all, and have yet to find an article talking about this that uses the terminology that Yihua uses. This is how our App will get notified on any auth change on firebase. 
                </p>
-               <a id="03" href="#00">Index</a>
+               <a id="04" href="#00">Index</a>
                <h2 class="subtitle">Google Sign In Auth 3</h2>
                <p class="paragraph">
                   We will focus on how to sign out. We start by making our header aware of when a user is singed in, or signed out with the current user state. We pass it as a prop for Header <code>currentUser={this.state.currentUser}</code> which will err TS, because we have no props on Header, or type on the App State. I create <code>interface AppState { currentUser: null | object }</code> that will do for the meantime, I then pass the generic to the class component <code>any, AppState</code> the first one being the props which I am yet to understand so I set to any, the second one being the structure of the State. 
@@ -147,6 +147,59 @@
                   <strong>Styling</strong>
                   <br>
                   Now we go to our sign-in component and create a div around the buttons with className button. In the signIn styles we change the width to a fixed 380px and then nest the <code>.button { ... }</code> where we set the display to flex, and justify content to space-between which will separate the elements to the edge of the div. We have everything styled corerctly, but our inputs go slightly beyond the width we set for our component. This is due to <code>box-sizing</code>. This is a CSS property that is set in every browser, where our border, margin, and padding affect the overall size of our component. When we inspect the input, we can see that the green and blue part of the component goes beyond the orange margin that uses the container. We can change this in our App.css with <code>* { box-sizing: border-box }</code> which uses the universal selectior <em>all elements</em>. Now our elements are inline because the margin, padding, and border do not affect the element size, which we can actually see when we inspect the element. 
+               </p>
+               <a id="05" href="#00">Index</a>
+               <h2 class="subtitle">Firebase Firestore</h2>
+               <p class="paragraph">
+                  We need to create a db in firestore. We do this in the database tab which takes us to a menu where we can click create database. Once that is done, we can choose a mode, locked mode that doesn't allow anyone to read or write in our DB, and test mode which allows everyone to write on it. We will start with test mode and then add additional rules to the db later. When we create it we can set Data, Rules, Indexes, and see Usage. Firestore is a NoSQL db that stores in JSON. We have collections: A group of objects that contains Documents. Just like MongoDB. We manually create a users collection, create a unique ID directly, and add a display_name field. Now we can see the doc in our firestore. Firestore uses the id as what we use to select the doc. 
+               </p>
+               <p class="paragraph">
+                  <strong>Nested Collections</strong>
+                  <br>
+                  Inside our user document, we can also add a collection. We add cart_items to this document, and then we create a document with the name anchovies. Now we have a collection of documents inside our document. We can have many docs inside the collection of the same doc. 
+               </p>
+               <p class="paragraph">
+                  <strong>Querying Firestore Data</strong>
+                  <br>
+                  We exported firestore in our utils. We call our collection with <code>firestore.collection('users')</code> and we target our doc with the id <code>firestore.collection('users').doc(...idValue...)</code> which would select our targetted document inside the users collection. We can keep chaining as much as we want. This is very different to mongoDB and I can see why it is hard to translate firestore data to mongoDB. We can also query a doc as if we were navigating a fs <code>firestore.doc('/users/idValue/cart_items/idValue')</code> which would fetch the doc that matches our ID for the path we created. We could do the same for a collection <code>firestores.collection('/users/idValue/cart_items')</code> which would return the whole cart_items collection. 
+               </p>
+               <a id="06" href="#00">Index</a>
+               <h2 class="subtitle">Storing User Data in Firebase</h2>
+               <p class="paragraph">
+                  Right now, we have the users in firebase, however these are not in our database, firebase has them in its own, separate, space. We go to our firebase utils file and create a Fn to handle this. In Firestore there are two things: QueryReference and QuerySnapshot. When we make a query as we saw earlier, the response we get is a QueryReference, which can come as a Document or Collection. The <strong>queryReference</strong> object is an obj that represents the "current" place in the db that we are querying. 
+               </p>
+               <p class="paragraph">
+                  <strong>queryReference</strong>
+                  <br>
+                  We create a dummy query that looks for a user Doc that doesn't exist. We then import it into our App Component and call our <code>createUserProfileDocument(user)</code> in our async onAuthStateChanged(). We then open our app and see that we get an object back. It has the dummy id we set, and the path that we also set. We are always getting back an object, even though it doesn't exist in our db. This is because the queryReference object is what we use to tell firebase to fetch or save data to the db. It doesn't have the actuall data, it has props that tell us details about it, or the method to get the Snapshot obj which gives us the data. We can also see in the <em>parent</em> prop we can see the CollectionReference that tells us where this document would be or is. 
+               </p>
+               <p class="paragraph">
+                  <strong>DocumentReference vs CollectionReference</strong>
+                  <br>
+                  we use documentRef objects to perform our CRUD methods. The documentRef methods are set(), get(), update(), delete(). get() gets a snapshotObject of the data. We can also use add() to add docs to a collection using the collectionRef obj. We save the userRef to a const in our utils method, and then we call get() on it and log it. We can see that it has a prop <code>exists: false</code> that tells us that this doc is not in the db. 
+               </p>
+               <p class="paragraph">
+                  <strong>Seeing if the user exists</strong>
+                  <br>
+                  We change the code to use string interpolation to use the uid from our google user object to see if we have the user in our firestore db <code>const userRef = firestore.doc(`users/${userAuth.uid}`)</code> which we use to get a snapshot and see if the user is in the db or not. We still get exists false, but we have the id as the actual id from our user obj. Now we want to add the user to the DB. 
+               </p>
+               <p class="paragraph">
+                  <strong>Adding user to DB</strong>
+                  <br>
+                  We create <code>if(!snapShot.exists){ ... }</code> and inside we want to see what props from this object we want to store in the db. Since the snapShot doesn't handle CRUD operations, we need to use the userRef we stored before. We first get the props we want from our userAuth obj <code>const { displayName, email } = userAuth</code> and we add <code>const createdAt = new Date()</code>. Then we create a try catch block, and inside we use userRef with the set() method <code>await userRef.set({ displayName, email, createdAt, ...additionalData })</code> And if there is an err we log the err.message. Now if we don't have a user, we will create one. In the end we <code>return userRef</code> in case we want to do any CRUD operations to our user once the user is logged in. Now if we look in our Firebase db we can see our created user document with the fields we set. If we refresh our Fn will fire every time because auth is always persisting, we are still not creating multiple users becasue we detect an existing user and just return userRef. 
+               </p>
+               <a id="07" href="#00">Index</a>
+               <h2 class="subtitle">Storing User Data in Our App</h2>
+               <p class="paragraph">
+                  We need to alter a Firestore Rule in order to perform CRUD opeartions, because by default, Firebase now disallows altering the DB for 30 days after creation. We remove the if statement and just leave <code>allow read, write;</code> Now that we have our createUserProfileDocument() method going, we also want to include that in our state. We got our App COmponent and alter our auth method a bit. We change user to userAuth, because that is more specific to the object that we are getting. Then we check if we have that object and store userRef <code>if(userAuth){ ... }</code> inisde <code>const userRef = await createUserProfileDocument(userAuth)</code> which is what we had set up earlier, that in the end the Fn returns the userRef. Then we call <code>userRef?.onSnapshot(snapShot=> { ... })</code> which will return a snapShot object.
+               </p>
+               <p class="paragraph">
+                  <strong>Snapshot Object</strong>
+                  <br>
+                  We get it from our documentReference object. It allows us to check if a doc exists at this query with the <em>exists</em> prop (boolean). And it also allows us to get props of the object by calling the data() method, which returns a JSON obj of the document. We get NO data until we use the data() method. If we <code>console.log(snapShot.data())</code> in our onSnapshot method, we can see the data from our user as it is in Firestore. However, we can see that we <em>don't</em> have the id. Since we want both in the state we do <code>this.setState({ currentUser: { id: snapShot.id, ...snapShot.data() }</code> which will get the id from snapShot and then spread the props of our doc into the state.
+               </p>
+               <p class="paragraph">
+                  Now, since this will fire every time our component gets mounted, we want to handle when we don't have a user, so we do an else statement <code>if (userAuth) { ... } else { this.setState({ currentUser: userAuth })</code> which will be null in this case, because if we get a userAuth obj we run the rest of the code, meaning that our script will only get here if userAtuh is null, setting the current user to null. 
                </p>
             </li>
          </ul>
