@@ -201,6 +201,31 @@
                <p class="paragraph">
                   Now, since this will fire every time our component gets mounted, we want to handle when we don't have a user, so we do an else statement <code>if (userAuth) { ... } else { this.setState({ currentUser: userAuth })</code> which will be null in this case, because if we get a userAuth obj we run the rest of the code, meaning that our script will only get here if userAtuh is null, setting the current user to null. 
                </p>
+               <a id="08" href="#00">Index</a>
+               <h2 class="subtitle">SignUp Component</h2>
+               <p class="paragraph">
+                  We create a new component SignUp. We do the default, but we import FormInput and CustomButton, as we will be using them here. Then we will import auth and createUserProfileDocument from our firebase utils. We create a class component <code>class SignUp extends React.Component { ... }</code> we do the basic but then create the state <code>this.state = { displayName: '', email: '', password: '', confirmPassword: '', }</code> which we then make an interface for. We pass the generic to the component <code>any, SignUpState</code> then we create a render() where we destructure the state <code>const { displayName, email, password, confirmPassword, } = this.state</code> Then we <code>return ( ... )</code> an H2 a Span and our Form className sign-up-form and with <code>onSubmit={this.handleSubmit}</code> which we haven't created. Then we create 4 FormInput components for our displayName, email, password, and confirmPassword. They vary slightly, and use <code>onChange={this.handleChange}</code> which we haven't created yet and makes TS angry... 
+               </p>
+               <p class="paragraph">
+                  <strong>handleSubmit</strong>
+                  <br>
+                  We create our handleSubmit() method <code>handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => { ... }</code> where we start with event.preventDefault() and then we destructure the state. We first check <code>if(password !== confirmPassword) return alert('Passwords don't match`) }</code> which will exit our Fn. If we continue, we use a try catch block. Inside we take the user from a method from our auth library <code>const { user } = await auth.createUserWithEmailAndPassword( email, password )</code> which uses our destructured state. Then we use our method <code>await createUserProfileDocument(user, {displayName})</code> and then we reset the state to empty values. Here we are destructuring displayName form the argument additionalData of our custom method. This will override the displayName since we don't get it from the user object, because this user doesn't come with data like the Google one. 
+               </p>
+               <p class="paragraph">
+                  <strong>handleChange()</strong>
+                  <br>
+                  We create <code>handleChange = (event: React.ChangeEvent<HTMLInputElement>) => { ... }</code> where we use the event.target to get the values to give the state <code>const { name, value } = event.target</code> which we then <code>this.setState({ [name]: value })</code> which sets a dynamic prop name to the state. I added it to the interface with <code>[name: string]: string</code> to stop TS errs. We then add the basic styling and we are done here.
+               </p>
+               <a id="08" href="#00">Index</a>
+               <h2 class="subtitle">Sign Up with Email and Password</h2>
+               <p class="paragraph">
+                  We add styles to our page for sign in and sign up and we should have both forms side by side. I had a slight problem where the style was not catching, and the mistake was that I had misspelled the className for the div and it was not applying the style set in the scss file. Changed that and had everything working. We test it out and we get the expected validation behaviour including passwords not matching. Then we get everything right and we get an error <code>auth/operation-not-allowed</code> because we haven't enabled this auth in Firebase.
+               </p>
+               <p class="paragraph">
+                  <strong>Firebase Setup Local Auth</strong>
+                  <br>
+                  We go to our Firebase Auth tab and enable email/password. We don't want to have the email verification step for testing. And now we should be able to do this. Now I create the user and I can see that I am actually Moerse. 
+               </p>
             </li>
          </ul>
       </div>
