@@ -224,7 +224,12 @@
                <p class="paragraph">
                   <strong>Firebase Setup Local Auth</strong>
                   <br>
-                  We go to our Firebase Auth tab and enable email/password. We don't want to have the email verification step for testing. And now we should be able to do this. Now I create the user and I can see that I am actually Moerse. 
+                  We go to our Firebase Auth tab and enable email/password. We don't want to have the email verification step for testing. And now we should be able to do this. Now I create the user and I can see that I am actually Moerse. Now we have our path set up.
+               </p>
+               <a id="09" href="#00">Index</a>
+               <h2 class="subtitle">Sign In with Email and Password</h2>
+               <p class="paragraph">
+                  We import auth form firebase.utils and then we go to our handleSubmit() method. We turn it into an async method and then <code>{ email, password } = this.state</code> which we will pass to an auth method we place inside a try catch block <code>await auth.signInWithEmailAndPassword(email, password)</code>. And if that succeeds we will clear our state with the code we had previously. 
                </p>
             </li>
          </ul>
