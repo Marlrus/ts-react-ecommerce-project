@@ -229,7 +229,12 @@
                <a id="09" href="#00">Index</a>
                <h2 class="subtitle">Sign In with Email and Password</h2>
                <p class="paragraph">
-                  We import auth form firebase.utils and then we go to our handleSubmit() method. We turn it into an async method and then <code>{ email, password } = this.state</code> which we will pass to an auth method we place inside a try catch block <code>await auth.signInWithEmailAndPassword(email, password)</code>. And if that succeeds we will clear our state with the code we had previously. 
+                  We import auth form firebase.utils and then we go to our handleSubmit() method. We turn it into an async method and then <code>{ email, password } = this.state</code> which we will pass to an auth method we place inside a try catch block <code>await auth.signInWithEmailAndPassword(email, password)</code>. And if that succeeds we will clear our state with the code we had previously. <strong>Note:</strong> As of now, even if we do sign in with google, we get prompted to add the email to the signin, however, we can change the behvaiour by setting the button to <code>type='button'</code> because HTML treats any button inside a form as type submit by default. This way we can override that behaviour. 
+               </p>
+               <p class="paragraph">
+                  <strong>Review</strong>
+                  <br>
+                  We have to enable auth on firebase, once that is done we need to do some basic setup to implement it. If we leave it on default, we have auth stored in firebase outside of our DB. We need to create paths for our Firestore to save that data if the user is new, and retrieve it if the user is returning. Once we have that data, we need to set it to the state of the front-end so that we can update the page relative to the user that is currently browsing the app. Allowing us to handle the shopping cart, and special information so that they can have a proper shopping experience. 
                </p>
             </li>
          </ul>

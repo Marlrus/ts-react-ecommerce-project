@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import { auth } from '../../firebase/firebase.utils';
 
 import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import './header.styles.scss';
+
+import { StoreInterface } from '../../redux/store.types';
 
 interface HeaderProps {
    currentUser: null | object;
@@ -36,4 +39,8 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => (
    </div>
 );
 
-export default Header;
+const mapStateToProps = (state: StoreInterface) => ({
+   currentUser: state.user.currentUser,
+});
+
+export default connect(mapStateToProps)(Header);

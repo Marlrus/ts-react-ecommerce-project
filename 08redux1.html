@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>00 Your Name Here</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">00 Your Name Here<hr></h1>
+		<header>
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">Redux Intro</h2>
+				<p class="paragraph">
+					This section is all about State and deciding where it lives. This topic can get complex, and we might not understand everything that is going on, but this tool is something that most larger apps will need to use. React is simply a group of components that are rendered in a tree like structure. We have seen this until now in a pretty tame level, where there are only 3 different state managing components. However as a project evolves this can get extremely confusing and hard to manage, as we need to have more state in more components, or decide to manage all the state in a single, top-level component. Redux solved this program for react.
+				</p>
+				<p class="paragraph">
+					<strong>Making things simpler</strong>
+					<br>
+					They went about it by saying: What if we remove all the state from all components and only have props? And the state we keep it in a store. Which is the state in one massive object. We have that state outside of our components, and we pass it down to whichever component needs it as props. The diagram we had looks muhch simpler this way, we have no component that holds state, and they all communicate with our single state object, and whichever component needs that prop can have it passed down to it. Any change that happens to the state is monitored, and passed down to the relevant components. 
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">Redux Concepts</h2>
+				<p class="paragraph">
+					Redux is a library that we would want to use if we are managing large state. React is great at UI, but not so great at managing state. <strong>Note:</strong> this hammers down the concept that React is not actually a framework, but more of a library which uses a lot of other smaller libraries to have optimal functionality. Redux is useful for sharing data between components. With react, you would need to move state up one layer into a parent element that can share the state between the components that need it, which you wouldn't need to do with Redux. Finally, Redux offers predictable state management using the 3 principles.
+				</p>
+				<p class="paragraph">
+					<strong>The 3 Principles</strong>
+					<br>
+					<strong>1- Single source of truth:</strong> We have one single data set describing the entire state of the app. This way, just by looking at that object, React should be able to know how it should look and where to go. 
+					<br>
+					<strong>2- State is Read Only:</strong> This encourages Fn Programming immutability, or not modifying the object directly, which avoids unexpected errors from side-effects. The state with Redux NEVER gets modified, instead it will be replaced with an entirely new state after each action taken by the user.
+					<br>
+					<strong>3- Changes using Pure Functions: </strong> Changes are made using only pure functions: a Fn that will always output the same if given the same input. We know about this more than the course goes into due to our dive into Fn Programming. 
+				</p>
+				<p class="paragraph">
+					<strong>Redux Jargon</strong>
+					<br>
+					<strong>Action:</strong> Something that a user does. Which then trickles into a <strong>Root Reducer: </strong> which is a pure Fn that recieves the I and returns the O without altering the I, as the State, called <strong>Store</strong> in redux. The <strong>Store</strong> is the entire state of the app. When the Store changes, react notices the change and renders and updates the DOM. Why do it this way? JQuery and Vanilla JS have a different method where actions cause direct changes, however as we get more actions going the changes get more complex and conflict between them gets much harder to track, and they trigger actions between them as well. With Redux, all our actions go through 1 single Reducer and through that Reducer it will return the same state depending on the action and updates/overwrites the Store, and this Store communicates to React how to udpate and render. 
+				</p>
+				<p class="paragraph">
+					<strong>Flux Pattern vs MVC Pattern</strong>
+					<br>
+					Redux uses an architectural pattern called a Flux Pattern. In programming architectural patterns help us solve problems in a logical sense and an organized fashion. The Flux pattern used by Redux uses a one-way dataflow where an action gets taken to a dispatcher which updates a store and finally updates a view. Before Redux, the pattern was the <strong>MVC Pattern</strong> Model View Controller. In this pattern we have an action, which is read by a controller, and based on what the controller says we update the model/data/state. This change in the model would then result in the update to the view. The problem with this pattern is that we might trigger the controller to change a model, which would trigger a view, but then that change in view might trigger another model and another change in view and this could chain to a lot of controller calls. 
+				</p>
+				<p class="paragraph">
+					<strong>Sumamry</strong>
+					<br>
+					Redux is equivalent to the native React this.state. Redux can replace and remove all <em>this.state</em> and have it all happen in the Redux library. We can mix and match, having parts of the state in Redux, and part in React, a common pattern to keep only important state in Redux Store, while keeping UI specific state like form inputs in this.state. 
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">Redux In Our Application</h2>
+				<p class="paragraph">
+					We are the point where we have to start reconsidering how to manage state, specilly if we want to continue increasing the complexity of our app. To understand the solution that Redux brings, we first need to understand the problem. We will do this by looking at our existing app. We created everything auth, and it's last step is to store the user in the State of our App Component. If we need to pass it to Header, we do it as we did, pass it directly to the header as a prop. Imagine that we had a Cart component in the Header that would need access to the User. We can do this because our Header has it, however, if the Header didn't need it, and we just needed it in our Cart Component, we would need to pass it down from App to Cart, which we already saw, is a bad practice. 
+				</p>
+				<p class="paragraph">
+					<strong>The problem</strong>
+					<br>
+					Up to now, we are not doing anything that is bad because both Header and Cart need the user from the state kept in app. But imagine if we had that same Cart Component at the bottom of a totally different branch of our app. We would need to pass that state down the whole other branch to reach the deeply nested Cart Component. We would need to add conditional props all the way down the chain JIC our Cart Component needs that prop. If we moved the state down to the Cart Component, we would not just have a lot of reapeated code, we would be storing different States of the exact same User Data. If they get missalligned, then we will have problems because we would have different versions of our User Data for the different components, which conflicts with uni-directional data flow. This is not good because we want the State to be the <em>single source of truth</em>, which is what we do through Redux, and then the component that needs it can access that same data directly, without needing to trickle it down the branch. 
+				</p>
+				<p class="paragraph">
+					<strong>Redux vs our current Apporach</strong>
+					<br>
+					Right now we handle state locally in each Component. Here we are updating the state which we have moved down. With Redux we set a single State somewhere else: the Store. Then our components recieve actions which are passed through Reducers, that then send the data to the Root Reducer, which updates our single state object that any component can access. We would keep parts of the state in different areas, zB everything regarding our uses would pass through the User Reducer, which is a <em>slice</em> of the State. We would have that for every part of our app, and then they would move to our top state called the Root Reducer. We would then use the Root Reducer to pass the state to the relevant components as props, which would make them function the exact way that we have set them to. This keeps our model of uni-directional data flow, and avoid the issue of <em>prop drilling</em>. 
+				</p>
+				<a id="03" href="#00">Index</a>
+				<h2 class="subtitle">Redux Actions and Reducer</h2>
+				<p class="paragraph">
+					Reducers are what our state is represented by in Redux. The smaller reducers (The ones for our page sections) all add up to the Root Reducer, which creates one big object containing the whole state passed down from our sectional reducers. Anything we want to pass to a component is taken from the Root Reducer. To set, or change the satate, we do it through <strong>Actions</strong>, these are just objects <code>{ type: string, payload: any }</code>, our components fire these actions and pass them to our Reducer. The reducer checks if the type of action is relevant to the reducer and then updates with the <em>payload</em> of that action. Then our change gets passed in as a prop, and the relevant component(s) are upadted. And this flow will always be followed. 
+				</p>
+				<p class="paragraph">
+					<strong>Anatomy of a Reducer</strong>
+					<br>
+					All reducers are just functions that take <strong>state</strong> and <strong>action</strong>. State being the <em>current state</em> that we are in and will be updated. The reducer will return an object with the new state of our userReducer. We do this through a <strong>switch</strong> statement, which is like a really big <em>if</em> statement. <code>const userReducer = (currState, action) =&gt; { ... }</code> Inside we have the switch/case code we saw in TS <code>{ switch (action.type) { case 'SET_CURRENT_USER': return { ...currentState, currentUser: action.payload }; default: return currentState }</code> Which checks what code to execute depending on the string that gets passed in the action object. Then we spread the currentState, and update with the payload depending on the case. We always return a <em>new</em> object because we want our components to re-render. If we send an updated version of an object, our components may not change, we need to change the object's location in memory. 
+				</p>
+				<p class="paragraph">
+					If we were to do <code>return currentState.currentUser = action.payload</code> this obj would not be different and our component may not re-render. If no action.type matches, we just return the currentState because we don't want to re-render anything. Our reducers listen to <em>EVERY</em> action, and if the action.type is not relevant to our child reducers, we need to return the unaltered state. 
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">Setting Up Redux</h2>
+				<p class="paragraph">
+					Between an action and the root reducer, our code could hit Middleware. The middleware is simply a piece of code that recieves the action <em>before</em> the Root Reducer. The one we willbe using the most to understand Redux is the reduxLogger middleware to see what our actions are doing. We do <code>yarn add redux redux-logger react-redux</code> and then for TS <code>yarn add @types/redux @types/redux-logger @types/react-redux</code> to get TS support. 
+				</p>
+				<p class="paragraph">
+					<strong>Provider and Store</strong>
+					<br>
+					We <code>import { Provider } from 'react-redux'</code> which is a component that we wrap around the enitre application to give everything access to our Store object. We create a dir redux inside our src/ which will have all the code related to redux in our app. We start with <strong>root-reducer.ts</strong> which will represent all of the state of our application. This will be the code that combines all of our other states together. Here is where all the reducers we will right will join up. We want to separate the reducers to have smaller more manageable files with their concern separate from the root-reducer. 
+				</p>
+				<p class="paragraph">
+					<strong>userReducer</strong>
+					<br> 
+					We will start with our userReducer to use redux in our app. We create a dir in redux/ user/ which will have all of our code related to the user in redux, we create a <strong>user.reducer.ts</strong> file. We start writing <code>const userReducer = (state, action) => { ... }</code> then we <code>const INITIAL_STATE = { currentUser: null }</code> where we take the state we had in App.tsx. I copy the interface for the state and use it here <code>const INITIAL_STATE: InitialState</code> and create <code>interface Action { type: string; payload: any }</code>. We use a <strong>default parameter value</strong> in our reducer <code>(state = INITIAL_STATE, action: Action)</code> which will Type our reducer, and use our state object if we don't have any set by default. 
+				</p>
+				<p class="paragraph">
+					<strong>Switch/Case</strong>
+					<br>
+					We then create <code>{ switch(action.type) { case '': break default: return initialState }</code> beacuase all of our reducers will get passed any action, even if they don't do anything with it, and they must return it to merge in the Root Reducer. We then set the case <code>case 'SET_CURRENT_USER' : return { ...initialState, currentUser: action.payload }</code> which will update our state. We finally export our reducer.
+				</p>
+				<p class="paragraph">
+					<strong>Root Reducer</strong>
+					<br>
+					We begin by <code>import { combineReducers } from "redux";</code> which we need. Then we import our userReducer(). Here we do <code>export default combineReducers({ user: userReducer })</code> which will return an object with the returned updated object from our userReducer. We will have this for all our other reducers which will create our unified State object. 
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">Setting Up Redux: Store, Provider, Action Creater Fns</h2>
+				<p class="paragraph">
+					Now we need to create our <strong>Store</strong>. We create redux/store.ts to hold it. We start by <code>import { createStore, applyMiddleware } from "redux";</code> In this file we will <code>import logger from 'redux-logger'</code> which will be our middleware to log what is going on in our redux code. We then <code>import rootReducer from './root-reducer'</code> which is our combineReducers Fn. Then we create <code>const middleware = [logger]</code> which is what we will pass to applyMiddleware() to use this middleware, which is a pipe Fn (Fn Programming FTW!). We then <code>const store = createStore(rootReducer, applyMiddleware(...middleware))</code> we spread the middleware to pass it as params to the applyMiddlware() Fn. 
+				</p>
+				<p class="paragraph">
+					<strong>index.tsx</strong>
+					<br>
+					We go to our index.tsx and <code>import store from './redux/store';</code> and then pass it as a prop to Provider <code>Provider store={store}</code> which will stop the TS err. Now we have access to Redux inside our App :3 ez. 
+				</p>
+				<p class="paragraph">
+					<strong>Action Creater Fns</strong>
+					<br>
+					We create redux/user/user.actions.ts for our actions related to users. We create our action Fn which returns the Action object which we defined earlier with type and payload <code>export const setCurrentUser = (user: any) => ({ type: 'SET_CURRENT_USER', payload: user })</code> which will return the action object that will trigger our switch case in userReducer. 
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">connect(), mapStateToProps, and mapDispatchToProps</h2>
+				<p class="paragraph">
+					We will get the user from Redux in our Header Component. We start by <code>import { connect } from "react-redux";</code> which is a higher order component that will modify our component allowing to get what it needs from Redux. HOC take components as arguments and return enhanced components. Before calling connect() we create a Fn that will send the state to the props of our Component <code>const mapStateToProps = (state: any) => ({ currentUser: state.user.currentUser })</code> which will take the state from our Root Reducer and set currentUser using that Redux state and pass it to our component as props as we already have it set up. <strong>Note:</strong> mapStateToProps is a placeholder, but it is the default name we give to this Fn. Then we use connect <code>export default connect(mapStateToProps)(Header)</code> which means that connect is a curried Fn that returns a HOC, which takes the props we want to pass to the Component, and then the component which we want to pass the state as props to. This is the pattern that we will use with all of our Components that need state from now on.
+				</p>
+				<p class="paragraph">
+					<strong>mapDispatchToProps</strong>
+					<br>
+					Now that we are getting our state from our Reducer, we need to update our App Component so that it can update the reducer value with the new set user action that we have. We go tou App.tsx and <code>import { connect } from "react-redux";</code> and we use it with <code>export default connect()(App)</code> Connect's first call can take two arguments: <code>(mapStateToProps, mapDispatchToProps)</code> since our App component doesn't need our user state for anything other than passing it to Header, which we replaced already, we set the first parameter to null. 
+				</p>
+				<p class="paragraph">
+					<strong>Dispatch</strong>
+					We create <code>const mapDispatchToProps = (dispatch) => ({ setCurrentUser: user=> dispatch(setCurrentUser(user)) })</code> dispatch is a way for Redux to know that whatever object you are passing is going to be an <em>Action Object</em> that will be passed to every reducer. Our setCurrentUser() is a function that takes a user but returns an Action object. Therefore when we call setCurrentUser(user) we are dispatching the action object, not the Fn. When we set it as the second argument to connect() <code>connect(null, mapDispatchToProps)(App)</code> This gives our Component access to our setCurrentUserMethod. However, when we call it in our Component it will take the user object but pass the action to dispatch() every time, making sure that our Reducer gets the Action Object.
+				</p>
+				<p class="paragraph">
+					In our logger we can now see that we are updating the state properly. Now we don't have interdependance between Components, meaning that now they are truly Components, isolated from the rest of the others. 
+				</p>
+				<a id="06" href="#00">Index</a>
+				<h2 class="subtitle">SideQuest: True Understanding and Typing</h2>
+				<p class="paragraph">
+					<strong>My Arduous Summary</strong>
+					<br>
+					So, connect() returns a HOC (Higher order component), it is a curried function that takes two arguments in its first call and the Component we want to transform in its second call. The first argument is mapStateToProps which is a Fn that we make ourselves. The idea of MapState to props is to take the State from the Store, and extract the props we want from it so that they are sent as props to our Component. By using connect() we have access to the state in our Store, and we can <em>map</em> out what we need into our Component. The second argument is mapDispatchToProps which is also a Fn that we make ourselves.
+				</p>
+				<p class="paragraph">
+					<strong>dispatch()</strong>
+					mapDispatchToProps is a function that takes a dispatch() Fn as an argument and returns an object of Fns we will have access to in our Component through the props. The Fns that we return are <em>all passed through the dispatch() Fn</em> we passed through <code>const mapDispatchToProps = (dispatch) =< ({ ... })/code>. <strong>dispatch()</strong> takes an <em>Action Object</em> as an argument and makes sure that the action is then sent through our reducers to be handled by them. Therefore, our code <code>setCurrentUser: (user) => dispatch(setCurrentUser(user))</code> will send the return of our setCurrentUser() Fn, which is an Action Object, to our reducers through dispatch to be handled by all of them. 
+				</p>
+				<p class="paragraph">
+					After we call connect() we have access to the state and our Action Fns through the props. We can now call <code>this.props.setCurrentUser( ... )</code> We then would pass the user to this method, and this user would be passed to our User Action Fn which will return an Action Object which will then pass to dispatch() which will then reach our Reducers, which will then update our state. To make things easier we destructure it <code>const { setCurrentUser } = this.props</code> and now we can call it directly where we need it. We don't need the constructor in our Component anymore because our state will be handled by Redux. 
+				</p>
+				<p class="paragraph">
+					<strong>Typing this beast</strong>
+					<br>
+					I made a lot of mistakes but corrected them and learned a lot. I started by creating a <strong>user.types</strong> (redux/user/user.types.ts) file that holds all the types we will need for our users in Redux. I created <code>export interface UserState { currentUser: null | { ... } }</code> which will be the object that will be passed to anything that uses the UserState. I then whent to the <strong>user.actions.ts</strong> file and used it there <code>(user: UserState)</code> which will be the parameter that will be passed to the Fn and returned as the payload for the Action Object of this Fn. I then wanted to type the Fn and tried using an ...interface... which can only type object. I then changed it to <code>type SetCurrentUserFn = (user: UserState) => { type: 'SET_CURRENT_USER'; payload: UserState }</code> which has a string literal for this action. Then I used it <code>export const setCurrentUser: SetCurrentUserFn = ...</code> which is now typed up to the return. 
+				</p>
+				<p class="paragraph">
+					We go back to the <strong>user.types.ts</strong> file and create <code>export interface SetCurrentUserAction { type: 'SET_CURRENT_USER'; payload: UserState }</code> which is the Action Obj we get from calling setCurrentUserAction(). I then used it in our user actions file to make the Fn type nicer <code>type SetCurrentUserFn = (user: UserState) => SetCurrentUserAction;</code>. Then we go to <strong>user.reducer.ts</strong> where we have the Fn that will recieve all of our actions and handle them. Here we <code>const INITIAL_STATE: UserState = { ... }</code> which is the default param we have. Our userReducer is meant to handle many different Action Objects, so hardcoding our current interface would hardcode it to a single event. I went back to <strong>user.types.ts</strong> and created a new Union Type <code>export type UserAction = SetCurrentUserAction | OtherAction</code> which will hold every single ActionObject that we may return from our user action Fns. Then I pass that type to the reducer <code>const userReducer = ( initialState = INITIAL_STATE, action: UserActions )</code> which will allow us to handle any case Action Obj by just adding it to the Union type <code>UserActions</code> we have set.
+				</p>
+				<p class="paragraph">
+					<strong>Header Component</strong>
+					<br>
+					In our header component we need to type the state in mapStateToProps. I created <strong>redux/store.types.ts</strong> to have a interface that holds the type for all of our state. I created <code>export interface StoreInterface { user: UserState }</code> which imports the UserState from user.types. As it grows we can add other fields here and it will keep every Fn that uses our State Typed. Now I could <code>const mapStateToProps = (state: StoreInterface) => ({ currentUser: state.user.currentUser })</code> with TS support and future proofing. 
+				</p>
+				<p class="paragraph">
+					<strong>App Component</strong>
+					<br>
+					This one was pretty hard. I had to type mapDispatchToProps() which takes a dispatch Fn as an argument. I dug through git and stackO and found that there is a type <code>Dispatch</code> that takes a generic of the Action Objects that dispatch can receive. I did <code>const mapDispatchToProps = (dispatch: Dispatch&lt;UserAction&gt;) = ({ ... })</code> and inside <code>setCurrentUser: (user: UserState) => dispatch(setCurrentUser(user))</code> which is now typed properly as TS knows that it will return a fitting UserActions object. This took much longer to do than it sounded here... 
+				</p>
+			</li>
+		</ul>
+</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>
