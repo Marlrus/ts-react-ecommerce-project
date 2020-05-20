@@ -267,7 +267,27 @@
 				<a id="08" href="#00">Index</a>
 				<h2 class="subtitle">Implementing Redux in Cart</h2>
 				<p class="paragraph">
-					We have to figure out how to hide and show our CartDropdown. Since we want to keep the display of our CartDropdown flexible, meaning that we might want to have it tirgger from another component that is not the Header, we want to set a way that the cart can be triggered using the global state through Redux. 
+					We have to figure out how to hide and show our CartDropdown. Since we want to keep the display of our CartDropdown flexible, meaning that we might want to have it tirgger from another component that is not the Header, we want to set a way that the cart can be triggered using the global state through Redux. We create a new redux/cart/ dir where we have a reducer, actions, and types. We start by creating the reducer <code>const INITIAL_STATE = { hidden: true }</code> beacuse we want the DD to be hidden by default. Then we <code>const cartReducer = (state = INITIAL_STATE, action) => { ... }</code> where we set the case <code>case CartActionTypes.TOGGLE_CART_HIDDEN</code> where we <code> return { ...state, hidden: !state.hidden, }</code> which returns the state but <strong>toggles</strong> the hidden status using the ! bang operator. Then we <code>default: return state</code>. We go to types and create <code>const CartActionTypes = { TOGGLE_CART_HIDDEN: 'TOGGLE_CART_HIDDEN' }</code> which we import and use in our reducer. 
+				</p>
+				<p class="paragraph">
+					<strong>cart actions</strong>
+					<br>
+					We need to create our Fn to return our action obj, we create <code>export const toggleCartHidden = (): CartActions => ({ type: CartActionTypes.TOGGLE_CART_HIDDEN, })</code> where we use types we have to create, I did the same setup I did for user <code>interface ToggleCartHiddenAction { type: typeof CartActionTypes.TOGGLE_CART_HIDDEN }</code> and then I exported a union type for TS inferrence <code>export type CartActions = ToggleCartHiddenAction</code> which only holds one for now, but it might use it in the future.
+				</p>
+				<p class="paragraph">
+					<strong>CartIcon</strong>
+					<br>
+					We <code>import { toggleCartHidden } from '../../redux/cart/cart.actions';</code> and <code>import { connect, ConnectedProps } from 'react-redux';</code> we want to send this to the props through Redux so we do our TS setup <code>const mapDispatchToProps = (dispatch: Dispatch&lt;CartActions&gt;) => ({ toggleCartHidden: ()=> dispatch(toggleCartHidden()) })</code> which we then <code>const connector = connect(null, mapDispatchToProps)</code> for <code>type CartIconProps = ConnectedProps&lt;typeof connector&gt;</code> and then <code>export default connector(CartIcon)</code>. Then we pass the props <code>const CartIcon: React.FC&lt;CartIconProps&gt; = ({ toggleCartHidden }) => ( ... )</code> which now has TS inferrence due to our setup. We then add this Fn to <code>div className='cart-icon' onClick={toggleCartHidden}</code> which will now fire our action when we click.
+				</p>
+				<p class="paragraph">
+					<strong>Root Reducer</strong>
+					<br>
+					Yihua forgot to add the reducer to the rootReducer that combines our state. We <code>import cartReducer from '...'</code> and then <code>export default combineReducers({ user: userReducer, cart: cartReducer })</code> I then create an interface in cart types <code>interface CartState { hidden: boolean }</code> and add it to the store.types <code>interface State { user: UserState, cart: CartState }</code> which will give us TS support. Now if we click the icon, we can see that our state updates cart state!
+				</p>
+				<p class="paragraph">
+					<strong>Header Component Actually hiding</strong>
+					<br>
+					We go to our header components and we want to get the state for our hidden property from Redux. We go to our mapStateToProps and alter it using advanced destructuring <code>const mapStateToProps = ({ user: {currentUser}, cart: {hidden} }: State => ...</code> where we take currentUser and hidden from the nested props of our State, which get TS Support due to the interface we have. Then we can just do <code>=> ({ currentUser, hidden, })</code> to update our state. We then destructure it from our props in Header, and use a ternary operator to show or hide the DD <code>{ hidden? null : &lt;CartDropdown/&gt;}</code> Which we can now effectively see in action. 
 				</p>
 			</li>
 		</ul>

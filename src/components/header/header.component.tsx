@@ -12,7 +12,7 @@ import './header.styles.scss';
 
 import { State } from '../../redux/store.types';
 
-const Header: React.FC<HeaderProps> = ({ currentUser }) => (
+const Header: React.FC<HeaderProps> = ({ currentUser, hidden }) => (
    <div className='header'>
       <Link className='logo-container' to='/'>
          <Logo className='logo' />
@@ -35,12 +35,16 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => (
          )}
          <CartIcon />
       </div>
-      <CartDropdown />
+      {hidden ? null : <CartDropdown />}
    </div>
 );
 
-const mapStateToProps = (state: State) => ({
-   currentUser: state.user.currentUser,
+const mapStateToProps = ({
+   user: { currentUser },
+   cart: { hidden },
+}: State) => ({
+   currentUser,
+   hidden,
 });
 
 const connector = connect(mapStateToProps);
