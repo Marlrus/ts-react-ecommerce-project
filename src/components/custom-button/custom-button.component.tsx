@@ -5,6 +5,7 @@ import './custom-button.styles.scss';
 interface CustomButtonProps {
    children: React.ReactNode;
    isGoogleSignIn?: boolean;
+   inverted?: boolean;
    type?: 'button' | 'submit' | 'reset';
    onClick?: () => Promise<firebase.auth.UserCredential>;
 }
@@ -12,10 +13,11 @@ interface CustomButtonProps {
 const CustomButton: React.FC<CustomButtonProps> = ({
    children,
    isGoogleSignIn,
+   inverted,
    ...otherProps
 }) => (
    <button
-      className={`custom-button ${
+      className={`custom-button ${inverted ? 'inverted' : null} ${
          isGoogleSignIn ? 'google-sign-in' : ''
       }`}
       {...otherProps}

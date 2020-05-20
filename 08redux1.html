@@ -289,6 +289,16 @@
 					<br>
 					We go to our header components and we want to get the state for our hidden property from Redux. We go to our mapStateToProps and alter it using advanced destructuring <code>const mapStateToProps = ({ user: {currentUser}, cart: {hidden} }: State => ...</code> where we take currentUser and hidden from the nested props of our State, which get TS Support due to the interface we have. Then we can just do <code>=> ({ currentUser, hidden, })</code> to update our state. We then destructure it from our props in Header, and use a ternary operator to show or hide the DD <code>{ hidden? null : &lt;CartDropdown/&gt;}</code> Which we can now effectively see in action. 
 				</p>
+				<a id="09" href="#00">Index</a>
+				<h2 class="subtitle">Add to Cart Styling</h2>
+				<p class="paragraph">
+					We need to set a button in our items that add them to the cart first. We start with CustomButton. Here we add a new prop <code>inverted?: boolean</code> which we use to set a class inverted if we have it in our button <code>className = {${inverted ? 'inverted' : null }</code> next to the logic for isGoogleSign in, so now if we pass inverted as true, we add the class that will invert the button color scheme. We add it to our styles with <code>&.inverted{ ... }</code> where we copy the style of our hover, and then we do a nested <code>&:hover { ... }</code> with the default style. Now if we have the class we have the style we want. 
+				</p>
+				<p class="paragraph">
+					<strong>CollectionItem</strong>
+					<br>
+					We import CustomButton and then call it with the inverted prop <code>CustomButton inverted</code> with content Add to Cart. We now see it in our app but not where it should be. We go to the collection item styles and do <code>.custom-button { ... }</code> where we set it to take ip 80% width, have 0.7 opacity, be with position absolute, and top 255px so that it goes to the height we want. Then we must go to our main collection-item and add <code>position: relative;</code>. Now our button is positioned right where we want it. We want this button to be hidden by default and only show when we hover. Therefore we set display:none; in our custom-button. Then we add <code>&:hover { ... }</code> to our root component to handle displaying and a few changes. We will traget .image and set opacity to 0.8 and then target .custom-button and reduce the opacity to 0.85 and set display to flex which will show it. Now we have what we want.
+				</p>
 			</li>
 		</ul>
 </div>
