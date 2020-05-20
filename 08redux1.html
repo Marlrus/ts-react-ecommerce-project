@@ -249,6 +249,26 @@
 				<p class="paragraph">
 					We do a best practice type adjustment, that is more relevant to JS but I'll still do it. In user.types we create <code>export const UserActionTypes { SET_CURRENT_USER: 'SET_CURRENT_USER' }</code> and then we use it in our interfaces and Action to avoid Typeos, in our interface <code>type: typeof UserACtionTypes.SET_CURRENT_USER</code> and in our action <code>type: UserActionTypes.SET_CURRENT_USER</code>. Looking at the Redux Docs, we can also set the return of our actions using the union: <code>export const setCurrentUser = ( user: CurrentUser | null ): UserActions => ({ ... })</code> which will make TS inferr the return and will remove us needing to export and use specific return types from our <code>user.types.ts</code> file. In our user.reducer.ts we also use these new features <code>const userReducer = (...): UserState => { switch(action.type){ case UserActionTypes.SET_CURRENT_USER: ... }</code> which will use our new type and also set the return to always have to match UserState, which is what we want. 
 				</p>
+				<a id="07" href="#00">Index</a>
+				<h2 class="subtitle">Cart Component and CartDropdown Component</h2>
+				<p class="paragraph">
+					We start by copying the shopping-bag.svg file into our assets/ then we create a new component cart-icon/ where we do the usual. Then we import the icon <code>import { ReactComponent as ShoppingIcon } from '../../assets/shopping-bag.svg'</code> Then we create our React.FC <code>const CartIcon = () => { ... }</code> where we will render a div className cart-icon, our logo <code>ShoppingIcon className='shopping-icon'</code> and a span className item-count to hold our counter. We then export the component. We then copy and paste the styles into the scss file. 
+				</p>
+				<p class="paragraph">
+					<strong>Header Component</strong>
+					<br>
+					We import the component to our Header, and add it at the end of the div and we now have our logo as we want it, but with no functionality yet. 
+				</p>
+				<p class="paragraph">
+					<strong>CartDropdown Component</strong>
+					<br>
+					We create our cart-dropdown/ and create our usual files. We <code>import CustomButton from '...'</code> and then create our React.FC <code>const Cart = () => ( ... )</code> Inside we have a div className cart-dropdown and inside that dive we have a div className cart-items and under that we have our CustomButton with the message GO TO CHECKOUT. We then export it. We copy and paste the styles in. Here for our button element we have <code>margin-top: auto;</code> so that it is always at the bottom. The cart-items take 240px in height and uses flex to allign the items vertically and it has <code>overflow: scroll;</code> which means that if the things contained in this div overflow the height, scroll will be available, neat!. We import it into our header and set it beneath the options div, sho that it is outside of the flow of the header links and icon. Now we can see it in our page always open. 
+				</p>
+				<a id="08" href="#00">Index</a>
+				<h2 class="subtitle">Implementing Redux in Cart</h2>
+				<p class="paragraph">
+					We have to figure out how to hide and show our CartDropdown. Since we want to keep the display of our CartDropdown flexible, meaning that we might want to have it tirgger from another component that is not the Header, we want to set a way that the cart can be triggered using the global state through Redux. 
+				</p>
 			</li>
 		</ul>
 </div>
