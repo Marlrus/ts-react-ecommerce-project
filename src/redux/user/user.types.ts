@@ -1,15 +1,23 @@
+//State and State Parts
 export interface UserState {
-   currentUser: null | {
-      createdAt: { seconds: number; nanoseconds: number };
-      displayName: string;
-      email: string;
-      id: string;
-   };
+   currentUser: null | CurrentUser;
 }
 
-export interface SetCurrentUserAction {
-   type: 'SET_CURRENT_USER';
-   payload: UserState;
+export interface CurrentUser {
+   createdAt: { seconds: number; nanoseconds: number };
+   displayName: string;
+   email: string;
+   id: string;
+}
+
+//UserActionTypes Hardcoded
+export const UserActionTypes = {
+   SET_CURRENT_USER: 'SET_CURRENT_USER',
+};
+
+interface SetCurrentUserAction {
+   type: typeof UserActionTypes.SET_CURRENT_USER;
+   payload: CurrentUser | null;
 }
 
 interface OtherAction {
@@ -17,4 +25,5 @@ interface OtherAction {
    payload: any;
 }
 
+//Every Action
 export type UserActions = SetCurrentUserAction | OtherAction;

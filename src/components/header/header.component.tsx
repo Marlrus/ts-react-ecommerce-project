@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, ConnectedProps } from 'react-redux';
 
 import { auth } from '../../firebase/firebase.utils';
 
@@ -8,11 +8,7 @@ import { ReactComponent as Logo } from '../../assets/crown.svg';
 
 import './header.styles.scss';
 
-import { StoreInterface } from '../../redux/store.types';
-
-interface HeaderProps {
-   currentUser: null | object;
-}
+import { State } from '../../redux/store.types';
 
 const Header: React.FC<HeaderProps> = ({ currentUser }) => (
    <div className='header'>
@@ -39,8 +35,12 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => (
    </div>
 );
 
-const mapStateToProps = (state: StoreInterface) => ({
+const mapStateToProps = (state: State) => ({
    currentUser: state.user.currentUser,
 });
 
-export default connect(mapStateToProps)(Header);
+const connector = connect(mapStateToProps);
+
+type HeaderProps = ConnectedProps<typeof connector>;
+
+export default connector(Header);
