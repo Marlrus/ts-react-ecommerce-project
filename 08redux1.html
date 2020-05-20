@@ -334,6 +334,16 @@
 					<br>
 					We start with <code>import { addItemToCart } from "./cart.utils";</code> and then we change our case return to <code>return{ ...state, cartItems: addItemToCart(state.cartItems, action.payload) }</code> which will return our state and not err with TS at all because we finally did a good job. There is a slight issue, in the data set we are using, the id values repeat, which we don't want and will not happen in a real DB. We copy and paste a new file to replace this dataset. We now test our app and it is working :3. 
 				</p>
+				<a id="12" href="#00">Index</a>
+				<h2 class="subtitle">CartItem Component</h2>
+				<p class="paragraph">
+					We create a new component <strong>cart-item/</strong> we do the usual and create a <code>const CartItem: React.FC = ({ item: { imageUrl, price, name, quantity }) => ( ... )</code> where we return a div classNamecart-item, with an img inside with src imageUrl and alt name, a div className item-details and two spans className name and price. Inside of name we display <code>{name}</code> and inside of price <code>{quantity} x ${price}</code> We copy and paste the styles. 
+				</p>
+				<p class="paragraph">
+					<strong>Cart Component</strong>
+					<br>
+					We import our component and connect, ConnectedProps. Then we create <code>const Cart: React.FC = () => ( ... )</code> we create a div className cart-items inside our cart-dropdown div. Then we set up Redux with connector, CartProps, and our connector() call. Now we have the Props in our component we type them in the generic with <code>CartProps</code>. We destructure <code>({ cartItems })</code> which lets us use it in the FC. Inside our cart-items div we map our cart items where we will render our CartItem component. <code>{cartItems.map((cartItem) => ( ... )</code> Inside we render our CartItem <code>CartItem key={cartItem.id} item={cartItem}</code> which will pass the cartItem to our CartItem in the item prop. Having this data I typed our CartItem <code>interface CartItemProps { item: CartItemInt; }</code> which I then passed to the generic. We now have our Cart working great!
+				</p>
 			</li>
 		</ul>
 </div>
