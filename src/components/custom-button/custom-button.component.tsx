@@ -7,7 +7,7 @@ interface CustomButtonProps {
    isGoogleSignIn?: boolean;
    inverted?: boolean;
    type?: 'button' | 'submit' | 'reset';
-   onClick?: () => Promise<firebase.auth.UserCredential>;
+   onClick?: () => Promise<firebase.auth.UserCredential> | void;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({

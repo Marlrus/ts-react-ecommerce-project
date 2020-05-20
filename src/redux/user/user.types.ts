@@ -13,7 +13,7 @@ export interface CurrentUser {
 //UserActionTypes Hardcoded
 export const UserActionTypes = {
    SET_CURRENT_USER: 'SET_CURRENT_USER',
-};
+} as const;
 
 interface SetCurrentUserAction {
    type: typeof UserActionTypes.SET_CURRENT_USER;

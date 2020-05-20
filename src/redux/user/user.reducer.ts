@@ -3,15 +3,16 @@ import {
    UserState,
    UserActionTypes,
 } from './user.types';
+import { Reducer } from 'react';
 
 const INITIAL_STATE: UserState = {
    currentUser: null,
 };
 
-const userReducer = (
+const userReducer: Reducer<UserState, UserActions> = (
    initialState = INITIAL_STATE,
-   action: UserActions
-): UserState => {
+   action
+) => {
    switch (action.type) {
       case UserActionTypes.SET_CURRENT_USER:
          return {

@@ -299,6 +299,31 @@
 					<br>
 					We import CustomButton and then call it with the inverted prop <code>CustomButton inverted</code> with content Add to Cart. We now see it in our app but not where it should be. We go to the collection item styles and do <code>.custom-button { ... }</code> where we set it to take ip 80% width, have 0.7 opacity, be with position absolute, and top 255px so that it goes to the height we want. Then we must go to our main collection-item and add <code>position: relative;</code>. Now our button is positioned right where we want it. We want this button to be hidden by default and only show when we hover. Therefore we set display:none; in our custom-button. Then we add <code>&:hover { ... }</code> to our root component to handle displaying and a few changes. We will traget .image and set opacity to 0.8 and then target .custom-button and reduce the opacity to 0.85 and set display to flex which will show it. Now we have what we want.
 				</p>
+				<a id="10" href="#00">Index</a>
+				<h2 class="subtitle">Cart Item Reducer</h2>
+				<p class="paragraph">
+					<strong>Typing note:</strong> I had a problem where the TS inferrence for my reducer was not working as expected. I was getting an err calling action.payload because it didn't exist in both cases of my CartActions. TS was not being able to tell what case I was handling automatically. I was <code>export const CartActionTypes = { ... }</code> for the types in my action and to check the case states. However, if I hover over it it says <code>TOGGLE_CART_HIDDEN: string, ADD_ITEM: string</code> as TS inferrence, which we dont want because we want to have string literals. To fix this I added <code>export const CartActionTypes = { ... } as const</code>, now when you hover over it has <em>readonly string literals</em> inferred as those string values cannot be changed since the strings in our object cannot be changed at all because they are readonly and hardcoded. Now when we use typeof in our action types we don't have string but literals. Now in our reducer, when we hover over <code>case CartActionTypes.TOGGLE_CART_HIDDEN</code> we can see that it is the <strong>concrete</strong> case, meaning it knows what it is doing. This solution was amazing and much easier than every other I found thanks to <a href="https://stackoverflow.com/questions/57332577/typescript-in-redux-reducer">ford04</a> heaps. I also used the <code>Reducer</code> type from react, which uses a generic for State and Actions and has an auto return of the State <code>type Reducer<S, A> = (prevState: S, action: A) => S;</code> which is the better way to type our reducers. I updated the code in both Cart and User reducers.
+				</p>
+				<p class="paragraph">
+					<strong>CartReducer</strong>
+					<br>
+					We want to create a new Action Fn that will add an item to our cart, we do <code>export const addItem = (item: any) => ({ type: CartActionTypes.ADD_ITEM, payload: item })</code> we add this to our CartActionTypes const, <em>which we set as const</em>. I set item to any since we havent typed it yet. I create <code>interface AddItemAction { type: typeof CartActionTypes.ADD_ITEM; payload: any }</code> which will be the return of our Action Fn. Then we add this case to the cartReducer <code>case CartActionTypes.ADD_ITEM: return { ...state, cartItems: [...state.cartItems, action.payload ]}</code> where we will spread the existing cart items and add our payload which will be an item. I added this to the CartState with <code>cartItems: any[]</code> until we type our item.
+				</p>
+				<p class="paragraph">
+					<strong>CollectionItem Component</strong>
+					<br>
+					We want to pass this Fn to our Component, so we do the setup we did before with mapDispatchToProps(). We use the generic CartActions on the Dispatch type. Then we <code>const connector = connect(null, mapDispatchToProps)</code> which we then <code>type CollectionItemProps2 = ConnectedProps&lt;typeof connector&gt;</code> and then <code>export default connector(CollectionItem)</code> Here we have something interesting, becasue we have props that are passed from another component, but we are taking this from Redux. I had to set the generic to <code>CollectionItemProps & CollectionItemProps2</code> but we will soon fix that. 
+				</p>
+				<p class="paragraph">
+					<strong>CollectionPreview and CollectionItem</strong>
+					<br>
+					We are passing down props from CollectionPreview, however we want to change it a bit. We want to send the whole item inside the item prop. We do this through <code>.map((item)=> ( ... )</code> and inside <code>CollectionItem key={item.id} item={item}</code> which will now pass the item through, including id, and preserve the unique key prop using our item.id. We change the code slightly, enabling Id in our interface for the Props, and then sending <code>({ item, addItem })</code> as Props. We then <code>const { id, imageUrl, name, price } = item</code> where we needed to change our FC to <code>=> { ... return( ... )}</code> to have access to JS to destructure. We then <code>CustomButton onClick={() => addItem(item)}</code> which will call our Action Fn dispatch(). I had to add the return to the CustomButton props interface for TS delight. Now if we go to our app we are passing our data as we wanted! yay :3
+				</p>
+				<a id="11" href="#00">Index</a>
+				<h2 class="subtitle">Adding Multiple Items to Cart</h2>
+				<p class="paragraph">
+
+				</p>
 			</li>
 		</ul>
 </div>
