@@ -322,7 +322,17 @@
 				<a id="11" href="#00">Index</a>
 				<h2 class="subtitle">Adding Multiple Items to Cart</h2>
 				<p class="paragraph">
-
+					We want to not have duplicate items in our cart. We will use a utility Fn. We create <strong>redux/cart/cart.utils.ts</strong>, For this Fn I typed the CartItem using what we have as an item and added a new prop <code>export interface CartItem { quantity: number; id: number; name: string; imageUrl: string; price: number; }</code> which we add to CartState <code>export interface CartState { hidden: boolean; cartItems: CartItem[] }</code> We then add this new type to our Action Fns <code>(item: CartItem): CartActions</code> and now we have typed our CartState and CartItem which we will now get inferrence in our Components for. 
+				</p>
+				<p class="paragraph">
+					<strong>addItemToCart()</strong>
+					<br>
+					We want to create a Fn that can check if we have an item in our CartItem[] and increase the quantity if we have one, or create a new one if we dont. We start with <code>export const addItemToCart = (cartItems: CartItem[], cartItemToAdd: CartItem) => { ... }</code> Then we check if we have any cart items in our state that match an existing item <code>const existingCartItem = cartItems.find(cartItem => cartItem.id === cartItemToAdd.id)</code> which will be true if it finds a match, and false if it doesnt, as it will return undefined. Then we use this check to handle the condition where we do have a matching item already <code>if(existingCartItem) { ... }</code> Inside we return a new version of the array with .map() <code>return cartItems.map(cartItem => ... )</code> Where we use a ternary operator <code>cartItem.id === cartItemToAdd.id ? { ...cartItem, quantity: ++cartItem.quantity } : cartItem</code> which spreads or existing cart item and adds 1 to the quantity if it matches, and returns the cartItem if it doesn't. Then if we have a new item, meaning that existingCartItem returned false, we <code>return [...cartItems, { ...cartItemToAdd, quantity: 1 }]</code> Which will return an array of all our current items and add the new item to the array with a default quanitity of 1. 
+				</p>
+				<p class="paragraph">
+					<strong>Cart Reducer and Data Set Problem</strong>
+					<br>
+					We start with <code>import { addItemToCart } from "./cart.utils";</code> and then we change our case return to <code>return{ ...state, cartItems: addItemToCart(state.cartItems, action.payload) }</code> which will return our state and not err with TS at all because we finally did a good job. There is a slight issue, in the data set we are using, the id values repeat, which we don't want and will not happen in a real DB. We copy and paste a new file to replace this dataset. We now test our app and it is working :3. 
 				</p>
 			</li>
 		</ul>

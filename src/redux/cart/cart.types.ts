@@ -1,6 +1,14 @@
 export interface CartState {
    hidden: boolean;
-   cartItems: any[];
+   cartItems: CartItem[];
+}
+
+export interface CartItem {
+   quantity: number;
+   id: number;
+   name: string;
+   imageUrl: string;
+   price: number;
 }
 
 export const CartActionTypes = {
@@ -15,7 +23,7 @@ interface ToggleCartHiddenAction {
 
 interface AddItemAction {
    type: typeof CartActionTypes.ADD_ITEM;
-   payload: any;
+   payload: CartItem;
 }
 
 export type CartActions = ToggleCartHiddenAction | AddItemAction;
