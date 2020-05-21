@@ -392,7 +392,27 @@
 				<p class="paragraph">
 					<strong>Other Components</strong>
 					<br>
-					We use our selector in our App component, though I will not use createStructuredSelector because TS support is awful and I have to write a lot more code and miss out on inferrence for no real reason whatsoever. 
+					We use our selector in our App component, though I will not use createStructuredSelector because TS support is awful and I have to write a lot more code and miss out on inferrence for no real reason whatsoever. I commited and de-factored my Header code. 
+				</p>
+				<a id="17" href="#00">Index</a>
+				<h2 class="subtitle">Checkout Page</h2>
+				<p class="paragraph">
+					We start by going into our Cart component and adding a conditional to display a message when the cart is empty. We do <code>cartItems.length>0 ? ... : ...</code> where if it is false, we render a span className empty-message saying your cart is empty. We then center the message in our styling. We create a page/checkout/ Component that will be an FC that retunrs a div for now. We add it to our App through a Route component <code>Route exact path='/checkout' component={ShopPage}</code>. 
+				</p>
+				<p class="paragraph">
+					<strong>withRouter and connect</strong>
+					<br>
+					Now we move to our Cart component, where we want our Checkout button to send us to the Checkout page. To do this we need access to <strong>history</strong>, so we <code>import { withRouter } from 'react-router-dom'</code> which is a HOC that will pass our history related props to the component. Here we have a connect HOC, so we need to wrap that around our withRouter <code>export default withRouter(connector(Cart));</code> which will create our connector HOC first and then create our withRouter HOC with the return from connect. To get TS support we need to type that into CartProps so, at the end of our <code>type CartProps = ConnectedProps...</code> we add <code>& RouteComponentProps</code> which is a type we get from react-router-dom which gives us TS supported access to the props from withRouter. 
+				</p>
+				<p class="paragraph">
+					<strong>Checkout Page Base</strong>
+					<br>
+					In our CheckoutPage we create a parent div className checkout-page, and inside we create another parent div className checkout-header. Inside we will have our headers in div className heade-block that each hold a span for our header items: Product, Description, Qunatity, Price, and Remove. Then we copy and paste the styles. Here we have the page with a width of 55%, and inside our checkout-header has a width of 100%, meaning that it will take up the whole width of the page. Our header blocks are all 23% except the last one, which is <code>&:last-child { width: 8% }</code> which makes it smaller. 
+				</p>
+				<p class="paragraph">
+					<strong>Import what we need</strong>
+					<br>
+					We import connect and selectCartItems, then we do the standard connect() process and typing. We also want a selector that returns the total for the price of our items in the cart. We create <code>export const selectCartTotal = createSelector( selectCartItems, ... )</code> Here we copy our reduce() method from our cont selector and modify the reducer to <code>accTotal + cartItemPrice * cartItem.quantity</code> which will multiply our quantity and price for each item and return the total price. Then we use it in our mapState... <code>total: selectCartTotal(total)</code>. We then add a div className total that has a span with TOTAL: ${total} which it gets from our props. 
 				</p>
 			</li>
 		</ul>
