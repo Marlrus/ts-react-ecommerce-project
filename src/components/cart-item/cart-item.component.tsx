@@ -1,14 +1,14 @@
 import React from 'react';
 
-import { CartItemInt } from '../../redux/cart/cart.types';
+import { CartItem } from '../../redux/cart/cart.types';
 
 import './cart-item.styles.scss';
 
 interface CartItemProps {
-   item: CartItemInt;
+   item: CartItem;
 }
 
-const CartItem: React.FC<CartItemProps> = ({
+const CartItemComponent: React.FC<CartItemProps> = ({
    item: { imageUrl, price, name, quantity },
 }) => (
    <div className='cart-item'>
@@ -22,4 +22,4 @@ const CartItem: React.FC<CartItemProps> = ({
    </div>
 );
 
-export default CartItem;
+export default CartItemComponent;

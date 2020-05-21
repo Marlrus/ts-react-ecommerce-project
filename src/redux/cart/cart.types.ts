@@ -1,9 +1,9 @@
 export interface CartState {
    hidden: boolean;
-   cartItems: CartItemInt[];
+   cartItems: CartItem[];
 }
 
-export interface CartItemInt {
+export interface CartItem {
    quantity: number;
    id: number;
    name: string;
@@ -23,7 +23,7 @@ interface ToggleCartHiddenAction {
 
 interface AddItemAction {
    type: typeof CartActionTypes.ADD_ITEM;
-   payload: CartItemInt;
+   payload: CartItem;
 }
 
 export type CartActions = ToggleCartHiddenAction | AddItemAction;

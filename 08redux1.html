@@ -344,6 +344,41 @@
 					<br>
 					We import our component and connect, ConnectedProps. Then we create <code>const Cart: React.FC = () => ( ... )</code> we create a div className cart-items inside our cart-dropdown div. Then we set up Redux with connector, CartProps, and our connector() call. Now we have the Props in our component we type them in the generic with <code>CartProps</code>. We destructure <code>({ cartItems })</code> which lets us use it in the FC. Inside our cart-items div we map our cart items where we will render our CartItem component. <code>{cartItems.map((cartItem) => ( ... )</code> Inside we render our CartItem <code>CartItem key={cartItem.id} item={cartItem}</code> which will pass the cartItem to our CartItem in the item prop. Having this data I typed our CartItem <code>interface CartItemProps { item: CartItemInt; }</code> which I then passed to the generic. We now have our Cart working great!
 				</p>
+				<a id="13" href="#00">Index</a>
+				<h2 class="subtitle">Selectors in Redux</h2>
+				<p class="paragraph">
+					Our Cart is now working, but we want the counter to match the ammount of items we have. We go to our CartIcon Component and we need to pass this number as a prop. We do this through mapStateToProps where we will create a new prop based on our state. <code>const mapStateToProps = ({ cart: { cartItems } }:State) => ({ ... })</code> iniside we want to return the items we have by using the quanitity value in each of our cartItems. We do this through using reduce() <code>itemCount: cartItems.reduce( ... , 0)</code> reduce accumulates values from an array and returns a single value created from them. We have the counter set to 0 <code>(accQuantity, cartItem) => accQuantity + cartItem.quantity, 0</code> this will create a value that is the total sum of the quanitity value in all of our cart items. We then add it to our connector and we use it inside our Component as <code>{itemCount}</code>. Now we have that working.
+				</p>
+				<p class="paragraph">
+					<strong>Selector</strong>
+					<br>
+					What we just did is called a <strong>selector</strong>, which is code that takes the whole state and returns a piece, or slice of that state. In our case we are computing a whole new value based on our state. However, we have a problem right now. Every time we do something that changes the state in any way, we are calling our mapStateToProps here. This happens because, even though the actual value may not change, the state is <em>always</em> a new object. Therefore our selector has to re-verify if the value changed in order to update. This firing and re-rendering is not good for our performance. We can fix this through caching which we will see next.
+				</p>
+				<a id="14" href="#00">Index</a>
+				<h2 class="subtitle">Optional: Memoization</h2>
+				<p class="paragraph">
+					Memoization is a <strong>chaching</strong> technique used in Dynamic Programming. Chaching is storing values in an easily accessible box so that they can be used later on. Memoization is a specific form of caching. If we create a Fn, it takes a set time to execute, and the more complex, the more time it takes to execute. To create a memoized version of a Fn, we must create a <strong>chache</strong>. A chace is simply an object that stores data, in the case of a Fn, it stores the parameter that we passed and the return matching that value. zB <code>const cache = {} </code> and our Fn <code>function memoizedFn(n) { ... }</code> Inside of it we check if we have the return stored in our cache <code>if(n in cache) { return cache[n] }</code> here we look through the cache and if the value already exists we return that value. If not, we <code>cache[n] = ourFnLogic; return cache[n]</code> which will add the return value matching the param we passed to our cache. Therefore if we call <code>memoizedFn(5)</code> twice, the first time it will run and store the return value in the cache, the second time, it will not run the calculation, but will instead return the value immediatley because it exists in the cache. In summary: <strong>memoization</strong> is a form of <strong>chaching</strong> the return value of a Fn based on its parameters. If the params match something in the catch, the return is <em>memoized.</em>
+				</p>
+				<a id="15" href="#00">Index</a>
+				<h2 class="subtitle">Reselect library</h2>
+				<p class="paragraph">
+					We have to <code>yarn add reselect</code>. Then we will move our Redux logic completely from our component into our redux/ dir. Meaning that mapStateToProps and mapDispatchToProps will be moved to their respective directory in redux/. We want to <code>import { createSelector } from "reselect";</code>, but before we use it we need to set up a few things. 
+				</p>
+				<p class="paragraph">
+					<strong>Input Selector and Output selector</strong>
+					<br>
+					The Input selector doesn't use createSelector. Output selectors use input selectors and createSelector to build themselves. An Input selector takes the whole State of an app and returns a slice of it. We do <code>const selectCart = (state: State) => state.cart;</code> for our Input Selector. And then we create our Output selector using createSelector <code>export const selectCartItems = createSelector([selectCart], cart => cart.cartItems )</code>. createSelector() takes 2 arguments, the first one is an array of input selectors, and the second one is a Fn that will return the value we want from the selector. We effectively have selected the cart from the state, and are now selecting the cartItems from the cart through our Output Selector. The second argument is called a <strong>combiner</strong>. Seeing the @types/reselect docs, I can see that we can actually pass the selectors individually, and not in an array, but the overloads are nuts. By doing this we now have a <em>memoized</em> selector.
+				</p>
+				<p class="paragraph">
+					<strong>Replacing our logic in component</strong>
+					<br>
+					We create <code>export const selectCartItemsCount = createSelector( selectCartItems, cartItems => cartItems.reduce( ... ) )</code> with the code we had in our CartIcon component. We could select these directly, but in the future we might want to have a selector that returns the cartItems therefore, we separate the two. We go to our component and import selectCartItemsCount, and replace our code <code>const mapStateToProps = (state: State) => ({ itemCount: selectCartItemsCount(state), })</code>. The data flow can be a little tricky. selectCartItemsCount calls one of our createSelector() Fns, there it sees that it needs the return of selectCartItems to resolve, so it jumps to it. selectCartItems is another call of createSelector() which sees that it needs the return of selectCart in order to execute. It goes to select cart and then it sees that it just has to pass the state, which will return state.cart. Then it returns to selectCartItems with the return from selectCart and executes. With the return it can now run selectCartItemsCount and will finally run our reduce() and return the number we need. 
+				</p>
+				<p class="paragraph">
+					<strong>CartDropdown Component</strong>
+					<br>
+					We are also using the cartItems from the state in our Cart component. Here we want to use the selector to get the slice of the state we want. We import selectCartItems and then add it to mapStateToProps <code>const mapStateToProps = (state: State) => ({ cartItems: selectCartItems(state), })</code> which will now use our selector to pass the props to our Cart FC with a memoized version. Now we won't re-render if the state slice didn't actually change. 
+				</p>
 			</li>
 		</ul>
 </div>

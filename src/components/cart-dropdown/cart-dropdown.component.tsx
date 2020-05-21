@@ -3,6 +3,7 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import CustomButton from '../custom-button/custom-button.component';
 import CartItem from '../cart-item/cart-item.component';
+import { selectCartItems } from '../../redux/cart/cart.selectors';
 
 import './cart-dropdown.styles.scss';
 import { State } from '../../redux/store.types';
@@ -18,8 +19,8 @@ const Cart: React.FC<CartProps> = ({ cartItems }) => (
    </div>
 );
 
-const mapStateToProps = ({ cart: { cartItems } }: State) => ({
-   cartItems,
+const mapStateToProps = (state: State) => ({
+   cartItems: selectCartItems(state),
 });
 
 const connector = connect(mapStateToProps);
