@@ -414,6 +414,16 @@
 					<br>
 					We import connect and selectCartItems, then we do the standard connect() process and typing. We also want a selector that returns the total for the price of our items in the cart. We create <code>export const selectCartTotal = createSelector( selectCartItems, ... )</code> Here we copy our reduce() method from our cont selector and modify the reducer to <code>accTotal + cartItemPrice * cartItem.quantity</code> which will multiply our quantity and price for each item and return the total price. Then we use it in our mapState... <code>total: selectCartTotal(total)</code>. We then add a div className total that has a span with TOTAL: ${total} which it gets from our props. 
 				</p>
+				<a id="18" href="#00">Index</a>
+				<h2 class="subtitle">Dispatch Action Shorthand</h2>
+				<p class="paragraph">
+					We want to hide our cart when we go to checkout. We will do it in CartDropdown. When you use connect with one param, it passes dispatch to the component props by default. This allows us to create a Fn inside the component. We go to our checkout button and on <code>onClick={()=> ... }</code> we add <code>()=>{ history.push('/checkout'); dipsatch(toggleCartHidden()) }</code> which sends our action to the reducer through a dispatch Fn. Which is a way to bypass doing mapDispatchToProps(). 
+				</p>
+				<a id="19" href="#00">Index</a>
+				<h2 class="subtitle">Checkout Item Component</h2>
+				<p class="paragraph">
+					
+				</p>
 			</li>
 		</ul>
 </div>

@@ -8,8 +8,13 @@ import { selectCartItems } from '../../redux/cart/cart.selectors';
 
 import './cart-dropdown.styles.scss';
 import { State } from '../../redux/store.types';
+import { toggleCartHidden } from '../../redux/cart/cart.actions';
 
-const Cart: React.FC<CartProps> = ({ cartItems, history }) => (
+const Cart: React.FC<CartProps> = ({
+   cartItems,
+   history,
+   dispatch,
+}) => (
    <div className='cart-dropdown'>
       <div className='cart-items'>
          {cartItems.length > 0 ? (
@@ -20,7 +25,12 @@ const Cart: React.FC<CartProps> = ({ cartItems, history }) => (
             <span className='empty-message'>Your cart is empty</span>
          )}
       </div>
-      <CustomButton onClick={() => history.push('/checkout')}>
+      <CustomButton
+         onClick={() => {
+            history.push('/checkout');
+            dispatch(toggleCartHidden());
+         }}
+      >
          GO TO CHECKOUT
       </CustomButton>
    </div>
