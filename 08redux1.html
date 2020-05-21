@@ -422,7 +422,17 @@
 				<a id="19" href="#00">Index</a>
 				<h2 class="subtitle">Checkout Item Component</h2>
 				<p class="paragraph">
-					
+					I had a go at this myself and got it right. We want to have a component that displays our items in the checkout, however, since we want to send individual cart items to this component, we won't use redux, rather we will pass them to the props from the parent Component. In our Checkout Page component, we have already selected our cartItems and used .map() on it. We are going to send the props as <code>cartItem{...} and key={...}</code> since we know this we can <code>interface CheckoutItemProps { cartItem: CartItem }</code> which we pass as a generic for our React.FC. Then we spread the props <code>({ cartItem: { ... }})</code> and we place them in their respective area. Once we have that our checkout page is on its first stage. 
+				</p>
+				<a id="20" href="#00">Index</a>
+				<h2 class="subtitle">Remove Items from Cart (D)</h2>
+				<p class="paragraph">
+					We do our basic types jazz with a new action for carts <code>export const clearItemFromCart = (item: CartItem): CartActions => ({ type: CartActionTypes.CLEAR_ITEM_FROM_CART, payload: item, })</code> We then go to the cartReducer and create the case, what we want to return is <code>return { ...state, cartItems: state.cartItems.filter( ... ) }</code> where we filter <code>cartItem => cartItem.id !== action.payload.id</code> which will return a new array of all the cart items, except the one that matches. We then go to our CheckoutItem component and do our standard connect() process. In mapDispatchToProps we do <code>clearItem: (cartItem:CartItem) => ...</code> and then we do our typing. We fuse the types, because we are passing props from Checkout and injecting props with Redux. Then we change the props a little <code>({ cartItem, clearItem, })</code> because we need access to cartItem to call clearItem(). Then we do an explicit return in our FC, we add { ... return (...)} to it which gives us JS outside of our render return. And then on our remove-button we add <code>onClick={()=> clearItem(cartItem)}</code> and we have everything set up. 
+				</p>
+				<a id="21" href="#00">Index</a>
+				<h2 class="subtitle">Quantity increase and decrease feature</h2>
+				<p class="paragraph">
+					We add the arrows to our component using wingdings from UFT8. We warp thim in divs className arrow and our quanitity in a span className value for styling. We then add the styling setting the display fo flex, and setting the cursor to pointer in our arrows. I will add the functionality myself as a test. I succeeded in adding hte functionality and in fact improved the code over the one in the course by making my util simpler. I createad a new action <code>removeItem()</code> and did all the typing for it. Then I added the <code>case CartActionTypes.REMOVE_ITEM</code> to my reducer. I then created a util for it. The util uses map() to do <code>{...cartItem, quantity: --cartItem.quanitity }</code> if the id matches. Then I added it it mapDispatchToProps() and to the arrow I added <code>onClick-{()=> cartItem.quantity > 1 ? subtractQuantity(cartItem) : clearItem(cartItem) }</code> which is a method we already created. Yihua did his clear item logic in the util Fn. I also imported and dispatched <code>addItem()</code> and added it to onClick for the other arrow. And we have our component working as we want. 
 				</p>
 			</li>
 		</ul>

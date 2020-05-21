@@ -3,7 +3,7 @@ import {
    CartActions,
    CartState,
 } from './cart.types';
-import { addItemToCart } from './cart.utils';
+import { addItemToCart, subtractQuantity } from './cart.utils';
 
 import { Reducer } from 'react';
 
@@ -26,6 +26,21 @@ const cartReducer: Reducer<CartState, CartActions> = (
          return {
             ...state,
             cartItems: addItemToCart(state.cartItems, action.payload),
+         };
+      case CartActionTypes.CLEAR_ITEM_FROM_CART:
+         return {
+            ...state,
+            cartItems: state.cartItems.filter(
+               (cartItem) => cartItem.id !== action.payload.id
+            ),
+         };
+      case CartActionTypes.REMOVE_ITEM:
+         return {
+            ...state,
+            cartItems: subtractQuantity(
+               state.cartItems,
+               action.payload
+            ),
          };
       default:
          return state;
