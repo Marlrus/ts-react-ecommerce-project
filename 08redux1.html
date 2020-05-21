@@ -379,6 +379,21 @@
 					<br>
 					We are also using the cartItems from the state in our Cart component. Here we want to use the selector to get the slice of the state we want. We import selectCartItems and then add it to mapStateToProps <code>const mapStateToProps = (state: State) => ({ cartItems: selectCartItems(state), })</code> which will now use our selector to pass the props to our Cart FC with a memoized version. Now we won't re-render if the state slice didn't actually change. 
 				</p>
+				<a id="16" href="#00">Index</a>
+				<h2 class="subtitle">User Selectors</h2>
+				<p class="paragraph">
+					We create a user.selectors.ts file. We get the user slice from the state with <code>const selectUser: Selector&;t;State, UserState&gt; = (state) => state.user</code> which we will feed into our Output selector <code>export const selectCurrentUser = createSelector( selectUser, user => user.currentUser )</code>. Then we also need the hidden state from cart so we go to cart selectors and create it <code>export const selectCartHidden = createSelector( selectCart, (cart)=> cart.hidden )</code>, we just need to replace them in our Header Component.
+				</p>
+				<p class="paragraph">
+					<strong>Header Component</strong>
+					<br>
+					In our header component we import our new selectors. Then we also <code>import { createStructuredSelector } from 'reselect';</code> to handle mapState to props. This Fn allows us to group together our selectors. <code>const mapStateToProps = createStructuredSelector({ currentUser: selectCurrentUser, hidden: selectCartHidden, })</code> which automatically passes our State as an argument to our selectors and returns a value with the return. This is fine and dandy for JS projects, but this has very bad TS typing and no inferrence. We need two generics, one for the State and the other for what the selectors will return. I had to <code>interface HeaderSelections extends UserState { hidden: boolean }</code> which I used in the generic <code>State, HeaderSelections</code> which fixed all the typing issues. Compared to our old code, this is much longer and requires an interface to get TS inferrence support, therefore it is not worth the time. I will leave it here for the sake of the exercise. 
+				</p>
+				<p class="paragraph">
+					<strong>Other Components</strong>
+					<br>
+					We use our selector in our App component, though I will not use createStructuredSelector because TS support is awful and I have to write a lot more code and miss out on inferrence for no real reason whatsoever. 
+				</p>
 			</li>
 		</ul>
 </div>

@@ -16,6 +16,7 @@ import { setCurrentUser } from './redux/user/user.actions';
 
 import { UserActions, CurrentUser } from './redux/user/user.types';
 import { State } from './redux/store.types';
+import { selectCurrentUser } from './redux/user/user.selectors';
 
 class App extends React.Component<AppProps> {
    unsubscribeFromAuth: null | Function = null;
@@ -70,8 +71,8 @@ class App extends React.Component<AppProps> {
    }
 }
 
-const mapStateToProps = ({ user }: State) => ({
-   currentUser: user.currentUser,
+const mapStateToProps = (state: State) => ({
+   currentUser: selectCurrentUser(state),
 });
 
 const mapDispatchToProps = (
