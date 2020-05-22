@@ -133,7 +133,12 @@
 				<a id="04" href="#00">Index</a>
 				<h2 class="subtitle">Collection Overview Component</h2>
 				<p class="paragraph">
-					
+					We want to create a component that will take over the map() we had in our Shop Component. We create the CollectionOVerview component with everything we had, including connect(). Then we move all the logic from Shop into this component and remove it from Shop. After we have that we import it into ShopPage and then just render it inside, leaving ShopPage as a very simple and short FC. Our CollectionsOverview has a className collecitons-overview which we target in our scss with display flex and flex column. 
+				</p>
+				<p class="paragraph">
+					<strong>Nested Routes</strong>
+					<br>
+					We will use the Route component in our ShopPage, until now we have only used it in App. We do <code>Route exact path={`${match.path}`} component={CollectionsOverview} </code> so that we can now have routes that go to our component. <code>match.path</code> is the current url stirng our component is in, so if we change it in the future, it will automatically adjust. 
 				</p>
 			</li>
 		</ul>
