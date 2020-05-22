@@ -123,7 +123,17 @@
 				<a id="03" href="#00">Index</a>
 				<h2 class="subtitle">ShopPage into Redux</h2>
 				<p class="paragraph">
-					Ill do this on my own. 
+					I'll do this on my own. I did it, but will watch to see how Yihua does it. I made 1 mistake only but it was minor. First step is setting up a redux/shop/shop.reducer.ts. This is what will pass down our shopState to our root-reducer which constructs our State. We get SHOP_DATA from the ShopPage Component and move it to our redux directory. Then we import it in and make it <code>const INITIAL_STATE = { collections: SHOP_DATA }</code>, this is where I made the mistake and did INITIAL_STATE = SHOP_DATA directly. Then we set up our reducer with only a switch case statement that returns the state by default. Once we have that we need to add it to the root-reducer <code>shop: shopReducer</code> Then I looked at the component to see what we need to select and created the <strong>shop.selectors.ts</strong>. There we selectShop() that gets state.shop, and then we create our selector <code>createSelector(selectShop, (shop) => shop.collections)</code>
+				</p>
+				<p class="paragraph">
+					<strong>ShopPage Component</strong>
+					<br>
+					Since we aren't using internal state, we convert it to a React.FC. Then we import connect and ConnectedProps from react-redux. We then do our ususal typing and connect() setup. We then just pass it as a generic and we have our FC ready to go. Easy pz, lemon squeezy.
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">Collection Overview Component</h2>
+				<p class="paragraph">
+					
 				</p>
 			</li>
 		</ul>
