@@ -2,8 +2,7 @@ import { createSelector, Selector } from 'reselect';
 import { State } from '../store.types';
 import { CartState } from './cart.types';
 
-const selectCart: Selector<State, CartState> = (state: State) =>
-   state.cart;
+const selectCart: Selector<State, CartState> = (state) => state.cart;
 
 export const selectCartItems = createSelector(
    selectCart,
