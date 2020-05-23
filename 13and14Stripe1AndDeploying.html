@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8" />
+      <meta
+         name="viewport"
+         content="width=device-width, initial-scale=1, shrink-to-fit=no"
+      />
+
+      <!-- Bootstrap CSS -->
+      <link
+         rel="stylesheet"
+         href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
+         crossorigin="anonymous"
+      />
+      <style>
+         code {
+            background-color: rgba(0, 0, 0, 0.075);
+            font-weight: bold;
+         }
+         .subtitle {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 0;
+            padding: 5px;
+            margin-top: 5px;
+            background-color: rgba(0, 0, 0, 0.075);
+            text-align: center;
+         }
+         h3 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+            padding: 5px;
+            margin-top: 10px;
+         }
+         .paragraph {
+            margin: 0.5rem 0 0.5rem;
+         }
+         .tab {
+            margin: 0 1rem;
+         }
+         html {
+            scroll-behavior: smooth;
+         }
+      </style>
+
+      <title>13 & 14 Stripe P1 and Deploying to Production</title>
+   </head>
+   <body>
+      <div class="container">
+         <h1 class="display-3 text-center">
+            13 & 14 Stripe P1 and Deploying to Production
+            <hr />
+         </h1>
+         <header>
+            <p class="paragraph">
+               Overall description.
+            </p>
+         </header>
+
+         <h2 id="00" class="subtitle">Index</h2>
+         <table class="table table-striped">
+            <thead>
+               <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Topic</th>
+                  <th scope="col">Description</th>
+               </tr>
+            </thead>
+            <tbody>
+               <tr>
+                  <th scope="row">1</th>
+                  <td>
+                     <a href="#01">topicName</a>
+                  </td>
+                  <td>
+                     <code>Code or description</code>
+                  </td>
+               </tr>
+            </tbody>
+         </table>
+
+         <ul class="list-group">
+            <li class="list-group-item">
+               <a id="01" href="#00">Index</a>
+               <h2 class="subtitle">Stripe Integration</h2>
+               <p class="paragraph">
+                  Stripe is the best software platform for running an internet business. They call themselves <em>the new standard in online payments</em>. And the DOCS are amazing. However... Since Colombia is a backwater, we don't have Stripe here... We will use a dummy test from Stripe for our app. And to do that we need a Stripe account. 
+               </p>
+               <p class="paragraph">
+                  There are many things that can be done with Stripe that we will ignore in the course. We will go to the Developer tab and there we can see our API keys. There is a <strong>Publishable Key</strong> and a <strong>Secret key</strong> which are used in our apps to tell stripe that we want to use their services in our specific account. The Publishable Key is the one we will use for our test, the Secret Key is the one that we need to actually do charges through the use of a backend server. 
+               </p>
+               <p class="paragraph">
+                  <strong>Appropriate Libraries</strong>
+                  <br>
+                  We <code>yarn add react-stripe-checkout</code> We create a new component/stripe-button where we import React and <code>import StripeCheckout from 'react-stripe-checkout'</code>. We create an FC that will get <code>({ price })</code> as a prop. We open {} for our FC because we need to do some conversion. Stripe handles values in cents, therefore we need to convert the price to cents. So we <code>const priceForStripe = price * 100;</code> and we also need our Publishable Key <code>const publishableKey = 'pk_test_JdfuRU40dN6HP7uJ7YMucKqj00nAmG8IWJ'</code>. We get a TS err, and if we ctrl+click we can see the props that this Component can take. There are a lot of props, but there are two mandatory ones <strong>token</strong> and <strong>stripeKey</strong>. token is a FN that takes a token as an argument, and a token has a bunch of things, one of them being a card, that has its own interface with a whole lot of things as well. (I love TS...). We can see the DOCS for more options and a description of what they do. 
+               </p>
+               <p class="paragraph">
+                  <strong>StripeCheckout</strong>
+                  <br>
+                  We use a few props <code>label='Pay Now' name='CRWN Clothing Ltd.' billingAddress shippingAddress</code> Then we add a bunch of other things... Unitl we reach token. Token is the <em>on-success</em> callback that triggers when we submit. We create <code>const onToken = (token: Token) => { console.log(token); alert('Payment Successful')</code>. In a real app we would pass this token to the backend, which then creates the charge, however we don't need this so it is a dummy handler. We pass it as <code>token={onToken}</code> and finally we add <code>stripeKey={publishableKey}</code>. I moved these two to the top of the Component. We then <code>export default StripeCheckoutButton</code>
+               </p>
+               <p class="paragraph">
+                  <strong>Checkout Component</strong>
+                  <br>
+                  We import our StripeCheckoutButton and add it at the bottom <code>StripeCheckoutButton price={total}</code> which now gives us access to the button in our app. Im getting better at TS typing. And if we click it, we get our component show automatically with styling, which is absolutely impressive, it even detects where I am... <strong>Note:</strong> I get an Update available message that says that I am using an older version of Stripe Checkout, and that the newer one is conversion-optimized and supports Apple Pay, Google Pay, and global payment methods. We use the dummy card provided by stripe and we can see that in our console we get the Object for our token that is what allows our backend to process the payment. We need to import a component for this because Stripe uses vanilla JS and these components allow us to not have to do the component from scratch and the integration from scratch by using someones third party code. We then add the warning message for the dummy card into our component. 
+               </p>
+            </li>
+         </ul>
+      </div>
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script
+         src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+         crossorigin="anonymous"
+      ></script>
+      <script
+         src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+         crossorigin="anonymous"
+      ></script>
+      <script
+         src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+         crossorigin="anonymous"
+      ></script>
+   </body>
+</html>
