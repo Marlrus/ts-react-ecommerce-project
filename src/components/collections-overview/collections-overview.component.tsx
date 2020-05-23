@@ -2,7 +2,7 @@ import React from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
 import CollectionPreview from '../collection-preview/collection-preview.component';
-import { selectCollections } from '../../redux/shop/shop.selectors';
+import { selectCollectionsAsArray } from '../../redux/shop/shop.selectors';
 
 import { State } from '../../redux/store.types';
 
@@ -19,7 +19,7 @@ const CollectionsOverview: React.FC<CollectionsOverviewProps> = ({
 );
 
 const mapStateToProps = (state: State) => ({
-   collections: selectCollections(state),
+   collections: selectCollectionsAsArray(state),
 });
 
 const connector = connect(mapStateToProps);

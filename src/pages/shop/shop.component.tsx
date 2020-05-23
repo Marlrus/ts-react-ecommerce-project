@@ -1,6 +1,8 @@
 import React from 'react';
-import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
 import { Route, RouteComponentProps } from 'react-router-dom';
+
+import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
+import CollectionPage from '../collection/collection.component';
 
 const ShopPage: React.FC<RouteComponentProps> = ({ match }) => (
    <div className='shop-page'>
@@ -8,6 +10,10 @@ const ShopPage: React.FC<RouteComponentProps> = ({ match }) => (
          exact
          path={`${match.path}`}
          component={CollectionsOverview}
+      />
+      <Route
+         path={`${match.path}/:collectionId`}
+         component={CollectionPage}
       />
    </div>
 );

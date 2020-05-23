@@ -3,8 +3,9 @@ import React from 'react';
 import CollectionItem from '../collection-item/collection-item.component';
 
 import './collection-preview.styles.scss';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-interface CollectionPreviewProps {
+interface CollectionPreviewProps extends RouteComponentProps {
    title: string;
    items: {
       id: number;
@@ -17,9 +18,18 @@ interface CollectionPreviewProps {
 const CollectionPreview: React.FC<CollectionPreviewProps> = ({
    title,
    items,
+   history,
+   match,
 }) => (
    <div className='collection-preview'>
-      <h1 className='title'>{title.toUpperCase()}</h1>
+      <h1
+         className='title'
+         onClick={() =>
+            history.push(`${match.path}/${title.toLowerCase()}`)
+         }
+      >
+         {title.toUpperCase()}
+      </h1>
       <div className='preview'>
          {items
             .filter((_, index) => index < 4)
@@ -30,4 +40,4 @@ const CollectionPreview: React.FC<CollectionPreviewProps> = ({
    </div>
 );
 
-export default CollectionPreview;
+export default withRouter(CollectionPreview);
