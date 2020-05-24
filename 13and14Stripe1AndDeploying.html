@@ -111,7 +111,12 @@
                <a id="02" href="#00">Index</a>
                <h2 class="subtitle">Deploying to Heroku</h2>
                <p class="paragraph">
-                  I have already done this many times before. We will run <code>heroku create projectName --buildpack https://github.com/mars/create-react-app-buildpack.git</code> A <strong>buildpack</strong> is a specific configuration for the build that we want so that it deploys our react as a <em>static website</em>. This is the best and most efficient way for us to host our react project made with CRA beacause our buildpack is a CRA buildpack. This buildpack will also use the <em>production build</em> of our React App (we don't have to run npm build ourselves). We use the name ecommerce-react-typescript. 
+                  I have already done this many times before. We will run <code>heroku create projectName --buildpack https://github.com/mars/create-react-app-buildpack.git</code> A <strong>buildpack</strong> is a specific configuration for the build that we want so that it deploys our react as a <em>static website</em>. This is the best and most efficient way for us to host our react project made with CRA beacause our buildpack is a CRA buildpack. This buildpack will also use the <em>production build</em> of our React App (we don't have to run npm build ourselves). We use the name ecommerce-react-typescript. <strong>Note:</strong> my build failed because I had a .env file which stopped the build from being executed. This took about 3 minutes to execute. Now we have <a href="https://ecommerce-react-typescript.herokuapp.com/">Our Project</a> up on Heroku. We then added our URL to the <strong>Authorized Domains</strong> in our Firebase Console. 
+               </p>
+               <a id="03" href="#00">Index</a>
+               <h2 class="subtitle">Optimizing Production Build</h2>
+               <p class="paragraph">
+                  How do we remove certain things for production while keeping them available during development, such as our logger? We do <code>if (process.env.NODE_ENV === 'development') middlewares.push(logger)</code> Inside of Node there is an <strong>evniornment</strong> variable. We can set environment variables, or Heroku can se environment variables. CRA has some defaults for this: development, production, test. When the <code>yarn build</code> script is executed, it tells whatever is hosting our app that it needs to switch our node environment variable to <em>production</em>. When we do <code>yarn start</code> and host in our local server, it is set to <em>development</em>. 
                </p>
             </li>
          </ul>

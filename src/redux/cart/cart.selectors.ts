@@ -5,17 +5,17 @@ import { CartState } from './cart.types';
 const selectCart: Selector<State, CartState> = (state) => state.cart;
 
 export const selectCartItems = createSelector(
-   selectCart,
+   [selectCart],
    (cart) => cart.cartItems
 );
 
 export const selectCartHidden = createSelector(
-   selectCart,
+   [selectCart],
    (cart) => cart.hidden
 );
 
 export const selectCartItemsCount = createSelector(
-   selectCartItems,
+   [selectCartItems],
    (cartItems) =>
       cartItems.reduce(
          (accQuantity, cartItem) => accQuantity + cartItem.quantity,
@@ -24,7 +24,7 @@ export const selectCartItemsCount = createSelector(
 );
 
 export const selectCartTotal = createSelector(
-   selectCartItems,
+   [selectCartItems],
    (cartItems) =>
       cartItems.reduce(
          (accTotal, cartItem) =>

@@ -6,6 +6,6 @@ import { UserState } from './user.types';
 const selectUser: Selector<State, UserState> = (state) => state.user;
 
 export const selectCurrentUser = createSelector(
-   selectUser,
+   [selectUser],
    (user) => user.currentUser
 );

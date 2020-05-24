@@ -5,7 +5,7 @@ import { ShopState, collectionIdKeys } from './shop.types';
 const selectShop: Selector<State, ShopState> = (state) => state.shop;
 
 export const selectCollections = createSelector(
-   selectShop,
+   [selectShop],
    (shop) => shop.collections
 );
 
@@ -15,7 +15,7 @@ const convertToArray = <T extends object>(object: T) =>
    );
 
 export const selectCollectionsAsArray = createSelector(
-   selectCollections,
+   [selectCollections],
    (collections) => convertToArray(collections)
 );
 
@@ -23,6 +23,6 @@ export const selectCollection = (
    collectionUrlParam: collectionIdKeys
 ) =>
    createSelector(
-      selectCollections,
+      [selectCollections],
       (collections) => collections[collectionUrlParam]
    );
