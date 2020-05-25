@@ -116,7 +116,47 @@
                <a id="03" href="#00">Index</a>
                <h2 class="subtitle">Optimizing Production Build</h2>
                <p class="paragraph">
-                  How do we remove certain things for production while keeping them available during development, such as our logger? We do <code>if (process.env.NODE_ENV === 'development') middlewares.push(logger)</code> Inside of Node there is an <strong>evniornment</strong> variable. We can set environment variables, or Heroku can se environment variables. CRA has some defaults for this: development, production, test. When the <code>yarn build</code> script is executed, it tells whatever is hosting our app that it needs to switch our node environment variable to <em>production</em>. When we do <code>yarn start</code> and host in our local server, it is set to <em>development</em>. 
+                  How do we remove certain things for production while keeping them available during development, such as our logger? We do <code>if (process.env.NODE_ENV === 'development') middlewares.push(logger)</code> Inside of Node there is an <strong>evniornment</strong> variable. We can set environment variables, or Heroku can se environment variables. CRA has some defaults for this: development, production, test. When the <code>yarn build</code> script is executed, it tells whatever is hosting our app that it needs to switch our node environment variable to <em>production</em>. When we do <code>yarn start</code> and host in our local server, it is set to <em>development</em>. Now we can push to heroku and not use our logger middleware. Heroku makes deploying very easy. 
+               </p>
+               <a id="04" href="#00">Index</a>
+               <h2 class="subtitle">CSS in JS</h2>
+               <p class="paragraph">
+                  One of the problems with CSS is that when it was concieved, we were only creating static websites that were single pages or collections of very few pages, and the styling was very basic. When our apps grow in scale (Facebook has 20,000 React Components), it is more likely that we may accidentally re-use the same class name for CSS styling. The problem is that all CSS shares one single <em>global namespace</em>. When we apply a style to a Component, JS takes that styling and puts it into the <strong>head</strong> of our application. The way we structure our app is a way for us to see how we are applying the styles to the component, however, the way that CSS applies them has not actually changed. In an example that uses the <em>card</em> className as a target, will apply it to any HTML element that has <em>card</em> in it. 
+               </p>
+               <p class="paragraph">
+                  <strong>Solutions 1</strong>
+                  <br>
+                  There was a solution called the BEM convention, which is simply a way of naming your css targets based on the elements, however this creates a lot of mental overhead because it creates absurd css names. Fortunately we can now leverage JS to create our CSS files. React offers a way to do this through the use of the <strong>style</strong> prop in our element. We do this by writing a JS object with css targets and values in a cammelCase format, and passing it to styles <code>div style={ourStyleObj}</code> which adds the styles directly into our HTML element. The problem here is that we don't have access to all of the CSS selectors, such as hover, disabled, nth child, before, etc... 
+               </p>
+               <p class="paragraph">
+                  <strong>CSS to JS</strong>
+                  <br>
+                  There are a few libraries that tackle this issue directly, the most popular one being <strong>styled-components</strong>, which is basically a JS library that renders our styles. There is a mentality that is prevalent that is called the <em>separation of concerns</em>, which web purists take to heart and just adapt to keeping CSS in CSS. The approach of using a CSS to JS library is merging this concerns but it is more inline with the React philosophy of components: <em>compartmentalize all of the code we need into our components.</em> With this approach we would be <em>scoping</em> or CSS to our component. This effectivelly eliminates the possibility of our CSS styling leaking into other components due to the <em>global namespace</em>. 
+               </p>
+               <a id="05" href="#00">Index</a>
+               <h2 class="subtitle">Styled-components</h2>
+               <p class="paragraph">
+                  We do <code>yarn add styled-components</code>. This library creates new Components that are targetted by a style written in CSS kebab-case which we use to replace our HTML elements and creates a unique className for them so that we don't have namespace bleeding. Another benefit is that if we were to re-use a style for an element we could re-use the Component we created with that styling. We can also use Component props to target styles by passing functions to our style-components style object. 
+               </p>
+               <p class="paragraph">
+                  <strong>HomePage conversion (easy)</strong>
+                  <br>
+                  We start by creating <code>homepage.styles.tsx</code> and <code>import styled from 'styled-components'</code>, which prompted us to add the @types/ for it. Then we do <code>const HomePageContainer = styled.div``</code> which opens us to write the styles. And then we copy the styles from ous scss file into our ``. And then we <code>export const HomePageContainer</code> Then in our Component we <code>import { HomePageContainer } from "./homepage.styles";</code> Then we erase all of our div and replace it with <code>HomePageContainer</code>. Now we are not using our scss file and we can see that our unique class name was generated. 
+               </p>
+               <p class="paragraph">
+                  <strong>Header Component (More Complex)</strong>
+                  <br>
+                  We <code>import styled from 'styled-components';</code> and <code>import { Link } from 'react-router-dom';</code> and <code>export const HeaderContaner = styled.div` ... `</code> where we copy from our scss. We create <code>export cont LogoContainer = styled(Link)` ... `</code> because we are using a non native HTML element. This is the format, like a HOC. And then we can put the styles here. We add css to our <code>import styled, { css } from 'styled-components';</code> which allows us to write a block of CSS that we can pass in and render as CSS inside any of our styled components. This is beacuse we are applying the same style to a few components, and this allows us to re-use this code <code>export const OptionLink = styled(Link)`${OptionContainerStyles}`;</code> and do the same for <code>export const OptionDiv</code>. Now we remove all the classNames and replace our HTML elements with our styled-components and we have the same outcome. And adde benefit is that now we can CTRL+Click and see the styling applied to the element directly. 
+               </p>
+               <p class="paragraph">
+                  <strong>Refactoring for less code and overhead</strong>
+                  <br>
+                  There is another way of having shared styles between components. We had an example before that two components shared styles, OptionLink and OptionDiv. We could change OptionDiv to <code>OptionLink as='div'</code> which would apply the same styling but render it and treat it as a div. We could also do this for our custom created components <code>as={ComponentName}</code>. Doing that we could remove the css import, code, and just pass it as Option Link. Now we have less overhead and code, and have perserved the same styles. 
+               </p>
+               <a id="06" href="#00">Index</a>
+               <h2 class="subtitle">Styled-components in our App P2</h2>
+               <p class="paragraph">
+                  
                </p>
             </li>
          </ul>
