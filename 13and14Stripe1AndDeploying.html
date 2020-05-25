@@ -156,7 +156,15 @@
                <a id="06" href="#00">Index</a>
                <h2 class="subtitle">Styled-components in our App P2</h2>
                <p class="paragraph">
-                  We will tackle using our props to alter our styling in the <strong>CustomButton</strong> Component. In this one we import styled and css as well. We create our <code>export const CustomButtonContainer = styled.button` ... `</code> Where we copy and paste our exact sass code including nesting. This means that we get the benefits of SASS and JS. We create a new css <code>const invertedButtonStyles = css ` ... `</code> where we put all the styles and hover code for our inverted button. We do the same for <code>googleSignInStyles</code>. 
+                  We will tackle using our props to alter our styling in the <strong>CustomButton</strong> Component. In this one we import styled and css as well. We create our <code>export const CustomButtonContainer = styled.button` ... `</code> Where we copy and paste our exact sass code including nesting. This means that we get the benefits of SASS and JS. We create a new css <code>const invertedButtonStyles = css ` ... `</code> where we put all the styles and hover code for our inverted button. We do the same for <code>googleSignInStyles</code>. Then we create a Fn to evaluate what styles we need to apply. We create <code>const getButtonStyles = (props: CustomButtonProps) => { ... }</code> Inside we handle first <code>if(props.isGoogleSignin) return googleSignInStyles</code> which will apply our styles based on the props we pass down. Then we want to see if the button is normal or inverted and apply the conditional styles.
+               </p>
+               <p class="paragraph">
+                  <strong>More refactoring</strong>
+                  <br>
+                  We cut the styles form our <code>CustomButtonContainer</code> that pertrain to the styling of a normal vs inverted button and put them in <code>const buttonStyles = css` ... `</code> Here we put background-color, color, border, and then we also put the <code>&:hover { ... }</code> from our main styles. Then we return to our Fn and add the second return <code>return props.inverted ? invertedButtonStyles : buttonStyles</code> which will juggle between our two styles depending on the prop. We basically kept everything that is shared in the CustomButtonContainer const and then everything that varies in the other css`` styles. To make the Fn actually affect the styles we add it to CustomButtonContainer <code>${getButtonStyles}</code> which will apply the style based on the return of our Fn. 
+               </p>
+               <p class="paragraph">
+                  <strong>Refactoring CustomButton Component</strong>. We don't need any logic in our component for the styles anymore so we remove it, and we also don't need to separate the props, so we actually change the FC to deestructure <code>({ children, ...props })</code> Then we <code>CustomButtonContaner {...props}</code> that has <code>{children}</code> inside of it. Now, depending on the props that got passed down, the styling will be applied through our styled-components. Now that we know how to do everything, we could re-factor our app to use this. I will do 2 components. 
                </p>
             </li>
          </ul>

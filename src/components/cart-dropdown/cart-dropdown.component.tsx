@@ -6,7 +6,12 @@ import CustomButton from '../custom-button/custom-button.component';
 import CartItem from '../cart-item/cart-item.component';
 import { selectCartItems } from '../../redux/cart/cart.selectors';
 
-import './cart-dropdown.styles.scss';
+import {
+   CartDropdownContainer,
+   CartItemsDiv,
+   EmptyMessageSpan,
+} from './cart-dropdown.styles';
+
 import { State } from '../../redux/store.types';
 import { toggleCartHidden } from '../../redux/cart/cart.actions';
 
@@ -15,16 +20,16 @@ const Cart: React.FC<CartProps> = ({
    history,
    dispatch,
 }) => (
-   <div className='cart-dropdown'>
-      <div className='cart-items'>
+   <CartDropdownContainer>
+      <CartItemsDiv>
          {cartItems.length > 0 ? (
             cartItems.map((cartItem) => (
                <CartItem key={cartItem.id} item={cartItem} />
             ))
          ) : (
-            <span className='empty-message'>Your cart is empty</span>
+            <EmptyMessageSpan>Your cart is empty</EmptyMessageSpan>
          )}
-      </div>
+      </CartItemsDiv>
       <CustomButton
          onClick={() => {
             history.push('/checkout');
@@ -33,7 +38,7 @@ const Cart: React.FC<CartProps> = ({
       >
          GO TO CHECKOUT
       </CustomButton>
-   </div>
+   </CartDropdownContainer>
 );
 
 const mapStateToProps = (state: State) => ({
