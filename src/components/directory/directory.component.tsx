@@ -8,7 +8,7 @@ import { State } from '../../redux/store.types';
 
 import { DirectoryMenuContainer } from './directory.styles';
 
-//Used in HomePage
+//Used in HomePage (Directory)
 const Directory: React.FC<DirectoryProps> = ({ sections }) => (
    <DirectoryMenuContainer>
       {sections.map(({ id, ...otherSectionProps }) => (

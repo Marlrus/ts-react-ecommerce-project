@@ -3,7 +3,13 @@ import { withRouter } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 
 //Styles
-import './menu-item.styles.scss';
+import {
+   BackgroundImageContainer,
+   ContentContainer,
+   ContentSubtitle,
+   ContentTitle,
+   MenuItemContainer,
+} from './menu-item.styles';
 
 //Types
 
@@ -14,7 +20,7 @@ interface MenuItemProps extends RouteComponentProps {
    linkUrl: string;
 }
 
-//Used in Directory
+//Used in Directory (Directory)
 const MenuItem = ({
    title,
    imageUrl,
@@ -23,19 +29,19 @@ const MenuItem = ({
    linkUrl,
    match,
 }: MenuItemProps) => (
-   <div
-      className={`${size} menu-item`}
+   <MenuItemContainer
       onClick={() => history.push(`${match.url}${linkUrl}`)}
+      style={{ height: `${size ? '380px' : '240px'}` }}
    >
-      <div
-         className='background-image'
+      <BackgroundImageContainer
+         className='MenuItem-background-image'
          style={{ backgroundImage: `url(${imageUrl})` }}
       />
-      <div className='content'>
-         <h1 className='title'>{title.toUpperCase()}</h1>
-         <span className='subtitle'>SHOP NOW</span>
-      </div>
-   </div>
+      <ContentContainer className='MenuItem-content'>
+         <ContentTitle>{title.toUpperCase()}</ContentTitle>
+         <ContentSubtitle>SHOP NOW</ContentSubtitle>
+      </ContentContainer>
+   </MenuItemContainer>
 );
 
 export default withRouter(MenuItem);
