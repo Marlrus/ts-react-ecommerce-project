@@ -4,7 +4,10 @@ import { connect, ConnectedProps } from 'react-redux';
 
 import CollectionItem from '../../components/collection-item/collection-item.component';
 
-import './collection.styles.scss';
+import {
+   CollectionItemsContainer,
+   CollectionPageContainer,
+} from './collection.styles';
 
 import { RouteComponentProps } from 'react-router-dom';
 import { State } from '../../redux/store.types';
@@ -17,14 +20,14 @@ const CollectionPage: React.FC<CollectionPageProps> = ({
 }) => {
    const { title, items } = collection!;
    return (
-      <div className='collection-page'>
+      <CollectionPageContainer>
          <h2 className='title'>{title}</h2>
-         <div className='items'>
+         <CollectionItemsContainer>
             {items.map((item) => (
                <CollectionItem key={item.id} item={item} />
             ))}
-         </div>
-      </div>
+         </CollectionItemsContainer>
+      </CollectionPageContainer>
    );
 };
 
