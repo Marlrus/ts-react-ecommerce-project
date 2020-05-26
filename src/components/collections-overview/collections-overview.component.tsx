@@ -6,16 +6,17 @@ import { selectCollectionsAsArray } from '../../redux/shop/shop.selectors';
 
 import { State } from '../../redux/store.types';
 
-import './collections-overview.styles.scss';
+import { CollectionsOverviewContainer } from './collections-overview.styles';
 
+//Used in ShopPage (Shop)
 const CollectionsOverview: React.FC<CollectionsOverviewProps> = ({
    collections,
 }) => (
-   <div className='collections-overview'>
+   <CollectionsOverviewContainer>
       {collections.map(({ id, ...otherCollectionProps }) => (
          <CollectionPreview key={id} {...otherCollectionProps} />
       ))}
-   </div>
+   </CollectionsOverviewContainer>
 );
 
 const mapStateToProps = (state: State) => ({
