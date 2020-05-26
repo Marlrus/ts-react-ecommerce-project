@@ -3,6 +3,13 @@ import { SHOP_DATA } from './shop.data';
 
 export type ShopState = typeof INITIAL_STATE;
 
+export interface ShopItem {
+   id: number;
+   name: string;
+   imageUrl: string;
+   price: number;
+}
+
 // export type collectionIdKeys =
 //    | 'hats'
 //    | 'jackets'

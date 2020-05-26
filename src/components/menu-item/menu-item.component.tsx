@@ -2,15 +2,15 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { RouteComponentProps } from 'react-router';
 
+//Styles
 import './menu-item.styles.scss';
 
-interface MenuItemProps extends RouteComponentProps {
-   title: string;
-   imageUrl: string;
-   size?: string;
-   linkUrl: string;
-}
+//Types
+import { SectionItem } from '../../redux/directory/directory.types';
 
+type MenuItemProps = RouteComponentProps & SectionItem;
+
+//Used in Directory
 const MenuItem = ({
    title,
    imageUrl,

@@ -6,16 +6,13 @@ import { addItem } from '../../redux/cart/cart.actions';
 
 import './collection-item.styles.scss';
 import { CartActions } from '../../redux/cart/cart.types';
+import { ShopItem } from '../../redux/shop/shop.types';
 
 interface CollectionItemProps {
-   item: {
-      id: number;
-      name: string;
-      imageUrl: string;
-      price: number;
-   };
+   item: ShopItem;
 }
 
+//USED IN CollectionPage
 const CollectionItem: React.FC<
    CollectionItemProps & CollectionItemProps2
 > = ({ item, addItem }) => {

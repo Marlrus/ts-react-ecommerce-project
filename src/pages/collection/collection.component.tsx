@@ -11,6 +11,7 @@ import { State } from '../../redux/store.types';
 import { selectCollection } from '../../redux/shop/shop.selectors';
 import { collectionIdKeys } from '../../redux/shop/shop.types';
 
+//USED IN ShopPage
 const CollectionPage: React.FC<CollectionPageProps> = ({
    collection,
 }) => {
