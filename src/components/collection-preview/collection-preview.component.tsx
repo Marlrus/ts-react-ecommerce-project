@@ -1,43 +1,44 @@
 import React from 'react';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import CollectionItem from '../collection-item/collection-item.component';
 
-import './collection-preview.styles.scss';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import {
+   CollectionPreviewContainer,
+   PreviewContainer,
+   CollectionTitle,
+} from './collection-preview.styles';
+
+import { ShopItem } from '../../redux/shop/shop.types';
 
 interface CollectionPreviewProps extends RouteComponentProps {
    title: string;
-   items: {
-      id: number;
-      name: string;
-      imageUrl: string;
-      price: number;
-   }[];
+   items: ShopItem[];
 }
 
+//Used in CollectionsOverview (Shop)
 const CollectionPreview: React.FC<CollectionPreviewProps> = ({
    title,
    items,
    history,
    match,
 }) => (
-   <div className='collection-preview'>
-      <h1
-         className='title'
+   <CollectionPreviewContainer>
+      <CollectionTitle
          onClick={() =>
             history.push(`${match.path}/${title.toLowerCase()}`)
          }
       >
          {title.toUpperCase()}
-      </h1>
-      <div className='preview'>
+      </CollectionTitle>
+      <PreviewContainer>
          {items
             .filter((_, index) => index < 4)
             .map((item) => (
                <CollectionItem key={item.id} item={item} />
             ))}
-      </div>
-   </div>
+      </PreviewContainer>
+   </CollectionPreviewContainer>
 );
 
 export default withRouter(CollectionPreview);
