@@ -8,7 +8,6 @@ import {
    auth,
 } from '../../firebase/firebase.utils';
 
-import './sign-in.styles.scss';
 import {
    ButtonContainer,
    SignInContainer,
