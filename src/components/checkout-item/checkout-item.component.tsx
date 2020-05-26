@@ -1,8 +1,18 @@
 import React, { Dispatch } from 'react';
 
-import './checkout-item.styles.scss';
+//Style
+import {
+   CheckoutItemContainer,
+   ImageContainer,
+   TextContainer,
+   QuantityContainer,
+   RemoveButtonContainer,
+} from './checkout-item.styles';
 
+//Types
 import { CartItem, CartActions } from '../../redux/cart/cart.types';
+
+//Redux
 import { connect, ConnectedProps } from 'react-redux';
 import {
    clearItemFromCart,
@@ -22,12 +32,12 @@ const CheckoutItem: React.FC<CheckoutItemProps> = ({
 }) => {
    const { name, imageUrl, price, quantity } = cartItem;
    return (
-      <div className='checkout-item'>
-         <div className='image-container'>
+      <CheckoutItemContainer>
+         <ImageContainer>
             <img src={imageUrl} alt={`item: ${name}`} />
-         </div>
-         <span className='name'>{name}</span>
-         <span className='quantity'>
+         </ImageContainer>
+         <TextContainer>{name}</TextContainer>
+         <QuantityContainer>
             <div
                className='arrow'
                onClick={() =>
@@ -38,19 +48,14 @@ const CheckoutItem: React.FC<CheckoutItemProps> = ({
             >
                &#10094;
             </div>
-            <span className='value'>{quantity}</span>
-            <div className='arrow' onClick={() => addItem(cartItem)}>
-               &#10095;
-            </div>
-         </span>
-         <span className='price'>{price}</span>
-         <div
-            className='remove-button'
-            onClick={() => clearItem(cartItem)}
-         >
+            <span>{quantity}</span>
+            <div onClick={() => addItem(cartItem)}>&#10095;</div>
+         </QuantityContainer>
+         <TextContainer>{price}</TextContainer>
+         <RemoveButtonContainer onClick={() => clearItem(cartItem)}>
             &#10005;
-         </div>
-      </div>
+         </RemoveButtonContainer>
+      </CheckoutItemContainer>
    );
 };
 
