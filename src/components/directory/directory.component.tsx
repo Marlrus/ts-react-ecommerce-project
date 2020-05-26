@@ -6,15 +6,15 @@ import { selectDirectorySection } from '../../redux/directory/directory.selector
 
 import { State } from '../../redux/store.types';
 
-import './directory.styles.scss';
+import { DirectoryMenuContainer } from './directory.styles';
 
 //Used in HomePage
 const Directory: React.FC<DirectoryProps> = ({ sections }) => (
-   <div className='directory-menu'>
+   <DirectoryMenuContainer>
       {sections.map(({ id, ...otherSectionProps }) => (
          <MenuItem key={id} {...otherSectionProps} />
       ))}
-   </div>
+   </DirectoryMenuContainer>
 );
 
 const mapStateToProps = (state: State) => ({
