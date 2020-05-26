@@ -9,6 +9,11 @@ import {
 } from '../../firebase/firebase.utils';
 
 import './sign-in.styles.scss';
+import {
+   ButtonContainer,
+   SignInContainer,
+   SignInTitle,
+} from './sign-in.styles';
 
 interface SignInState {
    [key: string]: string;
@@ -44,8 +49,8 @@ class SignIn extends React.Component<any, SignInState> {
 
    render() {
       return (
-         <div className='sign-in'>
-            <h2 className='title'>I already have an Account</h2>
+         <SignInContainer>
+            <SignInTitle>I already have an Account</SignInTitle>
             <span>Sign in with your email and password</span>
 
             <form onSubmit={this.handleSubmit}>
@@ -65,7 +70,7 @@ class SignIn extends React.Component<any, SignInState> {
                   handleChange={this.handleChange}
                   required
                />
-               <div className='buttons'>
+               <ButtonContainer>
                   <CustomButton type='submit'> Sign in </CustomButton>
                   <CustomButton
                      onClick={signInWithGoogle}
@@ -74,9 +79,9 @@ class SignIn extends React.Component<any, SignInState> {
                   >
                      Sign in with Google
                   </CustomButton>
-               </div>
+               </ButtonContainer>
             </form>
-         </div>
+         </SignInContainer>
       );
    }
 }
