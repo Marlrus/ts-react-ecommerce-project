@@ -1,36 +1,43 @@
 import React, { Dispatch } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 
-import CustomButton from '../custom-button/custom-button.component';
 import { addItem } from '../../redux/cart/cart.actions';
 
-import './collection-item.styles.scss';
+import {
+   AddButton,
+   PriceContainer,
+   BackgroundImage,
+   CollectionFooterContainer,
+   CollectionItemContainer,
+   NameContainer,
+} from './collection-item.styles';
+
 import { CartActions } from '../../redux/cart/cart.types';
 import { ShopItem } from '../../redux/shop/shop.types';
 
-interface CollectionItemProps {
+interface ItemProps {
    item: ShopItem;
 }
 
 //USED IN CollectionPage
-const CollectionItem: React.FC<
-   CollectionItemProps & CollectionItemProps2
-> = ({ item, addItem }) => {
+const CollectionItem: React.FC<CollectionItemProps> = ({
+   item,
+   addItem,
+}) => {
    const { imageUrl, name, price } = item;
    return (
-      <div className='collection-item'>
-         <div
-            className='image'
+      <CollectionItemContainer>
+         <BackgroundImage
             style={{ backgroundImage: `url(${imageUrl})` }}
          />
-         <div className='collection-footer'>
-            <span className='name'> {name} </span>
-            <span className='price'> ${price} </span>
-         </div>
-         <CustomButton onClick={() => addItem(item)} inverted>
+         <CollectionFooterContainer>
+            <NameContainer> {name} </NameContainer>
+            <PriceContainer> ${price} </PriceContainer>
+         </CollectionFooterContainer>
+         <AddButton onClick={() => addItem(item)} inverted>
             Add to Cart
-         </CustomButton>
-      </div>
+         </AddButton>
+      </CollectionItemContainer>
    );
 };
 
@@ -40,6 +47,7 @@ const mapDispatchToProps = (dispatch: Dispatch<CartActions>) => ({
 
 const connector = connect(null, mapDispatchToProps);
 
-type CollectionItemProps2 = ConnectedProps<typeof connector>;
+export type CollectionItemProps = ConnectedProps<typeof connector> &
+   ItemProps;
 
 export default connector(CollectionItem);
