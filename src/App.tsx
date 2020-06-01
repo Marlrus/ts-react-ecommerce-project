@@ -12,11 +12,14 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up
 import CheckoutPage from './pages/checkout/checkout.component';
 //components
 import Header from './components/header/header.component';
+
+//Utils
 import {
    auth,
    createUserProfileDocument,
 } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/user.actions';
+
 //types
 import { UserActions, CurrentUser } from './redux/user/user.types';
 import { State } from './redux/store.types';

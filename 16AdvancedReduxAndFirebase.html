@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>Advanced Redux and Firebase</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">Advanced Redux and Firebase<hr></h1>
+		<header>	
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">Moving our Shop Data to Firebase</h2>
+				<p class="paragraph">
+					The first videos of the module where review of Firestore. The most important parts are that Firestore is a DB that stores data in collections that have documents. And these documents can have collections of their own with documents and etc... Similar to how objects work, our collection would be a <em>key</em> and our documents are the <em>values</em>. <code>{ collection: value[ nestedCollection:  value[ ... ] ]}</code> etc... Another thing to note, is that documents on Firestore, don't have to follow a schema, meaning that different documents under the same collection can have different fields. This gives us flexibility, but may cause problems on front end interaction. 
+				</p>
+				<p class="paragraph">
+					<strong>Firestore Types of Properties</strong>
+					<br>
+					We can store <em>number, boolean, map, array, null, timestamp, geopoint</em>. Map is a JSON that has a unique key. Arrays are like <em>maps</em> but the index (number) is the key. We want to create a collection from our codebase. 
+				</p>
+				<p class="paragraph">
+					<strong>Setting our collections</strong>
+					<br>
+					We go to <strong>firebase.utils.js</strong> and create a new Fn <code>export const addCollectionAndDocuments = ( collectionKey, objectsToAdd ) => { const collectionRef = fitestore.collection(collectionKey); console.log(collectionRef) }</code> which we will use to create a new collection by passing the objects to it. We want to pass the shop collections, so we import a selector from <em>SHOP</em> in our mapStateToProps() <code>collectionsArray: selectCollectionsAsArray(state)</code> which will pass it to the props of App. We destructure it in our Component. Then, after our userAuth logic, we add it <code>addCollectionAndDocuments('collections;, collectionsArray)</code> and we can see it in our console, where we can see our collectionRef.
+				</p>
+				<p class="paragraph">
+					<strong>passing the data</strong>
+					<br>
+					We go to firebase utils where we will do a <strong>batch write</strong>: a way to group all our calls together into one big requests. We want this because we want consistency, and this ensures that if one of our saves fails, the whole transaction will fail if it happens in the middle of saving. We use <code>const batch = firestore.batch()</code> which gives us the batch object. Then we want to loop through all the objects to add <code>objectsToAdd.forEach(obj=> { ... })</code>. Inside we <code>const newDocRef = collectionRef.doc()</code> which tells Firestore to give us a new document reference in the collection and generate a random id for it. Whatever we pass inside doc() will become the id, which we could do if we wanted. However, it is best to generate a random id that cannot collide with another name. Now, instead of doing <code>newDocRef.set()</code> like we did before, we will do <code>batch.set(newDocRef, obj)</code> which batch creates. After this Fn, we call <code>batch.commit()</code> We make our Fn async and <code>return await batch.commit()</code> which will only return if the whole batch of calls succeeds. 
+				</p>
+				<p class="paragraph">
+					<strong>Data Considerations</strong>
+					<br>
+					Our data at the moment, holds values that we don't want in the db, like the routeName and the id because we are asking firestore to generate them for us. We do this in our App Component in addCollectionAndDocuments() <code>collectionsArray.map( ({ title, items }) => ({ title, items }) )</code> which will pass a new array with objects where title: title, and items: items. Now that we did this, we need to remove the code from the component so that we don't create the documents again. However, we have our util Fn to re-use if we need to add docs from the front end to the back end in the future. 
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>
