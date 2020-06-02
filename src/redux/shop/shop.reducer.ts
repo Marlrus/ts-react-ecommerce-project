@@ -1,4 +1,3 @@
-import { SHOP_DATA } from './shop.data';
 import {
    ShopActionTypes,
    ShopState,
@@ -7,8 +6,8 @@ import {
 
 import { Reducer } from 'react';
 
-export const INITIAL_STATE = {
-   collections: SHOP_DATA,
+const INITIAL_STATE = {
+   collections: null,
 };
 
 const shopReducer: Reducer<ShopState, ShopActions> = (

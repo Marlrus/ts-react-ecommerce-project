@@ -4,7 +4,7 @@
 // export type ShopState = typeof INITIAL_STATE;
 
 export interface ShopState {
-   collections: ShopMap;
+   collections: ShopMap | null;
 }
 
 export type ShopMap = {

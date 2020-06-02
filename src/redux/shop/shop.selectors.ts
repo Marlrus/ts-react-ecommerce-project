@@ -16,13 +16,12 @@ const convertToArray = <T extends object>(object: T) =>
 
 export const selectCollectionsAsArray = createSelector(
    [selectCollections],
-   (collections) => convertToArray(collections)
+   (collections) => (collections ? convertToArray(collections) : [])
 );
 
 export const selectCollection = (
    collectionUrlParam: collectionIdKeys
 ) =>
-   createSelector(
-      [selectCollections],
-      (collections) => collections[collectionUrlParam]
+   createSelector([selectCollections], (collections) =>
+      collections ? collections[collectionUrlParam] : null
    );

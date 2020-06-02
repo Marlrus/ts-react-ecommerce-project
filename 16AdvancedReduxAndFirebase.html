@@ -136,7 +136,25 @@
 				<a id="04" href="#00">Index</a>
 				<h2 class="subtitle">WithSpinner HOC</h2>
 				<p class="paragraph">
-					Since we are getting the data from the Backend, we don't need to use INITIAL_STATE or SHOP_DATA anymore. 
+					Since we are getting the data from the Backend, we don't need to use INITIAL_STATE or SHOP_DATA anymore. We then go to INITIAL_STATE and <code>collections: null</code>, which will cause errs. We have to fix our selector <code>selectCollectionsAsArray()</code> so that it can handle a null object, we do <code>collections => collections ? convertToArray(collections) : null</code> which fixes one of our issues. The other issue is with our selectCollecion selector, which also expects an object. Here we need to <code>collections ? collections[collectionUrlParam] : null</code>, which removes the err. Now the components that use this selector will explicitly use null and know that there is no data being passed, rendering an empty state if needed. 
+				</p>
+				<p class="paragraph">
+					<strong>Loading State Err</strong>
+					<br>
+					We get an err from our CollectionPage Component because it is expecting a property title and items from collection that it is not getting before the data is fetched from Firestore. What we want to do is render a spinner of some kind while the data is being fetched. We will create a <strong>Spinner Component</strong> that uses the HOC pattern we have used before. We create the folder and styles. Copy in the styles for our styled-component. We import SpinnerOverlay and SpinnerContainer: The overlay ensures that our spinner is always centered. We then create <code>const WithSpinner = (WrappedComponent: React.FC) => ({ isLoading, ...otherProps}) => { ... }</code> where we will pass an isLoading boolean to determine what we return. Inside we do <code>return isLoading ? ( ... ) : ( ... )</code> Where we return SpinnerOverlay with SpinnerContainer as a child if we are loading, and our <code>WrappedComponent { ...otherProps }</code> if we aren't.
+				</p>
+				<p class="paragraph">
+					<strong>Where to place WithSpinner Logic and Component</strong>
+					<br>
+					We place the logic inside our ShopPage because it is the one that handles the updating of our collections. It knows when the data is being loaded, and when it is finshed loading through our Fn. We import WithSpinner and then we go to our component. Here Yihua uses state = ... but since we are using an FC that uses hooks we do <code>const [loading, setLoading] = useState({loading: true})</code> which will set the state to that object. setLoading() is a Fn that will update the state. In our useEffect() hook we place <code>setLoading({ loading: false })</code> right after updateCollections which will set loading in our state to false. 
+				</p>
+				<p class="paragraph">
+					I had some errors with the WithSpinner HOC, I had to use different typing <code>WrappedComponent: React.ComponentType&lt;any></code> in order to get it to work. This is less than ideal. Then I went back to the ShopPage component and <code>const CollectionsOverviewWithSpinner = WithSpinner(CollectionsOverview)</code> and the same for CollectionPage. Then we go into our route component and change the component={...} prop to <code>render={(props) => ( ... )}</code> Where we render inside <code>CollectionsOverviewWithSpinner isLoading={loading} {...props}</code> Which takes the state we set with useState(). Here I had to destructure it <code>const { loading } = loadingState;</code> that comes from <code> const [loadingState, setLoading] = useState({ loading: true });</code> And we do the same thing for CollectionPageWithSpinner. Now when we go to any of the paths and refresh the page, we will see the spinner display while the content is being loaded. In second thought, having the generic ANY doesn't affect the logic in our components becasue this isLoading prop is temporary and we are not wrapping our component in our new WithSpinner HOC. We can now use this HOC whenever we need to do async fetching. 
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">Optional: How to build HOCs</h2>
+				<p class="paragraph">
+					The HOC is a very common pattern in the React Ecosystem. We will write our Own. 
 				</p>
 			</li>
 		</ul>

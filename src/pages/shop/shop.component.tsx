@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
+import WithSpinner from '../../components/with-spinner/with-spinner.component';
 
 import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
 import CollectionPage from '../collection/collection.component';
@@ -13,12 +14,19 @@ import {
 import { ShopActions, ShopMap } from '../../redux/shop/shop.types';
 import { updateCollections } from '../../redux/shop/shop.actions';
 
+const CollectionsOverviewWithSpinner = WithSpinner(
+   CollectionsOverview
+);
+const CollectionPageWithSpinner = WithSpinner(CollectionPage);
+
 //Used in App Component and anything that routes to /shop
 const ShopPage: React.FC<ShopPageProps> = ({
    match,
    updateCollections,
 }) => {
    // const unsubscribeFromSnapshot = null;
+
+   const [loadingState, setLoading] = useState({ loading: true });
 
    useEffect(() => {
       const collectionRef = firestore.collection('collections');
@@ -28,19 +36,32 @@ const ShopPage: React.FC<ShopPageProps> = ({
             snapshot
          );
          updateCollections(collectionsMap);
+         setLoading({ loading: false });
       });
    });
+
+   const { loading } = loadingState;
 
    return (
       <div className='shop-page'>
          <Route
             exact
             path={`${match.path}`}
-            component={CollectionsOverview}
+            render={(props) => (
+               <CollectionsOverviewWithSpinner
+                  isLoading={loading}
+                  {...props}
+               />
+            )}
          />
          <Route
             path={`${match.path}/:collectionId`}
-            component={CollectionPage}
+            render={(props) => (
+               <CollectionPageWithSpinner
+                  isLoading={loading}
+                  {...props}
+               />
+            )}
          />
       </div>
    );
