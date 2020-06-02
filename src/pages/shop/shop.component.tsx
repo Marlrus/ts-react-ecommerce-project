@@ -24,7 +24,7 @@ const ShopPage: React.FC<ShopPageProps> = ({
    match,
    updateCollections,
 }) => {
-   // const unsubscribeFromSnapshot = null;
+   // const unsubscribeFromSnapshot: Function | null = null;
 
    const [loadingState, setLoading] = useState({ loading: true });
 
@@ -38,7 +38,7 @@ const ShopPage: React.FC<ShopPageProps> = ({
          updateCollections(collectionsMap);
          setLoading({ loading: false });
       });
-   });
+   }, [updateCollections]);
 
    const { loading } = loadingState;
 
