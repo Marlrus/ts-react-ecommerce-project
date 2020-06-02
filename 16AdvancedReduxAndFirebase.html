@@ -100,6 +100,44 @@
 					<br>
 					Our data at the moment, holds values that we don't want in the db, like the routeName and the id because we are asking firestore to generate them for us. We do this in our App Component in addCollectionAndDocuments() <code>collectionsArray.map( ({ title, items }) => ({ title, items }) )</code> which will pass a new array with objects where title: title, and items: items. Now that we did this, we need to remove the code from the component so that we don't create the documents again. However, we have our util Fn to re-use if we need to add docs from the front end to the back end in the future. 
 				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">Moving our Shop Data to Our App</h2>
+				<p class="paragraph">
+					We need to pull the data from Firestore, and then pass it into our reducer and storing it in our redux so that our app has access to it. We need to consider what part of the data we need for the Front-end and what we have in the backend. We removed parts of the data because we don't need it in the DB, now we need to create it for the front end again. Another consideration is in what part of our component tree we need to put this data and the code that fetches it. If we have two branches that need that data, we need to call the data and store it in the parent component of that tree so that we only have to fetch it once to pass it down both branches. 
+				</p>
+				<p class="paragraph">
+					<strong>Shop Component</strong>
+					<br>
+					We want to have the state in our Shop Component, until now we have done it using a class component. I will attempt to do this using a FC instead of what Yihua does. I used <code>{ ... return( ... )}</code> to get JS access to our hooks. I read the docs and found that useEffect() is what replaces componentDidMount(). I did <code>useEffect(() => { ... })</code> where we create <code>const collectionRef = firestore.collection('collections')</code> which will fetch the collection snapShot from firebase. Then we <code>collectionRef.onSnapshot(async snapshot => { console.log(snapshot) })</code> to see what we get. We can see that we get a docs prop in the object that is an array of 5 items, that holds the id for each collection.
+				</p>
+				<p class="paragraph">
+					<strong>Transforming the data</strong>
+					<br>
+					We will create a util Fn in our <strong>firebase.utils.js</strong> to handle this. We create <code>export const convertCollectionsSnapshotToMap = (collections) => { ... }</code> inside we create <code>const transformedCollection = collections.docs.map(doc => { ... } )</code> to get the data from the snapshot we need to call data() on the doc itself. We want to destructure what we need for our our frontend <code>const { title, items } = doc.data()</code> then we want to return our re-structured object <code>return{ routeName: encodeURI(title.toLoweCase()), ... }</code> encodeURI() is a JS method that converts all strings to a valid URI string by replacing invalid values with valid values. And we toLowerCase() to keep our routes standard when we use routeName to route. Then we do <code>{ ... id: doc.id, title, items }</code> which will return the object that we need. We add a console.log() to see it. We go to our shopComponent and in our collectionRef.onSnapshot() we call <code>convertCollectionsSnapshotToMap(snapshot)</code> which we can see returns an array of the objects structured as we need them to be. 
+				</p>
+				<a id="03" href="#00">Index</a>
+				<h2 class="subtitle">Adding Shop Data to Redux</h2>
+				<p class="paragraph">
+					Now that we have our array, we need to set it to the structure we had <strong>normalized data</strong>. To do this we go to our util and do <code>return transformedCollection.reduce( ... , {})</code> where we have an empty object as a starting value. Then we <code>(accumulator, collection) => { accumulator[collection.title.toLowerCase()] = collection; return accumulator }</code> This will create a new key in our {} using the collection.title converted to lowecase, and then set the value to the object in the collection array. Then we return it to the next iteration of the reducer. 
+				</p>
+				<p class="paragraph">
+					<strong>Updating the redux reducer</strong>
+					<br>
+					We go the types file and create <code>export const ShopActionTypes = { UPDATE_COLLECTIONS: 'UPDATE_COLLECTIONS' } as const</code> which will be used for our actions. Then we create a <strong>shop.actions.ts</strong> We import the types and create a new action: <code>export const updateCollections = ( collectionsMap: ShopMap ): ShopActions => ({ ... })</code> that required extensive re-typing and type creation in our types file. Inside we <code>type: ShopActionTypes.UPDATE_COLLECTIONS, payload: collectionsMap</code> that will return our action.
+				</p>
+				<p class="paragraph">
+					<strong>Shop reducer & Shop Component</strong>
+					<br>
+					We type our reducer <code>const shopReducer: Reducer&lt;ShopState, ShopActions> = ( ... )</code> where we create a new case for our switch <code>case ShopActionTypes.UPDATE_COLLECTIONS: return { ...state, collections: action.payload }</code> which will create our new object that will be passed to the root reducer. Now that we have that set up, we need to use it in the shop Component where we need to use connect. Since we are passing an action we need to create our mapDispatchToProps(), then do our connector(), ConnectedProps generic, and finally wrap our component in connector(). Then we destructure our updateCollections() from the props so that we use the dispatch() version of our action, and everything is working. 
+				</p>
+			</li>
+			<h2>Section 17 HOC Patterns</h2>
+			<li class="list-group-item">
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">WithSpinner HOC</h2>
+				<p class="paragraph">
+					Since we are getting the data from the Backend, we don't need to use INITIAL_STATE or SHOP_DATA anymore. 
+				</p>
 			</li>
 		</ul>
 	</div>

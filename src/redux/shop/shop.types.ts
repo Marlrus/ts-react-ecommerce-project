@@ -1,7 +1,27 @@
-import { INITIAL_STATE } from './shop.reducer';
-import { SHOP_DATA } from './shop.data';
+// import { INITIAL_STATE } from './shop.reducer';
+// import { SHOP_DATA } from './shop.data';
 
-export type ShopState = typeof INITIAL_STATE;
+// export type ShopState = typeof INITIAL_STATE;
+
+export interface ShopState {
+   collections: ShopMap;
+}
+
+export type ShopMap = {
+   [key in collectionIdKeys]: {
+      id: number;
+      title: string;
+      routeName: string;
+      items: ShopItem[];
+   };
+};
+
+export type collectionIdKeys =
+   | 'hats'
+   | 'sneakers'
+   | 'jackets'
+   | 'womens'
+   | 'mens';
 
 export interface ShopItem {
    id: number;
@@ -10,6 +30,10 @@ export interface ShopItem {
    price: number;
 }
 
+export const ShopActionTypes = {
+   UPDATE_COLLECTIONS: 'UPDATE_COLLECTIONS',
+} as const;
+
 // export type collectionIdKeys =
 //    | 'hats'
 //    | 'jackets'
@@ -17,4 +41,9 @@ export interface ShopItem {
 //    | 'womens'
 //    | 'mens';
 
-export type collectionIdKeys = keyof typeof SHOP_DATA;
+interface updateCollectionsAction {
+   type: typeof ShopActionTypes.UPDATE_COLLECTIONS;
+   payload: ShopMap;
+}
+
+export type ShopActions = updateCollectionsAction;
