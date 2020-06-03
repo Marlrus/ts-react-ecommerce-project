@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 import WithSpinner from '../../components/with-spinner/with-spinner.component';
@@ -6,13 +6,11 @@ import WithSpinner from '../../components/with-spinner/with-spinner.component';
 import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
 import CollectionPage from '../collection/collection.component';
 
-import {
-   firestore,
-   convertCollectionsSnapshotToMap,
-} from '../../firebase/firebase.utils';
-
-import { ShopActions, ShopMap } from '../../redux/shop/shop.types';
-import { updateCollections } from '../../redux/shop/shop.actions';
+import { ShopActions, ShopState } from '../../redux/shop/shop.types';
+import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
+import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
+import { State } from '../../redux/store.types';
+import { ThunkDispatch } from 'redux-thunk';
 
 const CollectionsOverviewWithSpinner = WithSpinner(
    CollectionsOverview
@@ -22,25 +20,14 @@ const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 //Used in App Component and anything that routes to /shop
 const ShopPage: React.FC<ShopPageProps> = ({
    match,
-   updateCollections,
+   isCollectionFetching,
+   fetchCollectionsStartAsync,
 }) => {
    // const unsubscribeFromSnapshot: Function | null = null;
 
-   const [loadingState, setLoading] = useState({ loading: true });
-
    useEffect(() => {
-      const collectionRef = firestore.collection('collections');
-
-      collectionRef.onSnapshot(async (snapshot) => {
-         const collectionsMap = convertCollectionsSnapshotToMap(
-            snapshot
-         );
-         updateCollections(collectionsMap);
-         setLoading({ loading: false });
-      });
-   }, [updateCollections]);
-
-   const { loading } = loadingState;
+      fetchCollectionsStartAsync();
+   }, [fetchCollectionsStartAsync]);
 
    return (
       <div className='shop-page'>
@@ -49,7 +36,7 @@ const ShopPage: React.FC<ShopPageProps> = ({
             path={`${match.path}`}
             render={(props) => (
                <CollectionsOverviewWithSpinner
-                  isLoading={loading}
+                  isLoading={isCollectionFetching}
                   {...props}
                />
             )}
@@ -58,7 +45,7 @@ const ShopPage: React.FC<ShopPageProps> = ({
             path={`${match.path}/:collectionId`}
             render={(props) => (
                <CollectionPageWithSpinner
-                  isLoading={loading}
+                  isLoading={isCollectionFetching}
                   {...props}
                />
             )}
@@ -67,14 +54,18 @@ const ShopPage: React.FC<ShopPageProps> = ({
    );
 };
 
-const mapDispatchToProps = (
-   dispatch: React.Dispatch<ShopActions>
-) => ({
-   updateCollections: (collectionsMap: ShopMap) =>
-      dispatch(updateCollections(collectionsMap)),
+const mapStateToProps = (state: State) => ({
+   isCollectionFetching: selectIsCollectionFetching(state),
 });
 
-const connector = connect(null, mapDispatchToProps);
+const mapDispatchToProps = (
+   dispatch: ThunkDispatch<ShopState, undefined, ShopActions>
+) => ({
+   fetchCollectionsStartAsync: () =>
+      dispatch(fetchCollectionsStartAsync()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type ShopPageProps = ConnectedProps<typeof connector> &
    RouteComponentProps;

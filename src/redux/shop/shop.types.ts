@@ -5,6 +5,8 @@
 
 export interface ShopState {
    collections: ShopMap | null;
+   isFetching: boolean;
+   errorMessage: string | undefined;
 }
 
 export type ShopMap = {
@@ -32,6 +34,9 @@ export interface ShopItem {
 
 export const ShopActionTypes = {
    UPDATE_COLLECTIONS: 'UPDATE_COLLECTIONS',
+   FETCH_COLLECTIONS_START: 'FETCH_COLLECTIONS_START',
+   FETCH_COLLECTIONS_SUCCESS: 'FETCH_COLLECTIONS_SUCCESS',
+   FETCH_COLLECTIONS_FAILURE: 'FETCH_COLLECTIONS_FAILURE',
 } as const;
 
 // export type collectionIdKeys =
@@ -46,4 +51,22 @@ interface updateCollectionsAction {
    payload: ShopMap;
 }
 
-export type ShopActions = updateCollectionsAction;
+interface fetchCollectionsStartAction {
+   type: typeof ShopActionTypes.FETCH_COLLECTIONS_START;
+}
+
+interface fetchCollectionsSuccessAction {
+   type: typeof ShopActionTypes.FETCH_COLLECTIONS_SUCCESS;
+   payload: ShopMap;
+}
+
+interface fetchCollectionsFailureAction {
+   type: typeof ShopActionTypes.FETCH_COLLECTIONS_FAILURE;
+   payload: string;
+}
+
+export type ShopActions =
+   | updateCollectionsAction
+   | fetchCollectionsStartAction
+   | fetchCollectionsSuccessAction
+   | fetchCollectionsFailureAction;
