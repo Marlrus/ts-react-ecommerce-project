@@ -1,30 +1,19 @@
 import React, { useEffect } from 'react';
 import { Route, RouteComponentProps } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
-import WithSpinner from '../../components/with-spinner/with-spinner.component';
 
-import CollectionsOverview from '../../components/collections-overview/collections-overview.component';
-import CollectionPage from '../collection/collection.component';
+import CollectionsOverviewContainer from '../../components/collections-overview/collections-overview.container';
+import CollectionPageContainer from '../../pages/collection/collection.container';
 
 import { ShopActions, ShopState } from '../../redux/shop/shop.types';
 import { fetchCollectionsStartAsync } from '../../redux/shop/shop.actions';
-import { selectIsCollectionFetching } from '../../redux/shop/shop.selectors';
-import { State } from '../../redux/store.types';
 import { ThunkDispatch } from 'redux-thunk';
-
-const CollectionsOverviewWithSpinner = WithSpinner(
-   CollectionsOverview
-);
-const CollectionPageWithSpinner = WithSpinner(CollectionPage);
 
 //Used in App Component and anything that routes to /shop
 const ShopPage: React.FC<ShopPageProps> = ({
    match,
-   isCollectionFetching,
    fetchCollectionsStartAsync,
 }) => {
-   // const unsubscribeFromSnapshot: Function | null = null;
-
    useEffect(() => {
       fetchCollectionsStartAsync();
    }, [fetchCollectionsStartAsync]);
@@ -34,29 +23,15 @@ const ShopPage: React.FC<ShopPageProps> = ({
          <Route
             exact
             path={`${match.path}`}
-            render={(props) => (
-               <CollectionsOverviewWithSpinner
-                  isLoading={isCollectionFetching}
-                  {...props}
-               />
-            )}
+            component={CollectionsOverviewContainer}
          />
          <Route
             path={`${match.path}/:collectionId`}
-            render={(props) => (
-               <CollectionPageWithSpinner
-                  isLoading={isCollectionFetching}
-                  {...props}
-               />
-            )}
+            component={CollectionPageContainer}
          />
       </div>
    );
 };
-
-const mapStateToProps = (state: State) => ({
-   isCollectionFetching: selectIsCollectionFetching(state),
-});
 
 const mapDispatchToProps = (
    dispatch: ThunkDispatch<ShopState, undefined, ShopActions>
@@ -65,7 +40,7 @@ const mapDispatchToProps = (
       dispatch(fetchCollectionsStartAsync()),
 });
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(null, mapDispatchToProps);
 
 type ShopPageProps = ConnectedProps<typeof connector> &
    RouteComponentProps;

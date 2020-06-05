@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>19 Container Patter 20 Redux-Saga</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">19 Container Patter 20 Redux-Saga<hr></h1>
+		<header>
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">Container Pattern</h2>
+				<p class="paragraph">
+					At the moment we are passing two values to our ShopComponent that we only use to pass down to our children components, however we do nothing else with these props. These are polluting our ShopPage component because we are not using them for anything, which is redundant. Components shouldn't know things that don't concern them. In our case, ShopPage doesn't care weather the children components are loading or not. We will fix this through a HOC using the Container Pattern.
+				</p>
+				<p class="paragraph">
+					<strong>collections-overview Container</strong>
+					<br>
+					We create a <strong>collections-overview.container.tsx</strong> to handle our HOC. Here we import connect, compose from redux, our selector, WithSpinner, CollectionsOverview, and the State type. Then we just create mapStateToProps() that passes an <code>isLoading: !selectIsCollectionsLoaded(State)</code> which is what our component is expecting as a prop. I had to return to set it to the opposite to get the proper isLoading boolean. Then we use compose to export the component, which works just as Ramda compose() does <code>const CollectionsOverviewContainer = compose( connect(mapStateToProps), WithSpinner )(CollectionsOverview)</code> which is just currying our Fns and then passing our component to them from right-to-left just as compose(). This way we are wrapping our component in WithSpinner and then connect(). Then we <code>export CollectionsOverviewContainer as React.FC</code>, we have to typecast it beacuse compose() returns unknown.
+				</p>
+				<p class="paragraph">
+					<strong>ShopPage</strong>
+					<br>
+					We remove the logic for our WithSpinner from this component and just import the container. In our route we remove the render prop and replace it with <code>component={CollectionsOverviewContainer}</code> since we are calling the component directly. The Container handles the logic for the WithSpinner HOC and the loading state directly, meaning that we don't need it in our ShopPage and can keep it as clean as possible. I will attempt to do the same for the CollectionPage. I successfuly did it by myself with 1 minor mistake caused by StyledComponents, which I will replace with CSS Modules. Containers don't render anything. They just pass props down to components. After completing I did a cleanup and removed a ton of code from ShopSelector, including the complete removal of mapStateToProps(). Now our ShopPage only has what it is concernde about, triggering the data fetching, and rendering the children component without having to get props just to pass them down, this is better for separation of concerns but results in more code and files. 
+				</p>
+				<p class="paragraph">
+					<strong>Refactoring is a Tradeoff</strong>
+					<br>
+					There are always things to change and improve. Refactoring adds a little bit of complexity. Not all refactoring is the same. By working in a large team it is better to refactor to keep a standard. A few files with a lot of code or more files with shorter code. Decide when to refactor, but don't end up in the loop of refactoring instead of working on features and bugs. Refactoring has diminishing returns, keep it in mind and be mindful of the time you are trading off refactoring. 
+				</p>
+			</li>
+			<h2 class="subtitle">20 Redux-Saga</h2>
+			<li class="list-group-item">
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">Intro to Sagas</h2>
+				<p class="paragraph">
+					This another method of handling Async Side-effects in our components that is actually more popular than thunk. In the redux flow, middleware like redux saga go between actions and reduecers and modify the data, sometimes even not passing the action to the reducer at all. Sagas are very different to Thunk. Thunk just detects actions that are passed as Fns and intercepts them and then dispatches them to the reducer once it handles the async operation. Redux-Saga works as Fns that conditionally run. The condition to decide is if a specific action is comming in to the saga middleware. Sagas are pieces of code that don't run until they are triggered by the action that they are listening for. Sagas can trigger other actions, any additional API logic, and basically anything that is considered a side-effect. Different to Thunk, Sagas go <strong>after</strong> reducers and then receive the action. From there sagas fire new actions which hit the reducers and sagas again as well. The actions that sagas are listening for are passed to the reducers but they don't react to these actions because they are intended for our sagas. 
+				</p>
+				<p class="paragraph">
+					<strong>Generator Functions</strong>
+					<br>
+					This is a new-ish feature in the JS ecosystem. It is a Fn that resembles async await, in fact async await is built on top of generators. As with async/await, generators pause the execution when they see a specific key caled a yield. They use the old school function declaration syntax but use the '*' star <code>function*</code> which declares that it is a generator Fn. When we call the Fn, we get a <strong>generator object</strong>. We create <code>function* get() { console.log('a'); console.log('b') } which returns undefined. We then <code>const g = gen()</code> which will also return undefined. However if we log <code>g</code> we get <code>gen {&lt;suspended&gt;}</code>. This is the generator object. What we do on it is call .next(). If we <code>g.next()</code> we run the code from our Fn and log a and b and we get an object as a return from our .next() call. This object has a value prop and a done prop. 
+				</p>
+				<p class="paragraph">
+					<strong>yield</strong>
+					<br>
+					We do <code>function* gen(i) { yield i; yield i + 10 }</code>. Then we <code>const g = gen(5)</code>. Then we do our call <code>const gObj = g.next()</code> which will return undefined, however if we log our gObj we see <code>{value: 5, done: false}</code>. We get the value from the <strong>yield</strong> on the first call. Also, we get done as false becasue there is more to execture from our gen() Fn. If we do <code>const jObj = g.next()</code> we get a return of undefined but if we log the value we get <code>{ value: 15, done: false }</code>, this is because we can call .next() one more time. If we do that call we get a return obj <code>{ value: undefined, done: true }</code>. To get a value from this last call we need to specify a return, if we had <code>return 25</code> after our yield statements we would get <code>{ value: 25, done: true }</code> after our last next() call. Basically yield gives us the option to pause Fns and decide when we want to continue the execution of our Fns. 
+				</p>
+				<a id="03" href="#00">Index</a>
+				<h2 class="subtitle">Redux-Saga</h2>
+				<p class="paragraph">
+					We <code>yarn add redux-saga</code> and then go to our store to add the middleware and remove thunk because we won't need it anymore. We then <code>const sagaMiddleware = createSagaMiddleware()</code> which can take an object for optional config that we are not going to use. 
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>
