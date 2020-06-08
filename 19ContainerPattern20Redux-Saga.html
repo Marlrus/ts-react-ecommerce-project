@@ -159,7 +159,7 @@
 				<a id="06" href="#00">Index</a>
 				<h2 class="subtitle">Google Sign In to Sagas</h2>
 				<p class="paragraph">
-					We want to change the signin to a promise oriented way. We have it in an observable way using the firebase auth library. 
+					We want to change the signin to a promise oriented way. We have it in an observable way using the firebase auth library. We create 6 new userActionTypes 3 for google and 3 for email with start, success, and failure. We then create 6 actions for each case. On the start we just send the type and no payload, as it will just signify the start of the process. Then we have a success that will have the user as a payload. And then a failure action for the error message. I did all the TS typing here. We then add a payload to emailSignInStart() because it takes emailAndPassword. We will be passing them as an object. 
 				</p>
 			</li>
 		</ul>
