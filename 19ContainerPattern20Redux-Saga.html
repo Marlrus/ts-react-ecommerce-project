@@ -116,7 +116,50 @@
 				<a id="03" href="#00">Index</a>
 				<h2 class="subtitle">Redux-Saga</h2>
 				<p class="paragraph">
-					We <code>yarn add redux-saga</code> and then go to our store to add the middleware and remove thunk because we won't need it anymore. We then <code>const sagaMiddleware = createSagaMiddleware()</code> which can take an object for optional config that we are not going to use. 
+					We <code>yarn add redux-saga</code> and then go to our store to add the middleware and remove thunk because we won't need it anymore. We then <code>const sagaMiddleware = createSagaMiddleware()</code> which can take an object for optional config that we are not going to use. We then <code>const middlewares: Middleware[] = [sagaMiddleware]</code> which fixes my TS err that infers that the Arr can only be of type SagaMiddleware. We create <code>shop.saga.ts</code> in the redux/shop folder, which is the standard, to keep the saga logic in their state piece. We want to move the logic from our Thunk into our saga. 
+				</p>
+				<p class="paragraph">
+					<strong>shop.saga.ts</strong>
+					<br>
+					In sagas we need to import effects from the lib that allow us to do different things. We <code>import { takeEvery } from "redux-saga/effects";</code> This effect listens to every action of a specific type that we pass to it. We create <code>export function* fetchCollectionsStart() { ... }</code> That has a yield using our import <code>yield takeEvery( ShopActionTypes.FETCH_COLLECTIONS_START, fetchCollectionsAsync )</code> which will call a new gen Fn <code>export function* fetchCollectionsAsync() { yield console.log('hai') }</code> We return to our ShopPage and change all of our thunk code to just the regular action <code>fetchCollectionsStart()</code> whih will trigger the action that our saga is listening to. If we refresh we see our console log hai. We pass the action, our saga takeEvery listens to it and then fires the second argument which is fetchCollectionsAsync. 
+				</p>
+				<p class="paragraph">
+					<strong>Sagas Theory</strong>
+					<br>
+					The whole purpose of the middleware is to run the sagas all <em>concurrently</em>. This means that it wants to run them all together in a non blocking manner. This means that when we trigger sagas, they can run processes that take time without blocking the functioning of our app. takeEvery() creates a <em>non blocking call</em> that doesn't stop our app from running other sagas or whatever the user wants to do. Alternatively we are also able to cnacel the tasks that are comming out of our Fn. In our case the fetchCollectionsAsync() is the saga, and the middleware is running it in the background as our app runs, if the user where to trigger the action multiple times we would be able to cancel the fetching of data if it hasn't completed as we only want the latest action to be the one executed to its fullest. With the <strong>yield</strong> inside our saga, we are yielding control to the middleware which can determine wether or not to cancel any of the previously started sagas from the other actions that came in. We have control of this because of the <em>yield</em>. 
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">Redux-Thunk into Saga</h2>
+				<p class="paragraph">
+					When we used Thunk, what we did was move the async call and logic out of the Component and changed it into our actions. When we did this we had to create a new thunk action that dispatches our actions of the async request. Instead of doing this in an action, we will do it in a saga. This is why we switched the action in our Component back to the regular action. We don't need the async Fn we created to handle this anymore. We copy the logic from our Thunk and move it into our fetchCollectionsAsync() gen Fn. Here we do a try catch block and inside <code>const collectionRef = firestore.colleciton('collections')</code> which we use in <code>const snapshot = tield collectionRef.get()</code> Which we then pass to <code>const collectionsMap: ShopMap = yield call( convertCollectionsSnapshotToMap, snapshot )</code> which uses a new saga effect call(). This effect is just like calling a Fn. We could call it normally though. Then we import the next effect put(), which will replace what we usually do with dispatch(). Put dispatches out an obj with a type and a payload. We <code>yield put(fetchCollectionsSuccess(collectionsMap))</code> and one on our catch block for the error using fetchCollectionsFailure(). Every part where we use <strong>yield</strong> we are giving the saga middleware the control to intervene the event and cancel it. 
+				</p>
+				<p class="paragraph">
+					Our app runs as expected and we can see that the action on FETCH_COLLECTIONS_SUCCESS says @@redux-saga/... which is logger letting us know where the actions are comming from. 
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">take(), takeEvery(), takeLatest()</h2>
+				<p class="paragraph">
+					We start by using the base listener effects with take(). The Fn <code>take('actionType')</code> takes only one argument. take waits for the action we pass to happen, when it happens we can get the payload of the action if we wanted by setting it to a variable <code>const actionPayload = yield take('actionType')</code> It is given to us in the format of a promise that has been resolved. The rest of the code doesn't execute until the take() finishes. take() works like the generic gen Fn but with only one next() call because it only has one yield. This makes it so take() only runs once, unlike the takeEvery() we used before. takeEvery() creates a new task using the gen Fn we pass to it as a second argument. Which is why it triggers more than once. 
+				</p>
+				<p class="paragraph">
+					<strong>takeEvery()</strong>
+					<br>
+					Using takeEvery(), redux-saga is firing a new task to run our gen Fn that we pass a second argument every time. This lets us use the code for the action more than one time. We could mimic this functionality with take() using a while(true){ take( ... ) ... } block. takeEvery() also creates new sagas every time it is fired, which wont happen with the while() take() setup. If we trigger it 3 times, it creates 3 actions on 3 different sagas. As we have it now, we know how to do a blocking operation, and a non blocking unlimited saga triggering saga with takeEvery(). 
+				</p>
+				<p class="paragraph">
+					<strong>takeLatest()</strong>
+					<br>
+					If we have an async call that takes time to resolve, and we use it inside takeLatest('actionType', genFn), redux saga will interrupt the execution of our saga action for every action that gets triggered before the async call resolves, and will only return the last saga that was triggered by the original action. In our redux logger we can see the original action that we are triggering in the Component, because it will always get triggered. Since it is processed by our reducer first, it then moves into the middleware. However, since we have set a delay() of 3000ms, we dont see the triggering of our SAGA_ACTION if we do calls before the delay finishes and only get one SAGA_ACTION logged for the latest action that managed to finish completely. 
+				</p>
+				<a id="06" href="#00">Index</a>
+				<h2 class="subtitle">Root Saga</h2>
+				<p class="paragraph">
+					We change the effect in our shop saga to takeLast(). Then we create <strong>root-saga.ts</strong> in our redux/ dir. Here we import all(), call(), and our saga fetchCollectionsStart(). Then we <code>export default function* rootSaga() { ... }</code> that uses <code>yield all([call(fetchCollectionsStart)])</code> which will call our sagas and we can then pass this rootSaga to our store.ts file. Then we go to our store.ts and import our rootSaga, and we put it in our <code>sagaMiddleware.run(rootSaga)</code> which means we now handle all the sagas in a separate file, separating concerns. all() takes an array of sagas and executes them in parallel. Like await Promise.all(). Now we can run all the sagas we want in parallel. 
+				</p>
+				<a id="06" href="#00">Index</a>
+				<h2 class="subtitle">Google Sign In to Sagas</h2>
+				<p class="paragraph">
+					We want to change the signin to a promise oriented way. We have it in an observable way using the firebase auth library. 
 				</p>
 			</li>
 		</ul>
