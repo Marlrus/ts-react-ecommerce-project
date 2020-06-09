@@ -189,7 +189,12 @@
 				<a id="07" href="#00">Index</a>
 				<h2 class="subtitle">Email Sign In to Sagas</h2>
 				<p class="paragraph">
-					
+					We don't need to set state in our component anymore because Redux will take over state from now on via sagas. We don't need utils from firebase so we remove the import as well. We then move into <strong>user.sagas.ts</strong> and create our logic. We start with our <code>export function* onEmailSignInStart() { ... }</code> which will listen for the event EMAIL_SIGN_IN_START and trigger our next gen Fn signInWithEmail. We create <code>export function* signInWithEmail({ payload: { email, password } }: emailSignInStartAction ) { ... }</code> which will destructure what we need from the payload of the action. Then we do a try catch block and run our logic. It is the same as the one in our signInWithGoogle() except that we get the user using another method <code>const { user } = yield auth.signInWithEmailAndPassword(email, password)</code> which will get the user using our firebase auth method. Then we do the same thing with userRef and userRef.get(). Then we just trigger our Redux action with <code>yield put( emailSignInSuccess({ id: userSnapshot.id, ...userSnapshot.data() })</code> which will send things back to the redux flow.
+				</p>
+				<p class="paragraph">
+					<strong>Refactor</strong>
+					<br>
+					Now we run our app and test our email sign in and it works perfectly. We can refactor some of our code because we have a lot of very similar code. 
 				</p>
 			</li>
 		</ul>

@@ -46,7 +46,7 @@ interface googleSignInFailureAction {
    payload: string;
 }
 
-interface emailSignInStartAction {
+export interface emailSignInStartAction {
    type: typeof UserActionTypes.EMAIL_SIGN_IN_START;
    payload: EmailAndPassword;
 }
