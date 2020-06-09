@@ -1,6 +1,7 @@
 //State and State Parts
 export interface UserState {
    currentUser: null | CurrentUser;
+   error: null | string;
 }
 
 export interface CurrentUser {

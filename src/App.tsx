@@ -14,10 +14,10 @@ import CheckoutPage from './pages/checkout/checkout.component';
 import Header from './components/header/header.component';
 
 //Utils
-import {
-   auth,
-   createUserProfileDocument,
-} from './firebase/firebase.utils';
+// import {
+//    auth,
+//    createUserProfileDocument,
+// } from './firebase/firebase.utils';
 import { setCurrentUser } from './redux/user/user.actions';
 
 //types
@@ -28,25 +28,24 @@ class App extends React.Component<AppProps> {
    unsubscribeFromAuth: null | Function = null;
 
    componentDidMount() {
-      const { setCurrentUser } = this.props;
-      this.unsubscribeFromAuth = auth.onAuthStateChanged(
-         async (userAuth) => {
-            if (userAuth) {
-               const userRef = await createUserProfileDocument(
-                  userAuth
-               );
-
-               userRef!.onSnapshot((snapShot) => {
-                  setCurrentUser({
-                     id: snapShot.id,
-                     ...snapShot.data(),
-                  } as CurrentUser);
-               });
-            } else {
-               setCurrentUser(userAuth);
-            }
-         }
-      );
+      // const { setCurrentUser } = this.props;
+      // this.unsubscribeFromAuth = auth.onAuthStateChanged(
+      //    async (userAuth) => {
+      //       if (userAuth) {
+      //          const userRef = await createUserProfileDocument(
+      //             userAuth
+      //          );
+      //          userRef!.onSnapshot((snapShot) => {
+      //             setCurrentUser({
+      //                id: snapShot.id,
+      //                ...snapShot.data(),
+      //             } as CurrentUser);
+      //          });
+      //       } else {
+      //          setCurrentUser(userAuth);
+      //       }
+      //    }
+      // );
    }
 
    componentWillUnmount() {

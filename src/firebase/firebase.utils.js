@@ -7,6 +7,7 @@ import { FIREBASE_CONFIG } from '../env';
 //Put your own Firebase Config Object here
 const config = FIREBASE_CONFIG;
 
+//creates user from Google Auth Firebase Response
 export const createUserProfileDocument = async (
    userAuth,
    additionalData
@@ -75,8 +76,9 @@ export const convertCollectionsSnapshotToMap = (collections) => {
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 
-const provider = new firebase.auth.GoogleAuthProvider();
-provider.setCustomParameters({ prompt: 'select_account' });
-export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: 'select_account' });
+export const signInWithGoogle = () =>
+   auth.signInWithPopup(googleProvider);
 
 export default firebase;

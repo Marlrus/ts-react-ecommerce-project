@@ -106,7 +106,7 @@
 				<p class="paragraph">
 					<strong>Generator Functions</strong>
 					<br>
-					This is a new-ish feature in the JS ecosystem. It is a Fn that resembles async await, in fact async await is built on top of generators. As with async/await, generators pause the execution when they see a specific key caled a yield. They use the old school function declaration syntax but use the '*' star <code>function*</code> which declares that it is a generator Fn. When we call the Fn, we get a <strong>generator object</strong>. We create <code>function* get() { console.log('a'); console.log('b') } which returns undefined. We then <code>const g = gen()</code> which will also return undefined. However if we log <code>g</code> we get <code>gen {&lt;suspended&gt;}</code>. This is the generator object. What we do on it is call .next(). If we <code>g.next()</code> we run the code from our Fn and log a and b and we get an object as a return from our .next() call. This object has a value prop and a done prop. 
+					This is a new-ish feature in the JS ecosystem. It is a Fn that resembles async await, in fact async await is built on top of generators. As with async/await, generators pause the execution when they see a specific key caled a yield. They use the old school function declaration syntax but use the '*' star <code>function*</code> which declares that it is a generator Fn. When we call the Fn, we get a <strong>generator object</strong>. We create <code>function* get() { console.log('a'); console.log('b') }</code> which returns undefined. We then <code>const g = gen()</code> which will also return undefined. However if we log <code>g</code> we get <code>gen {&lt;suspended&gt;}</code>. This is the generator object. What we do on it is call .next(). If we <code>g.next()</code> we run the code from our Fn and log a and b and we get an object as a return from our .next() call. This object has a value prop and a done prop. 
 				</p>
 				<p class="paragraph">
 					<strong>yield</strong>
@@ -160,6 +160,36 @@
 				<h2 class="subtitle">Google Sign In to Sagas</h2>
 				<p class="paragraph">
 					We want to change the signin to a promise oriented way. We have it in an observable way using the firebase auth library. We create 6 new userActionTypes 3 for google and 3 for email with start, success, and failure. We then create 6 actions for each case. On the start we just send the type and no payload, as it will just signify the start of the process. Then we have a success that will have the user as a payload. And then a failure action for the error message. I did all the TS typing here. We then add a payload to emailSignInStart() because it takes emailAndPassword. We will be passing them as an object. 
+				</p>
+				<p class="paragraph">
+					<strong>User Reducer</strong>
+					<br>
+					Here we change the reducer with a new format. We stack to cases on top of one another <code>case userActionTypes.GOOGLE_SIGN_IN_SUCCESS: case userActionTypes.EMAIL_SIGN_IN_SUCCESS: </code> which will both have the same return, <code>return { ...state, currentUser: action.payload, error:null }</code>. Then we do the same for our failure actions. Here we will <code>return { ...state, error: action.payload }</code> which we will clear if we succeed in our login. We then go to ur App Component and comment out all the logic and imports related to auth. 
+				</p>
+				<p class="paragraph">
+					<strong>User Sagas</strong>
+					<br>
+					We create our <strong>user.sagas.ts</strong> file. We then import takeLatest and put from redux-saga/effects and import the action types. We create our 2 generator Fns <code>export function* onGoogleSignInStart() { ... }</code> and <code>export function* signInWithGoogle() { ... }</code> but we need to change some things first. In our firebase.utils we change all provider vars to <code>googleProvider</code>. And we will <code>export const googleProvider</code>. We then <code>import { googleProvider, auth, createUserProfileDocument } from "../../firebase/firebase.utils";</code> in our sagas. 
+				</p>
+				<p class="paragraph">
+					<strong>Sign in Logic</strong>
+					<br>
+					We make a try catch block in our signInWithGoogle() generator Fn. Here we start with <code>const userRef = yield auth.signInWithPopup(googleProvider)</code>, which will store the returned value from our call in userRef becasue of yield. We will then log userRef. After this we create a new saga <code>export function* userSagas() { yield all([call(onGoogleSignInStart)]) }</code> which we will send to the root saga and add it to the call() statement there. 
+				</p>
+				<p class="paragraph">
+					<strong>SignIn Component</strong>
+					<br>
+					In our Component we import connect, ConnectedProps, UserActions type, and googleSignInStart action. We mapDispatchToProps() where we send our action, and we do our normal Ts typing. Then we set the generic in our React.Component <code>SignInProps, SignInState</code> where we also need to type the constructor <code>props: SignInProps</code>. Then in our render() we <code>const { googleSignInStart } = this.props</code> and we put it on our CustomButton <code>onClick={googleSignInStart}</code> now if we press the button we trigger the popup and if we proceed we get the user auth object. 
+				</p>
+				<p class="paragraph">
+					<strong>user.sagas</strong>
+					<br>
+					We need to destructure the user from this auth object, so in our saga signInWithGoogle() we <code>const { user } = yield auth.signInWithPopup(googleProvider)</code> which will give us what we want. Then we run that through our createUserProfileDocument() Fn that converts our Google Firebase response into a userRef object. However, we need to get the snapshot from that userRef value in order to use it so we <code>const userSnapshot = yield userRef.get()</code> Then we import the action we want to fire if this all succeeds with <code>yield put(googleSignInSuccess({id: userSnapshot.id, ...userSnapshot.data()})</code> which will use our action and put this back into the redux flow. Then in the catch { ... } we tield the put of our err <code>yield put(googleSignInFailure(err.message)</code> Now our app works as we had it but uses sagas instead. 
+				</p>
+				<a id="07" href="#00">Index</a>
+				<h2 class="subtitle">Email Sign In to Sagas</h2>
+				<p class="paragraph">
+					
 				</p>
 			</li>
 		</ul>
