@@ -11,6 +11,7 @@ import {
    googleProvider,
    auth,
    createUserProfileDocument,
+   getCurrentUser,
 } from '../../firebase/firebase.utils';
 
 //SHARED LOGIC
@@ -68,6 +69,28 @@ export function* onEmailSignInStart() {
    );
 }
 
+//USER SESSION CHECKING LOGIC
+export function* isUserAuthenticated() {
+   try {
+      const userAuth = yield getCurrentUser();
+      if (!userAuth) return;
+      yield getSnapshotFromUserAuth(userAuth);
+   } catch (err) {
+      yield put(signInFailure(err.message));
+   }
+}
+
+export function* onCheckUserSession() {
+   yield takeLatest(
+      UserActionTypes.CHECK_USER_SESSION,
+      isUserAuthenticated
+   );
+}
+
 export function* userSagas() {
-   yield all([call(onGoogleSignInStart), call(onEmailSignInStart)]);
+   yield all([
+      call(onGoogleSignInStart),
+      call(onEmailSignInStart),
+      call(onCheckUserSession),
+   ]);
 }

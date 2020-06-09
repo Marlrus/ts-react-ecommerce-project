@@ -73,6 +73,16 @@ export const convertCollectionsSnapshotToMap = (collections) => {
    }, {});
 };
 
+//Get userAuth object and unsubscribe immediately to use in sagas.
+export const getCurrentUser = () => {
+   return new Promise((resolve, reject) => {
+      const unsubscribe = auth.onAuthStateChanged((userAuth) => {
+         unsubscribe();
+         resolve(userAuth);
+      }, reject);
+   });
+};
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 

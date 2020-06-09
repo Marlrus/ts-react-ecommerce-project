@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrentUser } from './redux/user/user.selectors';
+import { checkUserSession } from './redux/user/user.actions';
 
 import './App.css';
 
@@ -21,29 +22,14 @@ import Header from './components/header/header.component';
 
 //types
 import { State } from './redux/store.types';
+import { UserActions } from './redux/user/user.types';
 
 class App extends React.Component<AppProps> {
    unsubscribeFromAuth: null | Function = null;
 
    componentDidMount() {
-      // const { setCurrentUser } = this.props;
-      // this.unsubscribeFromAuth = auth.onAuthStateChanged(
-      //    async (userAuth) => {
-      //       if (userAuth) {
-      //          const userRef = await createUserProfileDocument(
-      //             userAuth
-      //          );
-      //          userRef!.onSnapshot((snapShot) => {
-      //             setCurrentUser({
-      //                id: snapShot.id,
-      //                ...snapShot.data(),
-      //             } as CurrentUser);
-      //          });
-      //       } else {
-      //          setCurrentUser(userAuth);
-      //       }
-      //    }
-      // );
+      const { checkUserSession } = this.props;
+      checkUserSession();
    }
 
    componentWillUnmount() {
@@ -83,7 +69,11 @@ const mapStateToProps = (state: State) => ({
    currentUser: selectCurrentUser(state),
 });
 
-const connector = connect(mapStateToProps);
+const mapDispatchToProps = (dispatch: Dispatch<UserActions>) => ({
+   checkUserSession: () => dispatch(checkUserSession()),
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type AppProps = ConnectedProps<typeof connector>;
 
