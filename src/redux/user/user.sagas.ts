@@ -5,7 +5,12 @@ import {
    emailSignInStartAction,
 } from './user.types';
 
-import { signInFailure, signInSuccess } from './user.actions';
+import {
+   signInFailure,
+   signInSuccess,
+   signOutSuccess,
+   signOutFailure,
+} from './user.actions';
 
 import {
    googleProvider,
@@ -87,10 +92,25 @@ export function* onCheckUserSession() {
    );
 }
 
+//SIGN OUT LOGIC
+function* signOut() {
+   try {
+      yield auth.signOut();
+      yield put(signOutSuccess());
+   } catch (err) {
+      yield put(signOutFailure(err.message));
+   }
+}
+
+export function* onSignOutStart() {
+   yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
+}
+
 export function* userSagas() {
    yield all([
       call(onGoogleSignInStart),
       call(onEmailSignInStart),
       call(onCheckUserSession),
+      call(onSignOutStart),
    ]);
 }

@@ -24,6 +24,9 @@ export const UserActionTypes = {
    GOOGLE_SIGN_IN_START: 'GOOGLE_SIGN_IN_START',
    EMAIL_SIGN_IN_START: 'EMAIL_SIGN_IN_START',
    CHECK_USER_SESSION: 'CHECK_USER_SESSION',
+   SIGN_OUT_START: 'SIGN_OUT_START',
+   SIGN_OUT_SUCCESS: 'SIGN_OUT_SUCCESS',
+   SIGN_OUT_FAILURE: 'SIGN_OUT_FAILURE',
 } as const;
 
 interface googleSignInStartAction {
@@ -49,6 +52,19 @@ interface checkUserSessionAction {
    type: typeof UserActionTypes.CHECK_USER_SESSION;
 }
 
+interface signOutStartAction {
+   type: typeof UserActionTypes.SIGN_OUT_START;
+}
+
+interface signOutSuccessAction {
+   type: typeof UserActionTypes.SIGN_OUT_SUCCESS;
+}
+
+interface signOutFailureAction {
+   type: typeof UserActionTypes.SIGN_OUT_FAILURE;
+   payload: string;
+}
+
 interface OtherAction {
    type: 'OTHER_ACTION';
    payload: any;
@@ -61,4 +77,7 @@ export type UserActions =
    | SignInSuccessAction
    | SignInFailureAction
    | emailSignInStartAction
-   | checkUserSessionAction;
+   | checkUserSessionAction
+   | signOutStartAction
+   | signOutSuccessAction
+   | signOutFailureAction;

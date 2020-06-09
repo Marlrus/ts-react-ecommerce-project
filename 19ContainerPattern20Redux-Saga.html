@@ -217,6 +217,29 @@
 					<br>
 					We work on our Fn <code>export function* isUserAuthenticated() { ... }</code> where we create a try catch block. In our catch we <code>yield put(signInFailure(err.message))</code> which is the code we refactored. And then we need to get the user object to pass to our refactored method getSnapshotFromUserAuth() <code>const userAuth = yield getCurrentUser()</code> and if we don't have an object here <code>if(!userAuth) return</code> we will return and cancel the rest of the call. If we do get a response we <code>yield getSnapshotFromUserAuth(userAuth)</code> which will log us in and create our persistence. Now if we log in and then refresh we will see these actions fire and that our presistence is there. We also need to add this saga to the userSagas <code>yield all([... call(onCheckUserSerssion)])</code> which will make the middleware detect this.
 				</p>
+				<a id="10" href="#00">Index</a>
+				<h2 class="subtitle">Sign Out with Sagas</h2>
+				<p class="paragraph">
+					We start by creating the new 3 actions for sign out: <em>start, success, failure</em>. We create them, start and success don't have a payload, just the action, and error has the error message as the payload. In our <strong>user.reducer.ts</strong> we stack the case SIGN_OUT_FAILURE on top of sign in failure. And then we process a new case <code>case userActionTypes.SIGN_OUT_SUCCESS: return { ...state, currentUser: null, error: null }</code> which will handle our sign out state changes. 
+				</p>
+				<p class="paragraph">
+					<strong>Header Component</strong>
+					<br>
+					We dont need auth so we remove it form the imports, but we import the action <code>signOutStart</code>, Dispatch, and UserActions type. Then we send it through mapDispatchToProps() and destructure it in our props. Then in our OptionLink component we set <code>onClick={signOutStart}</code> which will trigger our action and make redux saga handle the logic. 
+				</p>
+				<p class="paragraph">
+					<strong>user.sagas.ts</strong>
+					<br>
+					We create our sign out logic <code>export function* onSignOutStart() { ... }</code> which will be the listener <code>yield takeLatest(userActionTypes.SIGN_OUT_START, signOut)</code> and we create <code>function* signOut() { ... }</code> which will be the one handling the logic and triggering our actions. We import the success and failure actions and then create our try catch block. In our catch we <code>yield put(signOutFailure(err.message))</code> and in our try we <code>yield auth.signOut(); yield put(signOutSuccess())</code> which will trigger our success. Now our sign out is working in our app using sagas and we have effectively separated all that is our logic from our component. 
+				</p>
+				<a id="11" href="#00">Index</a>
+				<h2 class="subtitle">Clear Cart Saga</h2>
+				<p class="paragraph">
+					We will leverage our saga to trigger another event upon signing out, the clearing of our cart. There are two ways to do this. Inside of our cart reducer, we could listen for our sign out success action and have it clear the cart when it is triggered. This can happen because all of our reducers recieve every action that is dispatched in our application, even if it is not part of their jurisdiction. However, we might want to have more cases where the user clears the cart, such as a button in the cart, or when the user completes their purchase. Therefore we will handle all of this logic in our redux/cart/ dir. 
+				</p>
+				<p class="paragraph">
+					
+				</p>
 			</li>
 		</ul>
 	</div>
