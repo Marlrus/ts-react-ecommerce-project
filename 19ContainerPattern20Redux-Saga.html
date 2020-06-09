@@ -199,6 +199,11 @@
 				<p class="paragraph">
 					Now we have the same functionality after our refactor. However we cannot sign out anymore and we don't have persistance for our user either. Back in our sagas, we have a lot of repeated code in our try catch blocks, so we <code>function* getSnapshotFromUserAuth(userAuth: any) { ... }</code> that will handle our logic in both calls. Inside we copy the code from signInWithGoogle() after we get the user object. And then we call thsi method. We do the same in signInWithEmail() and we have refactored our code. <strong>Note:</strong> I had an err where I forgot to <em>yield</em> inside the saga and it was not being passed anywhere. 
 				</p>
+				<a id="08" href="#00">Index</a>
+				<h2 class="subtitle">Reviewing our Sagas</h2>
+				<p class="paragraph">
+					We broke up all of our async related fetch actions into 3 actions <em>start, success, failure</em>. Our components fire the first action <em>start</em> which is what redux-saga is listening to and triggers our sagas. Our sagas fetch these actions using takeEvery(), takeLatest(), or take(). After our sagas execute, they launch our actions back into the flow, however, since our saga middleware is not listening for these actions, it is not triggered. We send/dispatch these actions back into the flow using the redux-saga method put(). The only difference between the shop sagas and user sagas is that we are handling two streams for our user, one for starting our auth with google, and one for starting our auth using email. 
+				</p>
 			</li>
 		</ul>
 	</div>

@@ -22,7 +22,13 @@ const FormInput: React.FC<FormInputProps> = ({
 }) => (
    <GroupContainer>
       <FormInputContainer onChange={handleChange} {...otherProps} />
-      {label ? <FormInputLabel>{label}</FormInputLabel> : null}
+      {label ? (
+         <FormInputLabel
+            className={otherProps.value.length ? 'shrink' : ''}
+         >
+            {label}
+         </FormInputLabel>
+      ) : null}
    </GroupContainer>
 );
 
