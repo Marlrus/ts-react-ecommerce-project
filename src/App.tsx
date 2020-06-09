@@ -18,10 +18,8 @@ import Header from './components/header/header.component';
 //    auth,
 //    createUserProfileDocument,
 // } from './firebase/firebase.utils';
-import { setCurrentUser } from './redux/user/user.actions';
 
 //types
-import { UserActions, CurrentUser } from './redux/user/user.types';
 import { State } from './redux/store.types';
 
 class App extends React.Component<AppProps> {
@@ -85,14 +83,7 @@ const mapStateToProps = (state: State) => ({
    currentUser: selectCurrentUser(state),
 });
 
-const mapDispatchToProps = (
-   dispatch: React.Dispatch<UserActions>
-) => ({
-   setCurrentUser: (user: CurrentUser | null) =>
-      dispatch(setCurrentUser(user)),
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps);
 
 type AppProps = ConnectedProps<typeof connector>;
 

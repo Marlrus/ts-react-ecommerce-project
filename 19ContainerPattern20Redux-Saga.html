@@ -194,7 +194,10 @@
 				<p class="paragraph">
 					<strong>Refactor</strong>
 					<br>
-					Now we run our app and test our email sign in and it works perfectly. We can refactor some of our code because we have a lot of very similar code. 
+					Now we run our app and test our email sign in and it works perfectly. We can refactor some of our code because we have a lot of very similar code. We remove two actions and just do <code>signInSuccess</code> and <code>signInFailure</code>, I do the TS typing accordingly. We then do that adjustment in our actions, just getting signInSuccess() and signInFailure(). We also remove the setCurrentUser() action and typing because we are not using it anymore. Now we move into our App.tsx and remove setCurrentUser and mapDispatchToProps(). In our user.sagas.ts we replace our calls with the new success and failure actions. Now in our user.reducer.ts we remove our stacked cases and use our new actions. 
+				</p>
+				<p class="paragraph">
+					Now we have the same functionality after our refactor. However we cannot sign out anymore and we don't have persistance for our user either. Back in our sagas, we have a lot of repeated code in our try catch blocks, so we <code>function* getSnapshotFromUserAuth(userAuth: any) { ... }</code> that will handle our logic in both calls. Inside we copy the code from signInWithGoogle() after we get the user object. And then we call thsi method. We do the same in signInWithEmail() and we have refactored our code. <strong>Note:</strong> I had an err where I forgot to <em>yield</em> inside the saga and it was not being passed anywhere. 
 				</p>
 			</li>
 		</ul>
