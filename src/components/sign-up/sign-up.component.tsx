@@ -12,7 +12,10 @@ import { signUpStart } from '../../redux/user/user.actions';
 
 import { SignUpContainer, SignUpTitle } from './sign-up.styles';
 //Types
-import { UserActions, SignUpUser } from '../../redux/user/user.types';
+import {
+   UserActions,
+   UserCredentials,
+} from '../../redux/user/user.types';
 
 interface SignUpState {
    [name: string]: string;
@@ -43,31 +46,13 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
          password,
          confirmPassword,
       } = this.state;
+      const { signUpStart } = this.props;
 
       if (password !== confirmPassword) {
          return alert(`Passwords don't match`);
       }
 
-      try {
-         // const { user } = await auth.createUserWithEmailAndPassword(
-         //    email,
-         //    password
-         // );
-
-         // await createUserProfileDocument(user, { displayName });
-         const { signUpStart } = this.props;
-
-         signUpStart({ email, password, displayName });
-
-         this.setState({
-            displayName: '',
-            email: '',
-            password: '',
-            confirmPassword: '',
-         });
-      } catch (err) {
-         console.error(err);
-      }
+      signUpStart({ email, password, displayName });
    };
 
    handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,8 +116,8 @@ class SignUp extends React.Component<SignUpProps, SignUpState> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<UserActions>) => ({
-   signUpStart: (signUpUser: SignUpUser) =>
-      dispatch(signUpStart(signUpUser)),
+   signUpStart: (userCredentials: UserCredentials) =>
+      dispatch(signUpStart(userCredentials)),
 });
 
 const connector = connect(null, mapDispatchToProps);

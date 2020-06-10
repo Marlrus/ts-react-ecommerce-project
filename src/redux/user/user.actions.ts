@@ -3,7 +3,7 @@ import {
    UserActionTypes,
    UserActions,
    EmailAndPassword,
-   SignUpUser,
+   UserCredentials,
 } from './user.types';
 
 export const googleSignInStart = (): UserActions => ({
@@ -48,19 +48,22 @@ export const signOutFailure = (error: string): UserActions => ({
 });
 
 //Sign Up Actions
-export const signUpStart = (signUpUser: SignUpUser): UserActions => ({
+export const signUpStart = (
+   userCredentials: UserCredentials
+): UserActions => ({
    type: UserActionTypes.SIGN_UP_START,
-   payload: signUpUser,
+   payload: userCredentials,
 });
 
-export const signUpSuccess = (
-   user: CurrentUser | null
-): UserActions => ({
+export const signUpSuccess = ({
+   user,
+   additionalData,
+}: any): UserActions => ({
    type: UserActionTypes.SIGN_UP_SUCCESS,
-   payload: user,
+   payload: { user, additionalData },
 });
 
 export const signUpFailure = (err: string): UserActions => ({
-   type: UserActionTypes.SING_UP_FAILURE,
+   type: UserActionTypes.SIGN_UP_FAILURE,
    payload: err,
 });

@@ -4,6 +4,7 @@ import {
    UserActionTypes,
    emailSignInStartAction,
    signUpStartAction,
+   signUpSuccessAction,
 } from './user.types';
 
 import {
@@ -13,7 +14,6 @@ import {
    signOutFailure,
    signUpFailure,
    signUpSuccess,
-   emailSignInStart,
 } from './user.actions';
 
 import {
@@ -24,9 +24,16 @@ import {
 } from '../../firebase/firebase.utils';
 
 //SHARED LOGIC
-function* getSnapshotFromUserAuth(userAuth: any) {
+function* getSnapshotFromUserAuth(
+   userAuth: any,
+   additionalData?: any
+) {
    try {
-      const userRef = yield call(createUserProfileDocument, userAuth);
+      const userRef = yield call(
+         createUserProfileDocument,
+         userAuth,
+         additionalData
+      );
       const userSnapshot = yield userRef.get();
       yield put(
          signInSuccess({
@@ -119,11 +126,9 @@ export function* signUp({
          email,
          password
       );
-      const newUser = yield createUserProfileDocument(user, {
-         displayName,
-      });
-      yield put(signUpSuccess(newUser));
-      yield put(emailSignInStart({ email, password }));
+      yield put(
+         signUpSuccess({ user, additionalData: { displayName } })
+      );
    } catch (err) {
       yield put(signUpFailure(err.message));
    }
@@ -133,6 +138,20 @@ export function* onSignUpStart() {
    yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
 }
 
+//Auto sign in after sign up logic
+export function* signInAfterSignUp({
+   payload: { user, additionalData },
+}: signUpSuccessAction) {
+   yield getSnapshotFromUserAuth(user, additionalData);
+}
+
+export function* onSignUpSuccessStart() {
+   yield takeLatest(
+      UserActionTypes.SIGN_UP_SUCCESS,
+      signInAfterSignUp
+   );
+}
+
 export function* userSagas() {
    yield all([
       call(onGoogleSignInStart),
@@ -140,5 +159,6 @@ export function* userSagas() {
       call(onCheckUserSession),
       call(onSignOutStart),
       call(onSignUpStart),
+      call(onSignUpSuccessStart),
    ]);
 }
