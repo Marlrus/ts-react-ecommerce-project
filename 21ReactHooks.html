@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>21 React Hooks</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">21 React Hooks<hr></h1>
+		<header>
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">useState()</h2>
+				<p class="paragraph">
+					Feb 2019 saw the start of hooks. It had a massive impact in the react community. It creates a different flow to what we have done until now. They emerged because the React Community found the lifecycle methods of Class Components confusing. The solution was hooks, which allow us to get functionality that was only available in Class Components in Functional Components. 
+				</p>
+				<p class="paragraph">
+					<strong>useState()</strong>
+					<br>
+					useState() is a hook that returns two things that we get access to using array destructuring. Use state returns 2 paramenters that we access through destructuring: <code>const [state, setState] = useState()</code> The first one is the state value, and the second one is the Fn that we will use to set that state. What we pass to useState() is the initial value we want the state to have <code>useState(stateValue)</code> which will be stored in the <code>state</code> variable. 
+				</p>
+				<p class="paragraph">
+					<strong>useState() limitations</strong>
+					<br>
+					In our class components we usually have a state object with multiple values, using useState() we would have to create a new useState() for each value that we want to alter. For example <code>const [address, setAddress] = useState('Bogota')</code> would set the initial address variable in our state to Bogota and we would change it with setAddress. However if we had more values in our state we would need to use the hook for each value. This is the prefered pattern, keeping different states for our different values.
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">useEffect()</h2>
+				<p class="paragraph">
+					This hook gives us the ability to fire side effects in our React.FC. useEffect() does not get any value, instead, it takes a Fn that gets called whenever the component changes/renders. When we setState() using the useState() hook it will trigger useEffect() with default parameters because it will tirgger when the component updates and re-renders. If we want to fire it as componentDidMount() we pass a second parameter <code>useEffect(CB, [])</code> This array will take what our useEffect() hook uses as a reference to trigger. If we leave it empty it will only trigger on the mount, if we set <code>[state]</code> it will trigger when we change the state we get from useState(). We can create different triggers for useEffect(). 
+				</p>
+				<p class="paragraph">
+					<strong>Fetching data</strong>
+					<br>
+					If we set the CB as an async Fn we get an error: <em>An effect function must not return anything besides a function, which is used for clean-up</em>. Instead we create our async Fn inside the CB <code>() => const fetchFn = async () => { ... }</code>. Inside we fetch and convert to JSON usually and setState() with the Fn from useState(). After we declare the Fn we need to call it in useEffect <code>fetchFn()</code> if we remove the [] second argument and use this method, our Fn triggers endlessly. This happens because we are setting the state with setState() which will tirgger a re-render, that will trigger useEffect() which will trigger setState() again and it creates the endless loop.
+				</p>
+				<p class="paragraph">
+					If we are seaching data using a seachQuery we <code>[searchQuery]</code> as the second useEffect() argument, which will trigger only when the value of the searchQuery changes. The values inside this array should be the ones that we are using to trigger the CB inside useEffect(). 
+				</p>
+				<p class="paragraph">
+					<strong>Hook Main Rule</strong>
+					<br>
+					Hooks cannot be called as a conditional, meaning that we cannot put them inside an if statement. The <strong>must always be called in the top level of our component</strong>. Therefore, if we want to leverage a conditional, we have to do this inside the hook. 
+				</p>
+				<a id="03" href="#00">Index</a>
+				<h2 class="subtitle">Converting Class Components with useState()</h2>
+				<p class="paragraph">
+					We convert our SignIn component. We convert it into a FC <code>const SignIn: React.FC&lt;SignInProps&gt; = ({ googleSignInStart, emailSignInStart, }) => { ... }</code> which will destructure the props we pass it through our use of connect(). Then we remove the constructor, remove the render() and make a few changes. I had done this before, so I didn't see anything unexpected except in our handleChange() Fn <code>setCredentials({ ...userCredentials, [name]: value })</code> which we had without the destructured elements before. This is because hooks leverage pure Fns, and if we dont spread the existing credentials, we are not respecting the data integrity. I removed it as we had before and we got an err. After it was refactored, it worked just the same as before. 
+				</p>
+				<p class="paragraph">
+					<strong>Sign Up Component</strong>
+					<br>
+					I will do this one on my own. I refactored exactly as yihua did and the component is working perfectly. 
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>

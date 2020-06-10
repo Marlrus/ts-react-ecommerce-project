@@ -251,7 +251,13 @@
 				<a id="12" href="#00">Index</a>
 				<h2 class="subtitle">Sign Up Saga By myself</h2>
 				<p class="paragraph">
-					I successfuly refactored the functionality on one try, with 1 minor mistake, forgetting to put the saga listener in the user root saga. After watching the video I forgot to add the sign up failure to the reducer, and I can refactor it to separate the concerns better.
+					I successfuly refactored the functionality on one try, with 1 minor mistake, forgetting to put the saga listener in the user root saga. After watching the video I forgot to add the sign up failure to the reducer, and I can refactor it to separate the concerns better. The proces was started by creating 3 actions for sign up: start, success, failure. We created the actions for them, and we created a saga listener for sign up start. That listener triggers the saga that handles the logic. The action would have the payload with all the data we need to create the user and to sign in <code>payload: { email, password, displayName }</code> inside we place the logic from our component to get <code>const { user }</code> which we need for our success action.
+				</p>
+				<p class="paragraph">
+					we <code>yield put(signUpSuccess({ user, additionalData: { displayName })</code> after we create our use with <code>const { user } = yield auth.createUserWithEmailAndPassword( email, password )</code> that we got from the action payload. After this I had set another put() to trigger signInWithEmail, but to keep the format the same, we will create new sagas that listen for our signUpSuccess action and sign us in. I created these sagas and the gen Fn that would trigger getSnapshotFromUserAuth() which will sign the user in. Here I did <code>export function* signInAfterSignUp({ payload: { user, additionalData }: signUpSuccessAction) { ... }</code> that runs our logic <code>yield getSnapshotFromUserAuth(user, additionalData)</code>. If we go to firebase utils we can see that we can pass that param to the Fn, however we don't have it set up. I added it to <code>function* getSnapshotFromUserAuth( userAuth: any, additionalData? any ) { ... }</code> which now calls <code>createUserProfileDocument(userAuth, additionalData )</code> which is handled in our firebase utils.
+				</p>
+				<p class="paragraph">
+					Now when the user signs up the action triggers a saga that will trigger the sign in logic using the payload from the action that will create a new user if there is no user in our firestore and sign us up. The way I had it before had less code, but it didn't follow the flow we are creating, an action that triggers the sagas, and we can now re-use our code as well. 
 				</p>
 			</li>
 		</ul>
