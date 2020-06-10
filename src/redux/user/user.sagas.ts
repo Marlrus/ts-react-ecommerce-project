@@ -3,6 +3,7 @@ import { takeLatest, put, all, call } from 'redux-saga/effects';
 import {
    UserActionTypes,
    emailSignInStartAction,
+   signUpStartAction,
 } from './user.types';
 
 import {
@@ -10,6 +11,9 @@ import {
    signInSuccess,
    signOutSuccess,
    signOutFailure,
+   signUpFailure,
+   signUpSuccess,
+   emailSignInStart,
 } from './user.actions';
 
 import {
@@ -106,11 +110,35 @@ export function* onSignOutStart() {
    yield takeLatest(UserActionTypes.SIGN_OUT_START, signOut);
 }
 
+//SIGN UP LOGIC
+export function* signUp({
+   payload: { email, password, displayName },
+}: signUpStartAction) {
+   try {
+      const { user } = yield auth.createUserWithEmailAndPassword(
+         email,
+         password
+      );
+      const newUser = yield createUserProfileDocument(user, {
+         displayName,
+      });
+      yield put(signUpSuccess(newUser));
+      yield put(emailSignInStart({ email, password }));
+   } catch (err) {
+      yield put(signUpFailure(err.message));
+   }
+}
+
+export function* onSignUpStart() {
+   yield takeLatest(UserActionTypes.SIGN_UP_START, signUp);
+}
+
 export function* userSagas() {
    yield all([
       call(onGoogleSignInStart),
       call(onEmailSignInStart),
       call(onCheckUserSession),
       call(onSignOutStart),
+      call(onSignUpStart),
    ]);
 }

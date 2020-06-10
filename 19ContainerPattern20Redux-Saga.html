@@ -238,6 +238,19 @@
 					We will leverage our saga to trigger another event upon signing out, the clearing of our cart. There are two ways to do this. Inside of our cart reducer, we could listen for our sign out success action and have it clear the cart when it is triggered. This can happen because all of our reducers recieve every action that is dispatched in our application, even if it is not part of their jurisdiction. However, we might want to have more cases where the user clears the cart, such as a button in the cart, or when the user completes their purchase. Therefore we will handle all of this logic in our redux/cart/ dir. 
 				</p>
 				<p class="paragraph">
+					We create a new action clearCart() that will only have a type that we will use to trigger our saga. Then we need to create the sagas file. We <code>import { all, call, takeLatest, put } from "redux-saga/effects";</code> We then create our root cart saga <code>export function* cartSagas() { ... }</code> which will use yield all(). Then we create our listener <code>export function* onSignOutSuccess() { ... }</code> which will actually listen to UserActionTypes <code>yield takeLatest( UserActionTypes.SIGN_OUT_SUCCESS, clearCartOnSignOut)</code> which will be our saga <code>export function* clearCartOnSignOut() { yield put(clearCart()) }</code> which will just trigger our action using put(). Then we send them to the root saga with <code>yield all([call(onSignOutSuccess)])</code>. Then we move into the <strong>root-saga.ts</strong> and add it to our rootSaga() export yield all() statement so that our middleware gets it.
+				</p>
+				<p class="paragraph">
+					<strong>cart reducer</strong>
+					<br>
+					Now we have our action triggering when we click sign out, but we have nothing happening yet. We update our reducer to listen for our clearCart() action and <code>return{ ...state, cartItems: [] }</code> which replaces our item array with an empty array. Now testing the app we have everything firing, and our cart gets wiped on logout. The great thing about the redux, redux-saga combo, is that we can separate our logic from our components, creating a somewhat back-end front-end separation inside our own app. 
+				</p>
+				<p class="paragraph">
+					as our final refactor, we use the same patter of creating a root saga for each of our redux state pieces and create <code>shopSagas</code> which we use in our root-saga.ts file.
+				</p>
+				<a id="12" href="#00">Index</a>
+				<h2 class="subtitle">Sign Up Saga By myself</h2>
+				<p class="paragraph">
 					
 				</p>
 			</li>

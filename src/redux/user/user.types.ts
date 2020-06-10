@@ -16,6 +16,10 @@ export interface EmailAndPassword {
    password: string;
 }
 
+export interface SignUpUser extends EmailAndPassword {
+   displayName: string;
+}
+
 //UserActionTypes Hardcoded
 export const UserActionTypes = {
    SET_CURRENT_USER: 'SET_CURRENT_USER',
@@ -27,6 +31,9 @@ export const UserActionTypes = {
    SIGN_OUT_START: 'SIGN_OUT_START',
    SIGN_OUT_SUCCESS: 'SIGN_OUT_SUCCESS',
    SIGN_OUT_FAILURE: 'SIGN_OUT_FAILURE',
+   SIGN_UP_START: 'SIGN_UP_START',
+   SIGN_UP_SUCCESS: 'SIGN_UP_SUCCESS',
+   SING_UP_FAILURE: 'SING_UP_FAILURE',
 } as const;
 
 interface googleSignInStartAction {
@@ -65,6 +72,22 @@ interface signOutFailureAction {
    payload: string;
 }
 
+//Sign up actions
+export interface signUpStartAction {
+   type: typeof UserActionTypes.SIGN_UP_START;
+   payload: SignUpUser;
+}
+
+interface signUpSuccessAction {
+   type: typeof UserActionTypes.SIGN_UP_SUCCESS;
+   payload: CurrentUser | null;
+}
+
+interface signUpFailureAction {
+   type: typeof UserActionTypes.SING_UP_FAILURE;
+   payload: string;
+}
+
 interface OtherAction {
    type: 'OTHER_ACTION';
    payload: any;
@@ -80,4 +103,7 @@ export type UserActions =
    | checkUserSessionAction
    | signOutStartAction
    | signOutSuccessAction
-   | signOutFailureAction;
+   | signOutFailureAction
+   | signUpStartAction
+   | signUpSuccessAction
+   | signUpFailureAction;

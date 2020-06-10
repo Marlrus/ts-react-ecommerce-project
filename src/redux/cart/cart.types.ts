@@ -16,6 +16,7 @@ export const CartActionTypes = {
    ADD_ITEM: 'ADD_ITEM',
    CLEAR_ITEM_FROM_CART: 'CLEAR_ITEM_FROM_CART',
    REMOVE_ITEM: 'REMOVE_ITEM',
+   CLEAR_CART: 'CLEAR_CART',
 } as const;
 
 //action types
@@ -38,8 +39,13 @@ interface removeItemAction {
    payload: CartItem;
 }
 
+interface clearCartAction {
+   type: typeof CartActionTypes.CLEAR_CART;
+}
+
 export type CartActions =
    | ToggleCartHiddenAction
    | AddItemAction
    | clearItemFromCartAction
-   | removeItemAction;
+   | removeItemAction
+   | clearCartAction;

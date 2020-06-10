@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { Dispatch } from 'react';
+import { connect, ConnectedProps } from 'react-redux';
 
 import FormInput from '../form-input/form-input.component';
 import CustomButton from '../custom-button/custom-button.component';
 
-import {
-   auth,
-   createUserProfileDocument,
-} from '../../firebase/firebase.utils';
+// import {
+//    auth,
+//    createUserProfileDocument,
+// } from '../../firebase/firebase.utils';
+import { signUpStart } from '../../redux/user/user.actions';
 
 import { SignUpContainer, SignUpTitle } from './sign-up.styles';
+//Types
+import { UserActions, SignUpUser } from '../../redux/user/user.types';
 
 interface SignUpState {
    [name: string]: string;
@@ -18,8 +22,8 @@ interface SignUpState {
    confirmPassword: string;
 }
 
-class SignUp extends React.Component<any, SignUpState> {
-   constructor(props: any) {
+class SignUp extends React.Component<SignUpProps, SignUpState> {
+   constructor(props: SignUpProps) {
       super(props);
 
       this.state = {
@@ -45,12 +49,15 @@ class SignUp extends React.Component<any, SignUpState> {
       }
 
       try {
-         const { user } = await auth.createUserWithEmailAndPassword(
-            email,
-            password
-         );
+         // const { user } = await auth.createUserWithEmailAndPassword(
+         //    email,
+         //    password
+         // );
 
-         await createUserProfileDocument(user, { displayName });
+         // await createUserProfileDocument(user, { displayName });
+         const { signUpStart } = this.props;
+
+         signUpStart({ email, password, displayName });
 
          this.setState({
             displayName: '',
@@ -123,4 +130,13 @@ class SignUp extends React.Component<any, SignUpState> {
    }
 }
 
-export default SignUp;
+const mapDispatchToProps = (dispatch: Dispatch<UserActions>) => ({
+   signUpStart: (signUpUser: SignUpUser) =>
+      dispatch(signUpStart(signUpUser)),
+});
+
+const connector = connect(null, mapDispatchToProps);
+
+type SignUpProps = ConnectedProps<typeof connector>;
+
+export default connector(SignUp);
