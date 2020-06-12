@@ -121,7 +121,39 @@
 				<a id="04" href="#00">Index</a>
 				<h2 class="subtitle">useEffect() in our App</h2>
 				<p class="paragraph">
-					As it stands we are using a class component in our App Component just for our componentDidMount() lifecycle method. We can replace it using useEffect(). I refactored it on my own. 
+					As it stands we are using a class component in our App Component just for our componentDidMount() lifecycle method. We can replace it using useEffect(). I refactored it on my own. We set <code>[checkUserSession]</code> into the dependency array of our useEffect(), which will not cause any problems because this Fn wont change which wont trigger the hook, and React will small err if we don't since it is a dependency. 
+				</p>
+				<p class="paragraph">
+					The other Component that Yihua had using componentDidMount() was the ShopPage Component, however, I did that one as an FC using hooks already. 
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">useEffect() as ComponentDidUnmount()</h2>
+				<p class="paragraph">
+					In our app we aren't using this lifecycle method. Inside our useEffect() Fn we can return another Fn inside, this is called a clean-up Fn. This Fn is what useEfect() calls when the component unmounts. We would have used this with the observer pattern that we had in our auth before. This would be the purpose of this useEffect clean-up Fn. This is why the only return that can be had in the useEffect() hook is the clean up Fn. 
+				</p>
+				<a id="06" href="#00">Index</a>
+				<h2 class="subtitle">Custom Hooks</h2>
+				<p class="paragraph">
+					Why would we want to have custom hooks? If we were to have some functionality that we share between components that use almost the same code and hooks, we could create our custom hook that merges the hook calls. In the example we were using useState() to set a user state, and useEffect() to do a fetch() API call that gets the user and in the other component a post. We create a new file that has this naming convention <code>hook-name.effect.js</code>. Here we create a Fn that encompasses fetching <code>const useFetch = (url) => { ... }</code> Where we will get the url to fetch from, and then use useState() and useEffect() inside that hook to call the API. We then import this into both of our components and pass the call and we have effectively written the two hooks once and used them in two different components. Custom hooks are just a way to combine multiple existing React Hooks for custom functionality.
+				</p>
+				<a id="07" href="#00">Index</a>
+				<h2 class="subtitle">useReducer() Hook</h2>
+				<p class="paragraph">
+					We won't use it in our live application. This is beacause this hook leverages functionality that we are handling using Redux. This is basically the same data flow from redux but for the local state of a component. Similar to useState() we get two things back from useReducer <code>const [state. dispatch] = useReducer(reducer, INITIAL_STATE)</code> Here state is the state object that we are using, and dispatch is Fn that passes actions to our reducer. The reducer, is a Fn that we will create that takes a state and an action, and uses switch/case to return a state object (Just like every reducer we have done in Redux already). The second parameter is the initial state, just like Redux. 
+				</p>
+				<p class="paragraph">
+					In our Component file we then proceed to create our INITIAL_STATE and the reducer with our cases and default return. Then we have to create the actions individually in this file as well as we had in our Redux workflow. The real difference comes in how we use this reducer, dispatch, and actions. We destructure the values from the state <code>const { value1, value2 } = state</code>, and then we dispatch the appropriate actions. We go into our component, and the Fn calls we have we will wrap in a dispatch <code>dispatch(Fn1(param))</code>, now when the Fn gets triggered, it will trigger an action and dispatch the action to the reducer() which will then alter the state. 
+				</p>
+				<p class="paragraph">
+					useReducer() is just a native implementation of Redux where you have complex state handling in a component. However, there is no root reducer meaning the the state is not global.
+				</p>
+				<p class="paragraph">
+					<strong>Should you use hooks</strong>
+					<br>
+					There is massive hype around hooks, and React has moved towards the use of hooks over the use of class components. Migrating from Redux and lifecycle methods to hooks is very unlikely, especially on code bases that have already been set up. Yihua disagrees with the migration to hooks because users try to mimic the effects of lifecycle methods with hooks, and he thinks that if we want lifecycle methods we should just use them because they are there. Some libraries like React Router, have also implemented hooks. Before we used the withRouter() HOC to access the history and other props we get from router, whereas now you can pull it with the useHistory() hook <code>let history = useHistory()</code> and then <code>function handleClick() { history.push('/home') }</code> which we could do in our component directly. 
+				</p>
+				<p class="pargraph">
+					Moving away from HOC after you app uses a lot of HOC is not that simple of an undertaking. Redux also implement hooks, the useSelector() hook will let us select parts of our state just like we did with the <strong>reselect</strong> library. Before we had our selectors in our <strong>name.selectors.ts</strong> file, which we passed to the component using mapStateToProps(), which can now be done locally using redux hooks. Another caveat is that we might be faced with problems in memoizing our selectors with reselect if we create them inline using our hooks. 
 				</p>
 			</li>
 		</ul>
