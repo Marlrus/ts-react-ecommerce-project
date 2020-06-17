@@ -120,7 +120,20 @@
 					We want to create a route for stripe we create <code>app.post('/payment', ...=>{ ... })</code> as usual where we create a post route that we will trigger in the frontend. We will create a <code>const body = { ... }</code> that we will send to the stripe API, using our req.body. We then import the stripe library and call it using <code>const tripe = new stripeImport(process.env.STRIPE_SECRET_KEY)</code> which will give us back the stripe object that we can use to make charges. Then in our route we do <code>stripe.charges.create(body, CB)</code> The CB is a FN that has 2 parameters, err and value. The error is handled if we get an error from our req, the value is the respones we get from stripe. I had to TS type them using the d.ts file <code>(err: IStripeError, response: charges.ICharge)</code>.
 				</p>
 				<p class="paragraph">
-					In the Fn we perform a ternary operator <code>if(err) ? res.status(500).send({ error: err }) : res.status(200).send({ success: response })</code> which is our whole route. 
+					In the Fn we perform a ternary operator <code>if(err) ? res.status(500).send({ error: err }) : res.status(200).send({ success: response })</code> which is our whole route. Having our backend set, we now need to write the code to connect both sides.
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">Connecting Client to Server</h2>
+				<p class="paragraph">
+					We run <code>yarn dev</code> which runs our client app and server at the same time. We then go to our client/ dir and install axios <code>yarn add axios</code>. This library will replace our native JS fetch() as it is a lib that can handle more complex fetch requests. Since we are in client/ this will put it in the client package.json file.
+				</p>
+				<p class="paragraph">
+					<strong>StripeButton Component</strong>
+					<br>
+					In our component we will change our onToken() Fn. We import axios. In our <code>const onToken = (token: Token) => { ... }</code> we erase the content and add an <em>AxiosRequestConfig</em> object: <code>axios({ url: 'payment', method: 'post', data: { amount: priceForStripe, token, } })</code> This will make a POST request to /payment (Axios infers the URL based on what we set in our package.json) which triggers our backend route, and sends a data object with the amount expected by stripe, and the token. 
+				</p>
+				<p class="paragraph">
+					That response is what we expect in our backend, where we take the token and the ammount to pass it to stripe.charges.create(). 
 				</p>
 			</li>
 		</ul>

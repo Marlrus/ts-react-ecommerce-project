@@ -2,12 +2,12 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import path from 'path';
-import stripeImport, { IStripeError, charges } from 'stripe';
+import { IStripeError, charges } from 'stripe';
 
 require('dotenv').config();
 
 //enable stripe library
-const stripe = new stripeImport(process.env.STRIPE_SECRET_KEY!);
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
 
 const app = express();
 
