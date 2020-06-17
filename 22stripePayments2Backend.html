@@ -130,10 +130,18 @@
 				<p class="paragraph">
 					<strong>StripeButton Component</strong>
 					<br>
-					In our component we will change our onToken() Fn. We import axios. In our <code>const onToken = (token: Token) => { ... }</code> we erase the content and add an <em>AxiosRequestConfig</em> object: <code>axios({ url: 'payment', method: 'post', data: { amount: priceForStripe, token, } })</code> This will make a POST request to /payment (Axios infers the URL based on what we set in our package.json) which triggers our backend route, and sends a data object with the amount expected by stripe, and the token. 
+					In our component we will change our onToken() Fn. We import axios. In our <code>const onToken = (token: Token) => { ... }</code> we erase the content and add an <em>AxiosRequestConfig</em> object: <code>axios({ url: 'payment', method: 'post', data: { amount: priceForStripe, token, } })</code> This will make a POST request to /payment (Axios infers the URL based on what we set in our package.json) which triggers our backend route, and sends a data object with the amount expected by stripe, and the token. That response is what we expect in our backend, where we take the token and the ammount to pass it to stripe.charges.create(). 
 				</p>
 				<p class="paragraph">
-					That response is what we expect in our backend, where we take the token and the ammount to pass it to stripe.charges.create(). 
+					<strong>Note:</strong> My server wasn't working because I didn't have <code>tsc -w</code>, so my server was not compiling. After fixing that my .env file was in the src/dir instead of the dist/ where I was reading from the server. I moved it and got the key to work and now my processes are getting handled in the server and I'm getting feedback in the Stripe Dashboard.
+				</p>
+				<a id="06" href="#00">Index</a>
+				<h2 class="subtitle">Deploying to Heroku</h2>
+				<p class="paragraph">
+					We used a buildpack to deploy to Heroku last time, which worked since we were using CRA directly. Now we are deploying an express server which will be the one bundling our code and doing the optimization before sending that through whenever a link is hit. We set that up in our <code>app.get('*', ... )</code> that will send our CRA index.html inside client/build whenever any route is hit. Now we need to remove the buildpack. 
+				</p>
+				<p class="paragraph">
+					We type <code>heroku buildpacks</code> which lists the buildpacks we have used. We copy the buildpack and then we run <code>heroku buildpacks:remove link</code> which will remove it. After this is done we cross our fingers and run <code>git push heroku master</code>. 
 				</p>
 			</li>
 		</ul>
