@@ -41,6 +41,13 @@ export const AddButton = styled(CustomButton)`
    position: absolute;
    top: 255px;
    display: none;
+
+   @media screen and (max-width: 800px) {
+      display: block;
+      opacity: 0.9;
+      min-width: unset;
+      padding: 0 10px;
+   }
 `;
 
 export const BackgroundImage = styled.div<{ imageUrl: string }>`
@@ -58,6 +65,7 @@ export const CollectionFooterContainer = styled.div`
    display: flex;
    justify-content: space-between;
    font-size: 18px;
+   padding-right: 12px;
 `;
 
 export const NameContainer = styled.span`
