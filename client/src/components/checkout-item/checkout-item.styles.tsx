@@ -18,14 +18,21 @@ export const ImageContainer = styled.div`
       width: 100%;
       height: 100%;
    }
+
+   @media screen and (max-width: 800px) {
+      width: 22%;
+   }
 `;
 
 export const TextContainer = styled.span`
    width: 23%;
+
+   @media screen and (max-width: 800px) {
+      width: 19%;
+   }
 `;
 
 export const QuantityContainer = styled(TextContainer)`
-   padding-left: 20px;
    display: flex;
 
    span {
@@ -34,6 +41,10 @@ export const QuantityContainer = styled(TextContainer)`
 
    div {
       cursor: pointer;
+   }
+
+   @media screen and (max-width: 800px) {
+      margin-right: 25px;
    }
 `;
 
