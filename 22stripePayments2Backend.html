@@ -141,7 +141,12 @@
 					We used a buildpack to deploy to Heroku last time, which worked since we were using CRA directly. Now we are deploying an express server which will be the one bundling our code and doing the optimization before sending that through whenever a link is hit. We set that up in our <code>app.get('*', ... )</code> that will send our CRA index.html inside client/build whenever any route is hit. Now we need to remove the buildpack. 
 				</p>
 				<p class="paragraph">
-					We type <code>heroku buildpacks</code> which lists the buildpacks we have used. We copy the buildpack and then we run <code>heroku buildpacks:remove link</code> which will remove it. After this is done we cross our fingers and run <code>git push heroku master</code>. 
+					We type <code>heroku buildpacks</code> which lists the buildpacks we have used. We copy the buildpack and then we run <code>heroku buildpacks:remove link</code> which will remove it. After this is done we cross our fingers and run <code>git push heroku master</code>. Also, I deployed and got no file served because my path is different to Yihuas, I changed it to <code>app.use(express.static(path.join(__dirname, '../client/build')));</code> which goes one back from the dist/ dir and can access client.
+				</p>
+				<p class="paragraph">
+					<strong>ENV</strong>
+					<br>
+					We will set the ENV through the Heroku CLI with <code>heroku config:set KEY_USING_ENV_TYPING</code>. And I tested the page and it worked perfectly. The only thing that has to be done to make this a functional Stripe payment page is to Active the account. The code is the same, we just switch from test mode to production mode which will enable recieving of payments. 
 				</p>
 			</li>
 		</ul>

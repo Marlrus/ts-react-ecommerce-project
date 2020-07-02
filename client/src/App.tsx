@@ -4,8 +4,6 @@ import { connect, ConnectedProps } from 'react-redux';
 import { selectCurrentUser } from './redux/user/user.selectors';
 import { checkUserSession } from './redux/user/user.actions';
 
-import './App.css';
-
 //pages
 import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
@@ -13,6 +11,8 @@ import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up
 import CheckoutPage from './pages/checkout/checkout.component';
 //components
 import Header from './components/header/header.component';
+
+import { GlobalStyle } from './global.styles';
 
 //types
 import { State } from './redux/store.types';
@@ -28,6 +28,7 @@ const App: React.FC<AppProps> = ({
 
    return (
       <div>
+         <GlobalStyle />
          <Header />
          <Switch>
             <Route exact path='/' component={HomePage} />

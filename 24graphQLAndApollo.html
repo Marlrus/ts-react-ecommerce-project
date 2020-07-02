@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>24 GraphQL and Apollo</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">24 GraphQL and Apollo<hr></h1>
+		<header>
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">Intro to GraphQL</h2>
+				<p class="paragraph">
+					<strong>REST</strong>
+					<br>
+					GraphQL is a server language that wraps around a DB or Server that you can make requests to in a different way than using REST. It is a backend techonology. REST works using endopoints that give us different returns depending on the URL. I've already created a REST API, therefore I understand the theory around REST. With REST if you need to get the comments from a post you would need to do 3 requests, the user_id then the post_id, and finally the request for all of the comments from that post. At the same time, we don't need all of the data from these requests, we just needed the id for the user and the post, but we fetched the entirety of the data, this is called over-fetching. GraphQL tries to solve this.
+				</p>
+				<p class="paragraph">
+					<strong>GraphQL</strong>
+					<br>
+					With graphql we have one single endpint, usually <code>/graphql</code>. With this endpoint we do all of the CRUD operations. To the endpoint we pass either a query or a mutation. The basic difference is that a query is when we ask for data, and a mutation when we want to alter data. If we want a query, we send it a JSON like object zB <code>posts { id, title, content }</code> this would tell our endpoint that we want access to the post data and that we want the id, title, and content, only. This solves overfetching directly, and it saves us from having to be aware of all the different endpoints that the API has and how they work. If we add a new endpoint or alted the REST API, we would need to transform our frontend app to use this endpoint with the new URL. With GraphQL if the backend server changes, we don't need to be aware of it, we just need to know the shape of the data and we can create a new query using the same format if we need to. Our queries can also be nested, meaning that we can fetch comments related to a post directly with our JSON like query. 
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">GraphQL Playground</h2>
+				<p class="paragraph">
+					Yihua created a playground that uses GraphQL where we can practice the language <a href="https://www.crwn-clothing.com/"> here.</a> We will only practice queries. We start by declaring that using <code>query</code>. There is a Schema tab, that if working properly, will show you what data you can request and its structure. ! means that it is always there. We can see that Collections has an array of Item which have their own structure. GraphQL has Integer and Float, float being a number with decimal places. There is also a <code>collection: Collection</code> that tells us that <code>type Item</code> is part of the Collection collection. 
+				</p>
+				<p class="paragraph">
+					<strong>Query type</strong>
+					<br>
+					After that there is a <code>type Query</code> which tells us what we can query. We have <code>collections: [Collection!]!</code> which means that we can query for all the collections that will always have an array of Colletion. We have <code>collection(id: ID!): Collection</code> which means that we can query a Collection using the ID, which will return the single collection that matches. We don't have a ! after Collection because there is no guarantee that we will recieve a collection, in the case that we don't use a correct ID. We also have <code>getCollectionsByTitle(title: String): Collection</code> This is a query that allows us to use a title string to get the Collection we want, also not guaranteed. <em>These queries are created in the backend, meaning that that is what we have access to.</em>
+				</p>
+				<p class="paragraph">
+					<strong>Querying</strong>
+					We <code>query { collections { id title } }</code> and when we get a JSON response <code>{ "data" { "collections": [ { "id": "...", "title": "..." }, ... ] } }</code> with all our collections and the data we asked for. In our query we add <code>items { id name price } </code> which we run and now gives us the internal items of our collections. We <em>NEED</em> to add sub fields to our query, we cannot <code>items</code> and get everything, we need to specify what we want. The order <strong>Does NOT</strong> matter, but it <em>will reflect the response object</em> we get. 
+				</p>
+				<p class="paragraph">
+					<strong>Other Features of Playground</strong>
+					<br>
+					We have another tab called <strong>DOCS</strong> that is generated by our playground and has documentation about what we can query, what we get back, and descriptions about the types. If we look at the ID type we get that it is a scalar type that represents a unique Identifier. The <strong>scalar</strong> type means that it is a value that is not an object, or array, but a native type. We cannot query items individually because Yihua did not set a query for that because we don't use it in our App.  
+				</p>
+				<p class="paragraph">
+					<strong>Query by ...</strong>
+					<br>
+					We will do a query by id that we have access to, using <code>query { collection(id: "..."){ title } }</code>, which is just as we saw in the queries we have access to. This will return the collection with the title using the id we copied from our previous query. We <em>need</em> subfields for this. If we query using a false ID, we get a return object that has <code>"collection": null</code>. We then use our <code>getCollectionsByTitle(title: "hats") { ... }</code> which will fetch the colleciton using an item and returns what we query for it. The search <strong>is not case sensitive</strong>, which allows us to query the "Hats" collection using "hats". Our response also has <code>"data" { "getCollectionsByTitle": { ... } }</code> which shows the name of the query we used. 
+				</p>
+				<a id="03" href="#00">Index</a>
+				<h2 class="subtitle">Introduction to Apollo</h2>
+				<p class="paragraph">
+					We run <code>git clone https://github.com/ZhangMYihua/graphql-lesson.git graphql-crwn</code> which creates a new directory in our folder with the code from the repo. This Repo has almost the same code we had, but it has a Spinner Component that replaces our WithSpinner HOC, and just holds the normal spinner. Apollo allows us to use a spinner in a non HOC pattern. Apollo is the goto when working with GraphQL. We <code>yarn add apollo-boost react-apollo graphql</code> and then we <code>yarn</code> to install all of our node_modules. <strong>Note:</strong> I had a major problem and had to remove all the dependencies from the package.json and install them manually. 
+				</p>
+				<p class="paragraph">
+					<strong>Apollo</strong>
+					<br>
+					When we query our GraphQL server, Apollo will make sure to <em>cache</em> the data. If none of the data has changed, Apollo will return the cached version of the data. Apollo automatically manages cached data an resolves unnecessary fetches. In our index.js file we <code>import { ApolloProvider } from 'react-apollo';</code>. This is similar to the Redux provider, but it just gives our app access to the state in our Apollo. Then we <code>import { createHttpLink } from "apollo-link-http";</code> which is what will let our client connect to the /graphql endpoint. Then we <code>import { InMemoryCache } from 'apollo-cache-inmemory';</code> which is what will chache the data that we fetch through Apollo. Finally we <code>import { ApolloClient } from 'apollo-boost';</code>. 
+				</p>
+				<p class="paragraph">
+					<strong>Index.js</strong>
+					<br>
+					We start by <code>const httpLink = createHttpLink({ uri: 'https://crwn-clothing.com' })</code> which is the same endpoint we used for our playground. Then we <code>const cache = new InMemoryCache();</code> which instanciates our InMemoryCache() class that will hold the Apollo cache. Then we set the client <code>const client = new ApolloClient({ link: httpLink, cache, })</code> which is the object we pass to create the client that has the point where we will query, and where the cache will be stored, which we used cache, shorthand in. Then we wrap our App in <code>ApolloProvider client={client}</code> which will use the client object we created. We run a test query, which requires us to also import <code>gql</code> from apollo-boost. Then we do <code>client.query({ query: gql` ... ` })</code> which is what makes the app understand what the GraphQL query is. Inside we use the query we had in the playground. This returns a promise, therefore we <code>.then(res => console.log(res))</code> and now if we load our app we can see the response from the GraphQL server.
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">Apollo Container</h2>
+				<p class="paragraph">
+					We will start replacing our data fetching in our CollectionsOverview Component. We remove all of Redux from here. We create a file in the same dir <strong>collections-overview.container.jsx</strong>. Here we import React, { Query } from react-apollo, and { gql } from apollo-boost. Then we import our CollectionsOverview Component and Spinner Component. We create our query <code>const GET_COLLECTIONS = gql`...`</code> which is the query we will use to get the collections with the data that we want. Then we create the <code>const CollectionsOverviewContainer = () => ( ... )</code> which is the Component. Inside we return a <code>&lt;Query query={GET_COLLECTIONS}&gt;</code> inside of it we get back a Fn that has a bunch of data. We destructure what we want <code>{( {loading, error, data } }) => { ... }</code> Here we will console.log all of them just to see them. But our logic will be <code>if (loading) return Spinner</code> and then <code>return CollectionsOverview collections={data.collections}</code> which uses our component and passes the data. All GraphQL queries have the data property and inside of it we get the query we used with the data we queried.
+				</p>
+				<p class="paragraph">
+					<strong>Using our Container</strong>
+					<br>
+					We go to our <strong>ShopPage</strong> Component where we will import our container. However, so we have a clearer message in our code we will do <code>import { default as CollectionsOverview } from '../../components/collections-overview/collections-overview.container';</code> which leaves the naming as it is but uses our container. We can see that we actually get logs twice, once when the data is being fetched which renders our spinner, and one when we get the data back. If I reload the page I can see that loading is false, because we have the data in the cache, even after a ctrl+r. I refactored to use the ternary opeartor, but the syntax is actually longer and confusing unfortunately. Apollo handles our async request easily using this pattern. 
+				</p>
+				<p class="paragraph">
+					<strong>Query with Variables</strong>
+					<br>
+					We remove Redux from our Collection Component. We create the container file with our React, Query, gql, Spinner, and CollectionPage. We start by creating the query <code>const GET_COLLECTION_BY_TITLE = gql` ... `</code> Since we are using a query that uses a variable we have to use something that looks like a Fn: <code>query getCollectionsByTitle($title: String!) { ... }</code> this takes a param $title that is a String always. Then Inside we do the query <code>{ getCollectionsByTitle(title: $title) { ... } }</code> Which takes the value for $title form the param and passes it as title. 
+				</p>
+				<p class="paragraph">
+					<strong>Passing Param to Query</strong>
+					<br>
+					We set up our query as a Fn, now we need to pass the value. We create <code>const CollectionPageContainer = ({ match }) => ( ... )</code> where we take match from our Router, which we will use to get the title that we want for the query. We then use the Query Component <code>Query query={GET_COLLECTION_BY_TITLE} variables={{ title: match.params.collectionId }}</code> which will get the prop variables which it will pass to the query we created. Here we pass an object that has the title prop, because it is what the Fn expects. Then we create our Fn where we destructure loading and data. If loading is true we return Spinner. If not we need to destructure the data from the query getCollectionsByTitle from our data <code>const { getCollectionsByTitle } = data </code> which will return our component with the data <code>CollectionPage collection={getCollectionsByTitle}</code>. <strong>Note:</strong> This is beacuse the response has this structure <code>data { queryName { ... } }</code> meaning that the collection is nested inside data.getCollectionsByTitle. Then we just go to ShopPage and change the import to <code>{ default as CollectionPage }</code>, and our App works. 
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">GraphQL vs Redux</h2>
+				<p class="paragraph">
+					We are familiar with the data flow in Redux and how it handles everything through actions and reducers. Apollo does the same thing, manage state, but it does it using a different structure. We have our data/state stored in our Local Cache, which we have instanciated. However, whether we fetch data locally or asynchronously, we do it using a query or mutation, which automatically detects whether the data should be fetched or if it is in the local cache. Apollo uses <strong>Resolvers</strong> which are the Fns that have our queries and mutations and process them. 
+				</p>
+				<p class="paragraph">
+					<strong>Apollo flow overview</strong>
+					<br>
+					Apollo works unidirectionally just like Redux. Our Components fire apollo requests. The requests are taken by our Resolvers (queries and mutations), here they have two routes: local, or external. If the query has been done and the data is already in the cache, Apollo will skip making a server request and just use the data in the Local Cache and pass the data to our component as porps. If the data is not there, it fires an External query or mutation, which can get/update/delete data on the backend, which then goes to our GraphQL Server, which then makes a SQL/NoSQL request to update the data in the DB. Then it gets a reply from the DB and returns it to the Resolver, which then passes or merges the data in the Local Cache and displays it in our components. 
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">Mutations on the Client</h2>
+				<p class="paragraph">
+					We have only queried data from our GraphQL server at the moment. However we can also use local data. It uses the same format that we have done until now. We want the code to be unified, and we want a single source of truth, therefore it would be better to use Apollo or Redux entirely. We go to our index.js and use <code>client.writeData({...})</code> which takes an obj that will be our initial state. We set <code>data: { cartHidden: true }</code> inside the object we pass to writeData(). We create graphql/resolvers.js. Inside we import gql and create type definitions for our mutations. We <code>export const typeDefs = gql` extend type Mutation { ToggleCartHidden: Boolean! } `</code> which follows the same pattern that we saw in our queries that tells GraphQL that this mutation will always return a boolean value. By convention type definitions are Capitalized. We do the <code>extend type Mutation</code> because we may have access to mutations from the backend, which we might use, this would give us access to the mutations we have defined in the backend and the mutations that we create. This can also be done to schemas. 
+				</p>
+				<p class="paragraph">
+					<strong>Resolvers</strong>
+					<br>
+					We create <code>export const Resolvers = { Mutation: { ... } }</code> which is the resolver. Inside we <code>toggleCartHidden: (_root, _args, _context, _info) =></code> This is the Fn that will handle our mutation to hide the cart. We get access to 4 objects in the Fns we have in our resolvers. This naming is convention is meant to be kept and is how the Apollo team has it in their DOCS to keep things standardized. <strong>_root</strong> represents the top level object that holds the actual type. In our App, _root would represent the collection type which holds all of the info regarding items. We would get access to the collection data using _root. If we are already at the top level, _root will be an empty object. <strong>_args</strong> represents all of the arguments that we might have access to inside our mutation, in our case we would have access to <code>{ title: String! }</code> which we used already to query the data by title. <strong>_context</strong> is what the Apollo client has access to: The client, and the cache. Since we only need the cache, we destructure it <code>{ cache }</code>. <strong>_info</strong> has info about the query or mutation, but we won't usually use it. We write it this way because that is how it is written in the backend, and Apollo wants consistency in how things are done.
+				</p>
+				<p class="paragraph">
+					<strong>Getting from cache</strong>
+					<br>
+					We define a query <code>const GET_CART_HIDDEN = gql` { cartHidden @client } `</code> which fetches the property from the cache. The <code>@client</code> is called a client directive, and it lets Apollo know that anything calling this query is looking at the local cache and not the backend. In our toggleCartHidden() we <code>const data = cache.readQuery({ query: GET_CART_HIDDEN })</code>. Here we get the data from our cache, using the query that we defined throuhg readQuery(). If we needed to use variables in our query, we could pass them using <code>variables: { ... }</code> as the second prop in our readQuery() object, the same way we did with title before. Then we do <code>return !cartHidden</code> this is our first Resolver. 
+				</p>
+				<p class="paragraph">
+					<strong>Using our Mutation</strong>
+					<br>
+					We <code>import { resolvers, typeDefs } from "./graphql/resolvers";</code> which we add to our <code>client</code> as <code>typeDefs, reslovers</code>. Now we need to switch the use of Redux to our new mutation. In our <strong>header.component.jsx</strong> we delete the selector for our cartHidden. We create a new file header.container.jsx. Here we import React, Query, Header, and GET_CART_HIDDEN, which we defined in our resolvers.js file. Then we <code>const HeaderContainer = () => ( ... )</code> where we use the Query Component <code>Query query={GET_CART_HIDDEN}</code>. Then we destructure cartHidden from data in the Fn <code>{({ data: {cartHidden} }) => ... }</code> where we return <code>Header hidden={cartHidden}</code>. Having done this we replace Header in our App.js with <code>import { default as Header } from './components/header/header.container';</code>.
+				</p>
+				<p class="apragraph">
+					<strong>Click to use mutation</strong>
+					<br>
+					We need to go to our CartIcon Component and have it use our mutation instead of the redux action. We remove the redux dispatch code and then create our container file. We do our imports, but instead of using the Query Component we use the Mutation Component. We use <code>const TOGGLE_CART_HIDDEN = gql` mutation ToggleCartHidden { ... } `</code> which is the name we gave it on our type definitions, and inside <code>toggleCartHidden @client</code> which makes our mutation use the cache. Then we define our CartIconContainer and use the Mutation component with <code>Mutation mutation={TOGGLE_CART_HIDDEN}</code> which will give us access to the result of our mutation in the Fn <code>{toggleCartHidden => CartIcon toggleCartHidden={toggleCartHidden}</code>. We then export it as the default. Then in the Header Component we <code>import { default as CartIcon } from '../cart-icon/cart-icon.container';</code> and our app is working as it was before now, toggling our cart hidden using Apollo instead of Redux. 
+				</p>
+				<a id="06" href="#00">Index</a>
+				<h2 class="subtitle">Adding Items with Apollo</h2>
+				<p class="paragraph">
+					We will modify the array of cart items to see how mutations work with data that is more complex than a simple boolean. We set the initial state in our cache on client.writeData() with <code>cartItems: []</code>. We will start with adding the quantity value that we have. This does not exist on the DB, therefore we must declare it in the front end, here we go to our typeDefs and <code>extend type item { quantity: Int }</code> which tells our front end that the item schema from the backend might have a quantity value in the frontend that is an Integer. Then inside extend type Mutation we add <code>AddItemToCart(item: Item!): [Item]!</code> which means that our mutation will get an item that is of type Item always, and return an array of Items. 
+				</p>
+				<p class="paragraph">
+					<strong>The Mutation</strong>
+					<br>
+					Inside our resolvers we create our mutation <code>arrItemToCart: (_root, { item }, { cache }) => { ... }</code> here we ignore _root, destruture item from _args, and cache from _context. Then we copy our cart.utils.js from redux/ and put them in graphql/ . Here we import the Fn addItemToCart() from our utils. To use it we need the cart items and the item to be added, we create a new query <code>const GET_CART_ITEMS = gql`{ cartHidden @client }`</code>. We then use it in our mutation <code>const { cartItems } = cache.readQuery({ query: GET_CART_ITEMS })</code> which gives us the items from the cache. Then we <code>const newCartItems = addItemToCart(cartItems, item)</code> which is our util that uses these two params to get the array of items we want. Then we <code>cache.writeQuery({ query: GET_CART_ITEMS, data: { cartItems: newCartItems } })</code> and finally we <code>return newCartItems</code>. 
+				</p>
+				<p class="paragraph">
+					<strong>Using toggleCartHidden</strong>
+					<br>
+					We go to CartDropdown and remove the Redux bindings. We also remove dispatch from our props and replace it with <code>toggleCartHidden</code> which we put on the onClick for our CustomButton. We create our cart-dropdown.container.jsx file where we import React, Mutation, Query, gql, and CartDropdown. We copy our mutation from the CartIcon TOGGLE_CART_HIDDEN, and import GET_CART_ITEMS from our resolvers. Then we create our <code>const CartDropdownContainer = () => ( ... )</code> which will have Mutation and Query inside of it. The order doesn't matter but we will do Mutation and then Query.
+				</p>
+				<p class="paragraph">
+					<strong>Mutation and Query</strong>
+					<br>
+					We start with <code>Mutation mutation={TOGGLE_CART_HIDDEN}</code> which gives us a Fn that has the value <code>{ toggleCartHidden => ( ... ) }</code> Inside we use Query <code>Query query={GET_CART_ITEMS}</code> which gives us access to the Data in the Fn which we destructure <code>{({ data: {cartItems } }) => ( ... )</code> that will return <code>CartDropdown cartItems={cartItems} toggleCartHidden={toggleCartHidden}</code> which will give it the props using our query and mutation. Inside our Header Component we <code>import { default as CartDropdown } from '../cart-dropdown/cart-dropdown.container';</code>. Now we set it so that if we go to the Cart, the cart dropdown will get hidden.
+				</p>
+				<p class="paragraph">
+					<strong>addItemToCart</strong>
+					<br>
+					We go to our <strong>CollectionItem Component</strong> and remove the Redux code. We create our container and import Mutation and all the things we need. We add our mutation <code>const ADD_ITEM_TO_CART = gql` ... `</code> Where we use the mutation name we have in our Resolver <code>mutation AddItemToCart($item: Item!) { ... }</code> which will recieve an item of type Item. And then inside <code>addItemToCart(item: $item) @client</code> which will execute the mutation in the client side, ergo the cache. 
+				</p>
+				<p class="paragraph">
+					<strong>Component</strong>
+					<br>
+					We want to dynamically get the value of the item in our mutation. We do this through the props we will get in our Component. We <code>const CollectionItemContainer = props => ( ... )</code> where we use <code>Mutation mutation={ADD_ITEM_TO_CART}</code> and inside the Fn we <code>{ addItemToCart => ( ... ) }</code> which we will use in our component <code>CollectionItem {...props} addItem={item => addItemToCart({ variables: { item } }) }</code> here we send the props to the component so that it can use them, and pass the addItem Fn. We use that format because our Resolvers use the variables object to get access to _args. Here we will send the object that it is expecting <code>{ variables: { item } }</code> which will match what the Resolver is expecting. In our CollectionPreview Component we <code>import { default as CollectionItem } from '../collection-item/collection-item.container';</code>. Now we can add items to the cart ourselves. 
+				</p>
+				<a id="07" href="#00">Index</a>
+				<h2 class="subtitle">CartItem Count With Apollo</h2>
+				<p class="paragraph">
+					To alter the count as the items are upgrading, we don't use the Redux pattern of triggering another action, instead what we do is that we add that change into the mutation itself. In our index.js, we add <code>itemCount: 0</code> to our client.writeData(). We copy part of our code from cart.selectos and move it to our graphql/cart.utils.js file. Here we create <code>export const getCartItemCount = cartItems => ...</code> that uses reduce() to get the total quantity. Then inside our addItemToCart() mutation we <code>cache.writeQuery({ query: GET_ITEM_COUNT, data: { itemCount: getCartItemCount(newCartItems) })</code> which will set the itemCount every time that addItemToCart is triggered. 
+				</p>
+				<p class="paragraph">
+					<strong>Implementation</strong>
+					<br>
+					In our CartIconContainer we add the new query <code>const GET_ITEM_COUNT = gql` ... `</code> with the same format we have in our resolvers. Then we wrap our Mutation inside the Query, where <code>Query query={GET_ITEM_COUNT}</code> which gives us access to the data. We destructure what we want <code>({ data: {itemCount }})</code> and then pass it to our CartIcon which resides inside Mutation as <code>itemCount={itemCount}</code>. We then fully remove the Redux code in our CartIcon Component and our CartIcon number is being updated successfuly.  
+				</p>
+				<p class="paragraph">
+					<strong>compose() and graphql() and the HOC pattern</strong>
+					<br>
+					We import graphql() from react-apollo and flowRight() from lodash, which is just compose as we know it from Fn programming. Then we delete Query and Mutation. We remove them from our CartIconContainer as well. I decided to switch to <code>compose()</code> from Ramda instead of flowRight from lodash. I read into the Apollo docs for graphql() and it states <em>The graphql() Fn is the most important thing exported by react-apollo</em>. It allows us to use the HOC pattern that we use in Redux with connect(). At also allows us to define an intermediate Fn that hooks up to a component like we do with WithRouter. <code>const withTodoAppQuery = graphql(gql`query { ... }`)</code> which we can then use as <code>const ComponentWithData = withTodoAppQuery(Component)</code>. It can tage a config object that has a ton of props, look for more in the <a href="https://www.apollographql.com/docs/react/api/react-apollo/#graphqlquery-configcomponent">Apollo graphql() DOCS</a>. 
+				</p>
+				<p class="paragraph">
+					In our Component we declare our two queries TOGGLE_CART_HIDDEN, and GET_ITEM_COUNT and then we just have to pass the info as props to our component using graphql(). We use compose() to run both Fns through our component just like we did with connect() we <code>export default compose( ... )(CartIconContainer)</code> that has <code>graphql(GET_ITEM_COUNT), graphql(TOGGLE_CART_HIDDEN, { name: 'toggleCartHidden' })</code> this will pass the queries as props to our Component and we use the name option in the config object to change the standard name of our mutation. If not, we will get the name <em>mutate</em> by default. In our component we destructure the values <code>({ data: { itemCount }, toggleCartHidden })</code> which follows the standard graphql pattern of nested data inside data, and usese the custom name we provided for our mutation. Then we can use it in <code>CartIcon toggleCartHidden={toggleCartHidden} itemCount={itemCount}</code>. This pattern is cleaner and familiar to the Redux pattern. 
+				</p>
+				<a id="08" href="#00">Index</a>
+				<h2 class="subtitle">Should you use GraphQL</h2>
+				<p class="paragraph">
+					We have worked with many APIs to manage state. GraphQL is a really hot topic in both frontend and backend. It offers a lot of value as it has solved the problem with REST. However, using graphQL is more verbose. Apollo is harder to adopt because both frontend and backend have to agree on using it and implementing it. Setting up in the backend is more complex than in the frontend. The community is new around this still, which means that it hasn't been flushed out yet and it is harder to find support when you have problems using it. The paradigm of Apollo and GraphQL might change a lot in the future, one of the things is that the Apollo team wants to move away from the HOC pattern. Redux has been tried and tested and has worked in large projects, this makes it more reliable, unfortunately it can not use a graphQL backend. 
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>

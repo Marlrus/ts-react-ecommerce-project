@@ -31,7 +31,7 @@ const MenuItem = ({
 }: MenuItemProps) => (
    <MenuItemContainer
       onClick={() => history.push(`${match.url}${linkUrl}`)}
-      style={{ height: `${size ? '380px' : '240px'}` }}
+      size={size}
    >
       <BackgroundImageContainer
          className='MenuItem-background-image'

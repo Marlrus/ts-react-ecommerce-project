@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>Context API</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">Context API<hr></h1>
+		<header>
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">Context API Intro and Setup</h2>
+				<p class="paragraph">
+					The Context API has been around for a while, and Redux leverages it to function. The context API is the React internal solution to stop prop drilling. Context allows us to pull parts of the state. In redux we have a store that has all the state, with the Context API we can create context objects that hold state that we can then pull into our components. To do this we have to go to a different version of our app. We go to Yihuas repo for this lesson and copy the link in the clone or download option. Then we <code>git clone linkToRepo</code> which will bring the repo to us. Then we install with <code>yarn</code>.
+				</p>
+				<p class="paragraph">
+					Our app is currently getting our shop data from our shop.data.js file and we are still using the Firebase auth subscription to check our user status. I had a few problems with installing the node packages due to incompatiblities with the versions. It could have been better to just manually install them due to the carrot in my package.json not working. After troubleshooting I got it to finally work, and I can finally study again...
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">Context Consumer + useContext Hook</h2>
+				<p class="paragraph">
+					We will start with our Collection Component. Here we are currently using Redux to fetch the items. We will replicate what we are doing in our shop reducer, using the context API. Reducers have data that we pull into our components using selectors, the context API serves is a way as a reducer. 
+				</p>
+				<p class="paragraph">
+					We create <strong>src/contexts/collections/collections.context.js</strong> This file will hold our collection context object. We <code>import { createContext } from "react";</code> This is a method that can take anything. We copy and paste our shop data in the collections folder. Then we import it and <code>const CollectionsContext = createContext(SHOP_DATA);</code> we create a new context that stores the shop data. We then export our context as default.
+				</p>
+				<p class="paragraph">
+					<strong>Collection Component</strong>
+					<br>
+					We import our context into our Component. We remove connect() and our Redux implementation. There are two ways to use the context, we will start with the more complicated one. We wrarp our whole return in a <code>CollectionsContext.Consumer</code> component. Inside we open <code>{ collections => { ... } }</code> which is a Fn that has access to the collections. Inside we get the collections using match from our props, so we change the props to <code>({ match })</code> and then <code>const collection = collections[match.params.collectionId]</code> that uses the id as the name for the key. Then we destructure <code>const { title, items } = collection</code> which is what we had before. Then we <code>return ( ComponentHTML )</code> which is what we hade before in our render return. This is very nested, but our app works as it did before.
+				</p>
+				<p class="paragraph">
+					<strong>The easy whey: useContext()</strong>
+					<br>
+					We will undo all of our previous code. This is a hook that allows us to store the context in a const inside of our component. We do <code>const collections = useContext(CollectionsContext)</code> which gives us access to the collection. Then we <code>const collection = collections[match.params.collectionId]</code> to get the specific collection. And with our destructuring, we have our app working fine again. This is infintely cleaner and easier to do and to refactor than using the Component context way. In fact, it is much cleaner than Redux. 
+				</p>
+				<a id="03" href="#00">Index</a>
+				<h2 class="subtitle">Context Provider</h2>
+				<p class="paragraph">
+					We create a new context/create-user/create-user.js where we <code>import { createContext } from "react";</code> and <code>const CurrentUserContext = createContext(undefined)</code>, which we then export as the default. Then we go to the App.js file to set it up. Unlike with useContext() there is no hook to make the setting of the context easy, meaning that we have to do the component approach using <strong>Provider</strong>. 
+				</p>
+				<p class="paragraph">
+					<strong>Where to use it</strong>
+					<br>
+					We have to choose where what component we wrap in our new Provider. Only the component that gets wrapped has access to the dynamically changing value, meaning that if we use this in various components but only wrap one in it, the one that is not wrapped would only have access to the initial value of our context. In our case, the only part of our app that cares for the user is the Header component, therefore we wrap it with our Provider.
+				</p>
+				<p class="paragraph">
+					<strong>Component Set-Up</strong>
+					<br>
+					We do a constructor() in our App Component that will <code>this.state = { currentUser: null }</code>. Then we go to our componentDidMount() method and change from using our Redux passed Fn and use <code>this.setState({ currentUser: { ... } })</code> which will update the component state. We do the same for the user logging out. We do this, because that value is what we will pass into our Provider with <code>CurrentUserContext.Provider value={this.state.currentUser}</code>. Now when the state of the component changes, it will pass that down to the provider, and any consumer of this Provider, will change whenever this value changes. 
+				</p>
+				<p class="paragraph">
+					<strong>Caveat</strong>
+					<br>
+					We did this process because it is the only way to pass state using the context API. This means that if we want to do this we have to leverage local state every time and we have to keep track of the Providers and Consumers. This is the native cure to prop drilling, but we still have to leverage local state. This achieves what we do with Redux, but has a different paradigm, because redux uses Uni-directional data flow for state, whereas this is more of an MVC pattern. To finish our Component we have to change this.props to this.state because we are not passing the state as a prop anymore. We can now delete our Redux code, which is actually a bunch of code. 
+				</p>
+				<p class="paragraph">
+					<strong>Header Component Consumption</strong>
+					<br>
+					We just use useContext() as a hook and keep redux because we are leveraging hidden for the cart. I did this on my own just to verify that I understood. 
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">Cart Context</h2>
+				<p class="paragraph">
+					We create context/cart/cart-context.js to handle our hidden state. Here we do the same process but we pass an object that also has a Fn in it <code>createContext({ hidden: true, toggleHidden: ()=> {} }</code> which will have the default value of toggleHidden set as an anonymous empty Fn that we can set in our components. Then we export it and move to use it.
+				</p>
+				<p class="paragraph">
+					<strong>Header Component</strong>
+					<br>
+					We import the CartContext and then we import useState() to leverage the internal state. We <code>const [hidden, setHidden] = useState(true)</code> which uses the default value we set in our CartContext. We remove all of the Redux code and then we <code>const toggleHidden = () => setHidden(!hidden)</code>, which uses the bang operator to toggle hidden from true to false and vice-versa. 
+				</p>
+				<p class="paragraph">
+					<strong>Provider</strong>
+					<br>
+					Our component uses hidden, however, since we are leveraging local state, we don't need to wrap our Component around it. We just need to wrap the children that need this local state in our Provider. This means that with this pattern, the state holder doesn't need a Provider, but actually provides to the children. Here we <code>CartContext.Provider value={{ hidden, toggleHidden }}</code> which will pass down the context object we created with the hidden property set using the current state of our Header Component and the custom ToggleHidden Fn that we defined here. 
+				</p>
+				<p class="paragraph">
+					<strong>CartIcon Consumer</strong>
+					<br>
+					I refactored it all on my own successfuly. What we did was that we passed the state from Header to our CartIcon through a CartContext.Provider. Which uses the value we have for toggleHidden() as the local definition we set in our Header Component. The basic idea of the Context API is to use the state of a parent Component up in the chain, to set the context object, which we can then send to children and use there through a Provider. 
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">Provider Context Pattern</h2>
+				<p class="paragraph">
+					If we look at redux, we go to our index.tsx and see that all of our app is wrapped in a <code>Provider store={store}</code> which is what gives all of our Components access to the Redux store. To do what we want to do in this more complex Component we need to do our own Provider Component. 
+				</p>
+				<p class="paragraph">
+					We start by creating a src/providers/cart/cart.provider.jsx we use jsx because our provider will actually be a Component. We then copy our cart.utils.js file from our Redux folder into our dir. We <code>import React, { createContext, useState, useEffect } from 'react'</code> and then <code>import { addItemToCart,removeItemFromCart } from "./cart.utils";</code> which we will need. Then we copy our CartContext and add new things to it. Here we add everything we will need to use <code>{ ... cartItems: [], addItem: () => {}, removeItem: () => {}, clearItemFromCart: () => {}, cartItemsCount: 0 }</code>
+				</p>
+				<p class="paragraph">
+					<strong>CartProvider Component</strong>
+					<br>
+					We then <code>const CartProvider = ({ children }) => { ... }</code> that will <code>return CartContext.Provider { children } /CartContext.Provider</code> In React children are any HTML inside of our Component tags. We then move our <code>hidden</code> and <code>toggleHidden</code> from our Header component into our CartProvider. After doing that we set the state with useState() for cartItems and cartItemsCount which is what we need from our new CartContext. 
+				</p>
+				<p class="paragraph">
+					<strong>Fns</strong>
+					<br>
+					We need to add the functionality which we do with <code>const addItem = item =>  setCartItems(addItemToCart(cartItems, item))</code> which means that addItem takes in an item and uses our util, which takes the cartItems we have, and passes the new item. Now in our Provider we add value <code>CartContext.Provider value={{ hidden, toggleHidden, cartItems, addItem, toggleHidden }</code>, which is what we defined inside the component. Finally we export it as default.
+				</p>
+				<p class="paragraph">
+					<strong>Index.js</strong>
+					<br>
+					Here we <code>import CartProvider from './providers/cart/cart.provider'</code> Once we do this, we wrap our app in our CartProvider component right under the Redux Provider component, however it doesn't really matter. Having done this we can now use our State in our Header component. We <code>import {CartContext} from '../../providers/cart/cart.provider';</code> which will use this new context. And inside of the Component we <code>const { hidden } = useContext(CartContext);</code> which is the value we are using locally. Then we remove our CartContext.Provider, which was local, beacuse we will be tapping into the state with our new CartProvider Component. 
+				</p>
+				<p class="paragraph">
+					<strong>CartIcon & CartDropdown</strong>
+					<br>
+					Since we are not using the local provider, we will change CartIcon which was using it. I will attempt this on my own. I did it successfuly. In CartDropdown we import useContext() and CartContext. Here we deleted all of redux, and removed cartItems from props and instead did <code>const { cartItems } = useContext(CartContext);</code> Which means we are not using Redux to render our items, which gives us an empty cart. 
+				</p>
+				<p class="paragraph">
+					<strong>CollectionItem</strong>
+					<br>
+					I refactored it, we just had to destructure addItem from our CartContext and remove all of the Redux code. Now we can add items to the cart. 
+				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">Provider Context Pattern 2</h2>
+				<p class="paragraph">
+					We add the removeItem() to our CartProvider like we did before. Then we refactor to context in our CheckoutPage Component, and CheckoutItem Component. We also refactor our CartDropdown Component to use hidden from our Cart Context so that we don't get an err there. We want to define our remove item logic in the Provider. We go to cart.utils.js and create a filterItemFromCart() that has this functionality, which we copy from our redux reducer. We use the filter() to remove the item using the item.id that we get when we pass an item to the Fn. 
+				</p>
+				<p class="paragraph">
+					In our Provider.jsx we declare it <code>const clearItemFromCart = item => setCartItems(filterItemFromCart(cartItems, item))</code> which will change the state of our cartItems, and then filter it with the util we defined. We add this to our CheckoutItem Component.  
+				</p>
+				<p class="paragraph">
+					<strong>useEffect() in Provider</strong>
+					<br>
+					We want to get the cart items count from our provider and not Redux. To do this we need to first create the util. We copy the code from our cart.selectors.js file, where we used reduce() to get the total quanitity by passing our cartItems to it. In our CartProvider we leverage useEffect() to update this value whenever our items update in the state. We <code>useEffect(()=> { setCartItemsCount(getCartItemsCount(cartItems))}, [cartItems])</code> which will use our util to setCartItemsCount in our state and will only fire when cartItems gets updated. We then pass it to the CartIcon Component, which I had done preivously, and is working purrfectly. 
+				</p>
+				<p class="paragraph">
+					<strong>Exercise: Refactor the rest</strong>
+					<br>
+					I refactored the catTotal in about 3 minutes. 
+				</p>
+				<a id="06" href="#00">Index</a>
+				<h2 class="subtitle">Removing Redux Completely</h2>
+				<p class="paragraph">
+					We delete the Provider component in our index.js file to remove Redux functionality from our app. We then remove Persistor and persistor gate from the file as well. Now we don't have persistence becasue we were leveraging redux persist before, and we have removed it since we started using the Context API. If we wanted to get this persistence, we would probably be able to do it with Context by writing it ourselves to use LocalStorage, or SessionStorage. After doing this we delete our redux/ directory. 
+				</p>
+				<p class="paragraph">
+					<strong>Context vs Redux</strong>
+					<br>
+					The main advantage of Context is that it is less verbose than Redux. Redux is very opinionated in how it needs to be set up. What we trade is the flexibility of the Redux ecosystem, such as Thunk, Sagas, Persist. Context also tightly couples our components with the specific contexts that it needs. Another things is that we need to wrap our App in more Providers as our application grows, which can get more verbose and confusing, whereas with Redux we just use a Provider Component that handles the entirety of our state. 
+				</p>
+				<p class="paragraph">
+					<strong>Use case</strong>
+					<br>
+					When the app is large, use Redux, it is more powerful, flexible, and has been tested. For small projects like a portfolio use Context to avoid the boilerplate of Redux. Context is likely to evolve to be more powerful. 
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>

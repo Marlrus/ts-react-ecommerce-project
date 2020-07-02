@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>25 Mobile Support</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">25 Mobile Support<hr></h1>
+		<header>
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">Mobile Responsiveness</h2>
+				<p class="paragraph">
+					Our website is not mobile friendly. We will modify the CSS to make it responsive. We will use media-query. We will convert our app.js to styled components. We create a new file <strong>global.styles.js</strong> where we <code>imort { createGlobalStyle } from 'styled-components';</code> Then we <code>const GlobalStyle = createGlobalStyle` ... `</code> where we copy the CSS from our App.css file. Then we export these styles out. In our App.tsx we <code>import { GlobalStyle } from "./global.styles";</code>. We then place a self closing GlobalStyle Component inside the div over the Header Component. We use <code>@media screen and (max-width: 800px) { ... }</code> will apply the style we set inside the brackets when the screen doesn't exceed 800px. We set <code>padding: 10px;</code> which will change the padding in body to 10px insetad of what we have set above, when the screen is under 800px.
+				</p>
+				<p class="paragraph">
+					<strong>Header Component</strong>
+					<br>
+					We start with Header. We use the same media query, which we will be copying all around. We start with making the header 10px smaller in height, with a padding of 10px, and a small margin of 20px in the bottom part. Then we change the logo to have a width of 50px and a padding of 0. Then we make the options container to take up 85% of the width, which is enough to display the options properly. 
+				</p>
+				<p class="paragraph">
+					<strong>MenuItem Component</strong>
+					<br>
+					This one was slightly more complicated. I had decided to handle the dynamic size of the items in the home page using inline styles because of being unable of passing the Props to MenuItemContainer with TS. I found that you can do this by adding a generic in the styles file <code>styled.div&lt;GENERIC&gt;</code> which is the prop that we will be passing. This allows us to use Props in our styles and not have TS err. After doing that I was setting the height dynamically inside of styled components which allowed me to set the media query with height 200px in the element. This works because media queries have heigher specificity than any regular selector. Doing this in the component would have required a complex hook. 
+				</p>
+				<p class="paragraph">
+					<strong>ShopPage: CollectionPreview, CollectionItem</strong>
+					<br>
+					We started with CollectionItem which I had to refactor to use the variables inside styled components as well. Once that was set up we use the media query to set the width to 40vw, and we want to remove the hover features, because we don't use them in mobile. We copy the hover code into the media query and set <code>opacity: unset;</code> on both selectors. 
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>

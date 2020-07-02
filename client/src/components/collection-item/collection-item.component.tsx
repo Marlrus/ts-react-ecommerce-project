@@ -27,9 +27,7 @@ const CollectionItem: React.FC<CollectionItemProps> = ({
    const { imageUrl, name, price } = item;
    return (
       <CollectionItemContainer>
-         <BackgroundImage
-            style={{ backgroundImage: `url(${imageUrl})` }}
-         />
+         <BackgroundImage className='image' imageUrl={imageUrl} />
          <CollectionFooterContainer>
             <NameContainer> {name} </NameContainer>
             <PriceContainer> ${price} </PriceContainer>
