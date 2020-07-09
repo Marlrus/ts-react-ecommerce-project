@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  	<head>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+		<style>
+			code{
+				background-color: rgba(0,0,0,.075);
+				font-weight: bold;
+			}
+			.subtitle{
+				font-size: 1.3rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 5px;
+				background-color: rgba(0,0,0,.075);
+				text-align: center;
+			}
+			h3{
+				font-size: 2rem;
+				font-weight: bold;
+				margin: 0;
+				padding: 5px;
+				margin-top: 10px;
+			}
+			.paragraph{
+				margin: 0.5rem 0 0.5rem;
+			}
+			.tab{
+				margin: 0 1rem;
+			}
+			html{
+				scroll-behavior: smooth;
+			}
+			</style>
+
+		<title>26 React Performance</title>
+  	</head>
+  	<body>
+      
+    <div class="container">
+		<h1 class="display-3 text-center">26 React Performance<hr></h1>
+		<header>
+			<p class="paragraph">
+				Overall description.
+			</p>
+		</header>
+
+		<h2 id="00" class="subtitle">Index</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th scope="col">#</th>
+					<th scope="col">Topic</th>
+					<th scope="col">Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th scope="row">1</th>
+					<td>
+						<a href="#01">topicName</a>
+					</td>
+					<td>
+						<code>Code or description</code>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+		<ul class="list-group">
+			<li class="list-group-item">
+				<a id="01" href="#00">Index</a>
+				<h2 class="subtitle">Code Splitting Intro</h2>
+				<p class="paragraph">
+					Performance varies between development and production builds. Don't optimize code ahead of time, only optimize once there is a problem. You can only optimize code if you measured that the code is running slow. Over optimizing might actually make things slower, the only way to find out is through measuring. We will talk about <strong>chunking</strong>. 
+				</p>
+				<p class="paragraph">
+					<strong>DevTools App Files in Network Tab</strong>
+					<br>
+					We go to the Heroku version of our page and then we open the network tab and do a hard refresh <em>ctrl+shift+r</em>. The list that we get are the files that represent our app. We see that we get a .css file which we don't get in dev because we don't compile until production. We have a *chunk.js file whcih holds all of the DOM Libs that we are using. We have a main.*.chunk.js which holds all of the React code that we wrote ourselves. We see the pngs that we used. If we refresh normally, we see that the files are not re-loaded but remain in the cache making loading faster and it is done automatically by the browser. We can see that the files are actually much smaller as well. 
+				</p>
+				<p class="paragraph">
+					<strong>main chunk</strong>
+					<br>
+					The files are called bundles of code, with our main chunk we have downloaded all of the JS code for our app, shop page, colleciton page, etc etc... Why do we need to download that if we have'nt visited those pages. We can split this so that they are downloaded when they are actually needed. This is called code splitting. We only need to do small modifications to split the code because it comes built into CRA. 
+				</p>
+				<a id="02" href="#00">Index</a>
+				<h2 class="subtitle">React Lazy + Suspense</h2>
+				<p class="paragraph">
+					As of now we have all of our code merged into one single file due to Webpack. The default is using a static import, where we bundle all of our imports together. We want to leverage <em>dynamic import</em> syntax, which loads the imports when they are needed. This is possible due to Babel which comes with CRA. To use this we just import lazy from react in our App.tsx. This integrates very well with React Router, where we use the lazy Fn to lazy load our components. When we do this, webpack creates chunks of code to be loaded depending on the Component that we visit when we get re-routed. <em>We can only leverage this wherever there are Routes.</em>
+				</p>
+				<p class="paragraph">
+					<strong>React Lazy + Suspense</strong>
+					<br>
+					To use this power we do <code>const HomePage = lazy(()=> import('./pages/homepage/homepage.component'))</code> to replace our old import. Now our chunk contains everything in our app except HomePage which is now handled by lazy() meaning that when the Route for HomePage gets triggered, a new chunk will be sent to the browser, meaning that we cang get a quicker load because our starting bundle is smaller. 
+				</p>
+				<p class="paragraph">
+					<strong>Suspense</strong>
+					<br>
+					This is a new Component from React that is wrapped around any part of our App that will be rendering async components. It is <em>meant to be used with lazy</em>. We wrap it around our Route that holds HomePage <code>Suspense fallback={div...Loading/div}</code> which will render what we place in fallback while a component is loaded. If we look in our console Network tab we can see that we have our main chunk and alos a 0.chunk.js which is the first chunk of our App. Now we have 2 chunks instead of one. We do this to all of our Route Components and then wrap them all around a single suspense Component. <strong>Note:</strong> Not doing this will cause all pages after the first one not render at all.
+				</p>
+				<p class="paragraph">
+					<strong>WithSpinner to Spinner</strong>
+					<br>
+					We create spinner/spinner.component.tsx and styles file. We copy the style from WithSpinner which we use as a HOC, and then we import React and our styles for the Spinner Component. We create a <code>const Spinner = () => ( ... )</code> That just renders SpinnerOverlay with SpinnerContainer inside. Then we export as default. We Refactor our WithSpinner Component. We remove the Code we just duplicated and remove the style import and just import Spinner and replace it in our code. I had the Component refactored in my code already. We can delete WithSpinner styles becasue we are using Spinner now. We then import it into App.tsx and add it to Suspense Fallback as a Component <code>Spinner /</code>. 
+				</p>
+				<p class="paragraph">
+					<strong>Exercise: Chunk rest</strong>
+					<br>
+					We have routes in our ShopPage Component, therefore we will refactor them to use lazy and Suspense. Done. 
+				</p>
+				<a id="04" href="#00">Index</a>
+				<h2 class="subtitle">Error Boundaries</h2>
+				<p class="paragraph">
+					YOu can wrap any Component in Lazy, however, save it for the larger Components that have a large tree under them. With Chunking we are depending on our network whenever a request is made because we need to fetch the chunk for that component from the server. If we lose that connection then our spinner will display indefinitely, to avoid this we need to create a <strong>Error Boudnary</strong>.
+				</p>
+				<p class="paragraph">
+					This feature was introduced at the same time as Suspense. It works similarly to Suspense, however it catches an error and renders the Component in fallback instead of letting the error occur and break the page. 
+				</p>
+			</li>
+		</ul>
+	</div>
+
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	</body>
+</html>
