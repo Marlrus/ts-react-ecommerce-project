@@ -118,10 +118,22 @@
 				<a id="04" href="#00">Index</a>
 				<h2 class="subtitle">Error Boundaries</h2>
 				<p class="paragraph">
-					YOu can wrap any Component in Lazy, however, save it for the larger Components that have a large tree under them. With Chunking we are depending on our network whenever a request is made because we need to fetch the chunk for that component from the server. If we lose that connection then our spinner will display indefinitely, to avoid this we need to create a <strong>Error Boudnary</strong>.
+					YOu can wrap any Component in Lazy, however, save it for the larger Components that have a large tree under them. With Chunking we are depending on our network whenever a request is made because we need to fetch the chunk for that component from the server. If we lose that connection then our spinner will display indefinitely, to avoid this we need to create a <strong>Error Boudnary</strong>. This feature was introduced at the same time as Suspense. It works similarly to Suspense, however it catches an error and renders the Component in fallback instead of letting the error occur and break the page. 
 				</p>
 				<p class="paragraph">
-					This feature was introduced at the same time as Suspense. It works similarly to Suspense, however it catches an error and renders the Component in fallback instead of letting the error occur and break the page. 
+					<strong>Creating ErrorBoundary</strong>
+					<br>
+					We create error-boundary/error-boundary.component.tsx and inside we import React. ErrorBoundaries <em>can only be Class Components</em> because we need access to lifecycle methods that are currently not replaceable with Hooks. We need internal state in this Component, we do <code>constructor(props: any) { super(props) ... }</code> where we set the state <code>this.state = { hasErrored: false, }</code> for which we create an interface and set the generic in our Component <code>any, ErrorBoundaryState</code> for TS support. This state will let us know if any of the child Components inside ErrorBoundary has produced an err or not. 
+				</p>
+				<p class="paragraph">
+					<strong>lifecycle Methods</strong>
+					<br>
+					We use a lifecylce method <code>static getDerivedStateFromError(err: Error) { return { hasErrored: true }</code> this method gets the err if any of the children throw an error. What this method returns is what is set as the state locally, meaning the State for ErrorBoundary. Now that we have the error the Component knows that it has erred and we use <code>componentDidCatch(err:Error, errInfo: ErrorInfo) { ... }</code> where we can handle the err once the state has changed. We would send this to an err service. 
+				</p>
+				<p class="paragraph">
+					<strong>render() and using</strong>
+					<br>
+					In our render we will use the internal state <code>return this.state.hasErrored ? ... : this.props.children</code> here we will return a div with Something went wrong in it if we have an err, if not we will render the child components without hinderance. We then export ErrorBoundary as the default. We import it into App.tsx and then wrap our Suspense Component in ErrorBoundary. Now if any of the lazy loading Components break or something happens to the network, we have a fallback component in our ErrorBoundary render(). We test by manually throwing an Err in HomePage, and we get our message displayed.
 				</p>
 			</li>
 		</ul>
