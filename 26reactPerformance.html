@@ -135,6 +135,11 @@
 					<br>
 					In our render we will use the internal state <code>return this.state.hasErrored ? ... : this.props.children</code> here we will return a div with Something went wrong in it if we have an err, if not we will render the child components without hinderance. We then export ErrorBoundary as the default. We import it into App.tsx and then wrap our Suspense Component in ErrorBoundary. Now if any of the lazy loading Components break or something happens to the network, we have a fallback component in our ErrorBoundary render(). We test by manually throwing an Err in HomePage, and we get our message displayed.
 				</p>
+				<p class="paragraph">
+					<strong>Improving Component</strong>
+					<br>
+					We want to improve our message when something breaks, we do this by importing styles provided by Yihua and pasting them in error-boundary.styles.tsx. I had to use the generic to use imageUrl. We import in the 3 Styled Components into ErrorBoundary and then in our render() we return ErrorImageOverlay as the top Component, then <code>ErrorImageContainer imageUrl='...'</code> and the ErrorImageText underneath it. We then test it out and get a centered nice image with our error message. I went further and used the err message as well just to test out. Having done that we now have our Suspense Component and ErrorBoundary Component. 
+				</p>
 			</li>
 		</ul>
 	</div>
