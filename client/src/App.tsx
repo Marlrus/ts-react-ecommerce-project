@@ -8,6 +8,7 @@ import { checkUserSession } from './redux/user/user.actions';
 import Header from './components/header/header.component';
 import Spinner from './components/spinner/spinner.component';
 import ErrorBoundary from './components/error-boundary/error-boundary.component';
+import HomePage from './pages/homepage/homepage.component';
 
 import { GlobalStyle } from './global.styles';
 
@@ -16,9 +17,9 @@ import { State } from './redux/store.types';
 import { UserActions } from './redux/user/user.types';
 
 //Lazy Imporst
-const HomePage = lazy(() =>
-   import('./pages/homepage/homepage.component')
-);
+// const HomePage = lazy(() =>
+//    import('./pages/homepage/homepage.component')
+// );
 const ShopPage = lazy(() => import('./pages/shop/shop.component'));
 const CheckoutPage = lazy(() =>
    import('./pages/checkout/checkout.component')
@@ -41,8 +42,8 @@ const App: React.FC<AppProps> = ({
          <Header />
          <Switch>
             <ErrorBoundary>
+               <Route exact path='/' component={HomePage} />
                <Suspense fallback={<Spinner />}>
-                  <Route exact path='/' component={HomePage} />
                   <Route path='/shop' component={ShopPage} />
                   <Route
                      exact

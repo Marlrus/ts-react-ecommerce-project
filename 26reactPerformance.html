@@ -140,6 +140,32 @@
 					<br>
 					We want to improve our message when something breaks, we do this by importing styles provided by Yihua and pasting them in error-boundary.styles.tsx. I had to use the generic to use imageUrl. We import in the 3 Styled Components into ErrorBoundary and then in our render() we return ErrorImageOverlay as the top Component, then <code>ErrorImageContainer imageUrl='...'</code> and the ErrorImageText underneath it. We then test it out and get a centered nice image with our error message. I went further and used the err message as well just to test out. Having done that we now have our Suspense Component and ErrorBoundary Component. 
 				</p>
+				<a id="05" href="#00">Index</a>
+				<h2 class="subtitle">React.memo, PureComponent, shouldComponentUpdate</h2>
+				<p class="paragraph">
+					There are Component level optimizations. We go to our lifecycles component exercise and start by looking at <code>shouldComponentUpdate()</code>. This method would stop re-rendering if the current props match the props that we are bringing later. However, we can do this without using this method, and in a way that works with React.FC. Yihua creates a component that has a counter and a sub component called person. Even though person doesn't change, every time the counter changes, Person is re-rendered. We know this happens becasue when the top level component renders, every FC child is also re-rendered. We use the react dev-tools Profiler to see how long it takes to load things and we see that every click is costing 0.5ms in rendering Person unnecessarily. 
+				</p>
+				<p class="paragraph">
+					<strong>React.memo()</strong>
+					<br>
+					In a React.FC we can use React.memo() to do a <em>shallow comparison</em> of state like shouldComponentUpdate() which will stop the re-rendering if the state doesn't change. We use it by wrapping it like a HOC <code>export default React.memo(Person)</code>. Now when we increase the count there is no re-rendering. We test using Profiler using memo() and not using it. React.memo() takes 0.2ms aprox to do it. Components that don't have props, dont use memo(). Measure to see if things are faster in the grand scheme of things. IMO having memo() is much better in the long run. 
+					<strong>React.PureComponent</strong> works in Class Components. We can get the same effect by using <code>class ComponentName extends React.PureComponent</code> which will do the same we did with shouldComponentUpdate(), without having to write it. 
+				</p>
+				<p class="paragraph">
+					<strong>Performance in our App</strong>
+					<br>
+					We test out what would happen if we kept the same things in Person using React.memo() but changed what we are passing as props to Person. We send in an inline instance of an object instead of the reference we have in our state. This causes us to re-render every time when using the count button even though the value doesn't change and we have the Component memoized. This happens because every time we run the code, JS creates a new Obj with a new reference in memory. Since we used Redux and reselect, we are covered from using React.memo(). This is optimized and has increased performance. 
+				</p>
+				<p class="paragraph">
+					<strong>CartDropdown</strong>
+					<br>
+					Yihua uses the profiler and starts adding items to the Cart. We see that every item gets re-rendered when we send a new item to the cart, which is not optimal. This happens beacuse in our CartDropdown we are using an array <code>cartItems.map(...)</code> which will always trigger the new generation of CartItem Components. Our CartItem Component gets its props from the parent which gets them from Redux, however, it doesn't have any memoization. We wrap it in React.memo() and now we only re-render the item if it is new. That was a very handy optimization that was very easy. 
+				</p>
+				<a id="06" href="#00">Index</a>
+				<h2 class="subtitle">useCallback and useMemo</h2>
+				<p class="paragraph">
+					
+				</p>
 			</li>
 		</ul>
 	</div>

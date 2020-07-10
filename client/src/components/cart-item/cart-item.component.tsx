@@ -26,4 +26,4 @@ const CartItemComponent: React.FC<CartItemProps> = ({
    </CartItemContainer>
 );
 
-export default CartItemComponent;
+export default React.memo(CartItemComponent);
