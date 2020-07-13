@@ -164,6 +164,21 @@
 				<a id="06" href="#00">Index</a>
 				<h2 class="subtitle">useCallback and useMemo</h2>
 				<p class="paragraph">
+					Yihua creates an app to show us what can happen with Fns because they are objects as well, therefore they have a new space in memory and cannot be compared normally. He uses <code>const functions = new Set()</code> which is like an array, but it can only have one value of each item. He then uses it inside the App component <code>functions.add(logName)</code> which adds a Fn that is defined inside the Component just to see how JS interprets this Fn in the Set. Every time the Increase Count button is hit, the Component re-renders and the Fn is re-declared by JS and added to the Set, even though it is <em>the same</em>. Even though our Fn doens't change at all, it is getting added to the Set constantly which can be avoided.
+				</p>
+				<p class="paragraph">
+					<strong>useCallback() Hook</strong>
+					<br>
+					This is fixed by using useCallback(), which takes 2 arguments, the Fn we want to meomize and the second one is an array of dependencies, like useEffect(). Now we can check that the Set doesn't add new versions of the Fn when we re-render. Yihua uses useCallback for the Fns that add to our count. In this case we do need to add count1 and 2 to the dependency array because we are using something that is outside of the Fn scope <code>const incrementCount1 = useCallback(() => setCount(count1 + 1), [count1])</code> Before we did this, since we had an empty array, our Fn always takes the initial value of our counter, meaning that it will never go over 1. <strong>Note:</strong> even though we are using useCallback() here, we see that the Fn we are triggering gets added to our Set. This happens because every time we fire the Fn, the value of our count1 or 2 changes, meaning that the Fn is different. However, we don't get both Fns added, which is better than not using useCallback(). 
+				</p>
+				<p class="paragraph">
+					<strong>useMemo()</strong>
+					<br>
+					This is very similar to useCallback(), however we use it on complex Fns that tax the browser. Here we don't want to memoize the Fn by itself, we want to memoize/cache the return value <code>const doSomethingComplicated = useMemo(() => { ... }, [...])</code>. It also takes a dependency array. The Fn that Yihua uses, uses count1 to calculate a number. Before useMemo() the Fn was recomputated when count2 also changed, with useMemo() it is only re-calculated if count1 is triggered. 
+				</p>
+				<a id="07" href="#00">Index</a>
+				<h2 class="subtitle">Gzipping and Compression</h2>
+				<p class="paragraph">
 					
 				</p>
 			</li>
