@@ -179,7 +179,10 @@
 				<a id="07" href="#00">Index</a>
 				<h2 class="subtitle">Gzipping and Compression</h2>
 				<p class="paragraph">
-					
+					We start by deploying our project to Heroku. There were no problems at all, even though we are using a TS backend. When we finish the build we can see that we have a <code>File sizes after gzip</code> that shows us the chunks that we created and their sizes. <strong>gzip</strong> is a compression strategy that the backend servers do so that when they pass through HTTPS the files are smaller. Once they hit the client they get decompressed and used. My main chunk (libs and CRA) is 217KB. The others are 7, 2, 1, and less than 1 KB each. 
+				</p>
+				<p class="paragraph">
+					When we go into the Network tab in our page and do a hard refresh, we see that the chunk size is much larger than what we saw in the Heroku build. This happens because Heroku doesn't offer gzip out of the gate, meaning that we have to manually apply it to our App in our express server. We do this with an express maintained lib <code>yarn add compression</code>. We also had to <code>yarn add dev @types/compression</code>. 
 				</p>
 			</li>
 		</ul>

@@ -3,6 +3,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import path from 'path';
 import { IStripeError, charges } from 'stripe';
+import compression from 'compression';
 
 require('dotenv').config();
 
@@ -12,6 +13,7 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
 const app = express();
 
 //Body Parser Setup
+app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
