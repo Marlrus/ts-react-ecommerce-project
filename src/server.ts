@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import { IStripeError, charges } from 'stripe';
 import compression from 'compression';
+import * as enforce from 'express-sslify';
 
 require('dotenv').config();
 
@@ -23,7 +24,7 @@ app.use(cors());
 //How we will serve in production
 if (process.env.NODE_ENV === 'production') {
    app.use(express.static(path.join(__dirname, '../client/build')));
-
+   app.use(enforce.HTTPS({ trustProtoHeader: true }));
    //Every URL
    app.get('*', (req, res) => {
       res.sendFile(
