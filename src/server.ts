@@ -4,7 +4,8 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import { IStripeError, charges } from 'stripe';
 import compression from 'compression';
-import * as enforce from 'express-sslify';
+import http from 'http';
+import enforce from 'express-sslify';
 
 require('dotenv').config();
 
@@ -12,6 +13,8 @@ require('dotenv').config();
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY!);
 
 const app = express();
+
+// app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
 //Body Parser Setup
 app.use(compression());
@@ -23,8 +26,8 @@ app.use(cors());
 
 //How we will serve in production
 if (process.env.NODE_ENV === 'production') {
-   app.use(express.static(path.join(__dirname, '../client/build')));
    app.use(enforce.HTTPS({ trustProtoHeader: true }));
+   app.use(express.static(path.join(__dirname, '../client/build')));
    //Every URL
    app.get('*', (req, res) => {
       res.sendFile(
@@ -36,11 +39,12 @@ if (process.env.NODE_ENV === 'production') {
 //Server
 const port = process.env.PORT || 5000;
 
-app.listen(port, () =>
-   console.log(`Server running on port ${port}`)
-).on('error', (err) => {
-   throw err;
-});
+http
+   .createServer(app)
+   .listen(port, () => console.log(`Server running on port ${port}`))
+   .on('error', (err) => {
+      throw err;
+   });
 
 //VIs
 

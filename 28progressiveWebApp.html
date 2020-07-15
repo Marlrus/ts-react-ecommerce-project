@@ -151,6 +151,9 @@
 					<br>
 					We need to use HTTPS, heroku gives us HTTPS but we need to redirect any HTTP request to HTTPS. To do this through Heroku, we need to put it in our application server. We do this through <code>yarn add express-sslify</code> We then need <code>yarn add @types/express-sslify</code> in our process.env.NODE_ENV === 'production' part we add <code>app.use(enforce.HTTPS({ trustProtoHeader: true }))</code>, which will enfore HTTPS when in production, but allow us to work using our localhost which doesn't use HTTPS. We need the trustProtoHeader because Heroku runs a <em>reverse-proxy</em>, if we mouseover trustProtoHeader we can see that it says: Heroku, nodejitsu and other hosters often use reverse proxies which offer SSL endpoints but then forward unencrypted HTTP traffic to the website. This makes it difficult to detect if the original request was indeed via HTTPS. Luckily, most reverse proxies set the x-forwarded-proto header flag with the original request scheme. Having done this we are done with what we needed to do in our server. 
 				</p>
+				<p class="paragraph">
+					I had to modify the path for the service worker and name using <code>path.resolve(__dirname, '../client/build', 'serviceWorker.js')</code> which worked on heroku, but not on localhost. I then ran the test and I got better reuslts, however I don't get all traffic redirected to HTTPS in my lighthouse audit. 
+				</p>
 			</li>
 		</ul>
 	</div>
