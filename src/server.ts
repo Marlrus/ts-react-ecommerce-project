@@ -46,7 +46,7 @@ app.listen(port, () =>
 
 app.get('/service-worker.js', (req, res) => {
    res.send(
-      path.resolve(__dirname, '..', 'build', 'service-worker.js')
+      path.resolve(__dirname, '../client/build', 'serviceWorker.js')
    );
 });
 
