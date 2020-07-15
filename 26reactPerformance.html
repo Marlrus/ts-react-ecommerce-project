@@ -182,7 +182,15 @@
 					We start by deploying our project to Heroku. There were no problems at all, even though we are using a TS backend. When we finish the build we can see that we have a <code>File sizes after gzip</code> that shows us the chunks that we created and their sizes. <strong>gzip</strong> is a compression strategy that the backend servers do so that when they pass through HTTPS the files are smaller. Once they hit the client they get decompressed and used. My main chunk (libs and CRA) is 217KB. The others are 7, 2, 1, and less than 1 KB each. 
 				</p>
 				<p class="paragraph">
-					When we go into the Network tab in our page and do a hard refresh, we see that the chunk size is much larger than what we saw in the Heroku build. This happens because Heroku doesn't offer gzip out of the gate, meaning that we have to manually apply it to our App in our express server. We do this with an express maintained lib <code>yarn add compression</code>. We also had to <code>yarn add dev @types/compression</code>. 
+					When we go into the Network tab in our page and do a hard refresh, we see that the chunk size is much larger than what we saw in the Heroku build. This happens because Heroku doesn't offer gzip out of the gate, meaning that we have to manually apply it to our App in our express server. We do this with an express maintained lib <code>yarn add compression</code>. We also had to <code>yarn add dev @types/compression</code>. Then we <code>import compression from 'compression'</code> and in our middleware use <code>app.use(compression())</code> and we are set. Then we push to heroku and see the file sizes which are effectively the same as we see in our build script. However, I still get 27 score in performance using lighthouse...
+				</p>
+				<a id="08" href="#00">Index</a>
+				<h2 class="subtitle">React &lt;Profiler&gt;</h2>
+				<p class="paragraph">
+					React added a new Profiler API, which shows us how long it takes a Component to render/mount. This was added in React 16.10, we are running 16.13. We import it from React <code>{ Profiler }</code> and in our HomePage we wrap Directory in it to see the stats. Profiler needs two properties <code>id='string' onRender={Fn}</code> In onRender the Fn takes 3 args <code>(id, phase, actualDuration) => { ... }</code> we will console.log() an object with these 3 parameters to see what they are. 
+				</p>
+				<p class="paragraph">
+					We refresh our page and see that our console is logging an object. We see the id as the string we specified, phase as the mount because our component is mounting, and the actualDuration as 12ms. We move somewhere else and then return to our Home and we see that we get a shorter duration because of React optimizations taking place. Profiler is a great tool to check your Components for problems where you feel it is running slowly. I removed it from my code. 
 				</p>
 			</li>
 		</ul>

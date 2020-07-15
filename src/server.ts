@@ -41,6 +41,14 @@ app.listen(port, () =>
    throw err;
 });
 
+//VIs
+
+app.get('/service-worker.js', (req, res) => {
+   res.send(
+      path.resolve(__dirname, '..', 'build', 'service-worker.js')
+   );
+});
+
 app.post('/payment', (req, res) => {
    //What stripe needs
    const body = {
