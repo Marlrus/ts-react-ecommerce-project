@@ -20,6 +20,8 @@ De no se por la integración de Stripe, la aplicación podría ser Serverless pa
 
 El manejo de estado de esta aplicación esta hecha completamente con Redux. Se utiliza Redux Persist para guardar información del estado en el cache y evitar re-renderización innecesario a través de memoización. Para el manejo de acciones asincronicas se utiliza Redux Saga, migrado de Redux Thunk. Esto unifica 100% del estado de la aplicación con Redux facilitando debugging y estandarizando patrones a través de toda la aplicación.
 
+[Enlace a mi articulo sobre Redux con TypeScript](https://www.thecodingwalrus.com/react/using-react-redux-connect-with-typescript/)
+
 ## Estilos
 
 El estilo se manejo originalmente con SASS, pero se migro a Styled-Components. Podria haberse hecho con CSS modules o SASS modules para mantener los beneficios de SASS evitando colisión de estilos debido al hashing que hacen los módulos.
