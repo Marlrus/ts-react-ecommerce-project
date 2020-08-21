@@ -1,6 +1,6 @@
 # React E-Commerce PWA (Progressive Web App) CRWN Clothing
 
-[Enlace a la pagina: CRWN Clothing](https://thecodingwalrus.com/)
+[Enlace a la pagina: CRWN Clothing](https://ecommerce-react-typescript.herokuapp.com/)
 
 Aplicación web construida usando Create React App. Backend para pagos Stripe y servir la aplicación utilizando NodeJS, base de datos y autenticación utilizando Firebase. El manejo del estado de toda la aplicación es a través de Redux y React Hooks.
 
