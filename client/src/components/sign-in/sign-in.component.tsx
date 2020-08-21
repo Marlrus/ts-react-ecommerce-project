@@ -30,6 +30,7 @@ const SignIn: React.FC<SignInProps> = ({
    });
 
    const { email, password } = userCredentials;
+
    const handleSubmit = async (
       event: React.FormEvent<HTMLFormElement>
    ) => {
